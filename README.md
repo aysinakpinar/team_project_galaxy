@@ -36,7 +36,7 @@ Everyone in the team should then clone this repo to their local machine to work 
 # Run the app
 (galaxy_venv); python app.py
 
-# Now visit http://localhost:5001/index in your browser
+# Now visithttp://127.0.0.1:5000/index in your browser
 ###### Install dependencies in requirement.txt
 
 ###### Folder structure
@@ -55,3 +55,7 @@ Everyone in the team should then clone this repo to their local machine to work 
 ├── tests
 └── venv
 ```
+### db migration
+flask db init
+flask db migrate -m "Initial migration"
+flask db upgrade
