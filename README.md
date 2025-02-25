@@ -24,8 +24,8 @@ Everyone in the team should then clone this repo to their local machine to work 
 # If you have problems with the above, contact your coach
 
 # Create a test and development database
-(galaxy_venv); createdb galaxy
-(galaxy_venv); createdb galaxy_test
+(galaxy_venv); createdb galaxy_db
+(galaxy_venv); createdb galaxy_db_test
 
 # Open lib/database_connection.py and change the database names
 (galaxy_venv); open lib/database_connection.py
