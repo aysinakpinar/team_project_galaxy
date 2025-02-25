@@ -1,2 +1,2 @@
 from .user import UserModel
-from .exercise import ExerciseModel
+# from .exercise import ExerciseModel

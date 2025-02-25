@@ -1,3 +1,74 @@
+from models.user import *
+from flask import *
+# Khadija, Millie & Louis logout test code 
+# create dummy user to log out
+
+def test_create_user(app, database):
+    # retrieving the user from the database 
+    with app.app_context():
+        user = UserModel(
+            username = "Ben",
+            email = "Ben@email",
+            password = "BenPassword",
+            location = "BenLondon"
+        )
+    db.session.add(user)
+    db.session.commit()
+
+    saved_user = UserModel.query.filter_by(username = "Ben").first()
+    assert user.id != None
+    assert user.email == "Ben@email"
+    assert user.password == "BenPassword"
+    assert user.location == "BenLondon"
+
+def test_login_user(app, database):
+    with app.app_context():
+
+        user = UserModel(
+            username = "Ben",
+            email = "Ben@email",
+            password = "BenPassword",
+            location = "BenLondon"
+        )
+    db.session.add(user)
+    db.session.commit()
+    user = UserModel.query.filter_by(username = "Ben").first()
+    session["user_id"] = user.id
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # import pytest
 # from models.user import UserModel
 # from extension import db
@@ -64,3 +135,4 @@
 # #         #     db.session.commit()
 # #         # db.session.rollback()
 # #         assert UserModel.query.count() == 1, f"Expected 1 user, found {UserModel.query.count()}"
+
