@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from extension import db
 from models.user import UserModel
 from dotenv import load_dotenv
+from config import TestingConfig
 
 # Load environment variables
 load_dotenv()
@@ -17,14 +18,14 @@ load_dotenv()
 @pytest.fixture(scope="session")
 def app():
     """Create a Flask test application."""
-    app = Flask(__name__)
+    from app import create_app
 
-    # Use environment variable for the test database
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('TEST_DATABASE_URL', 'postgresql://localhost/galaxy_db_test')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['TESTING'] = True
+    # using TestingConfig for tests
+    app = create_app(TestingConfig)
 
-    db.init_app(app)
+    # if there is an env var, override
+    if os.getenv('TEST_DATABASE_URL'):
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('TEST_DATABASE_URL')
 
     return app
 
