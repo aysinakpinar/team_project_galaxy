@@ -1,4 +1,4 @@
-import config
+from config import TestingConfig 
 
 from extension import db
 from flask import Flask
@@ -14,7 +14,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Load configuration
-app.config.from_object(config)
+app.config.from_object(TestingConfig)
 
 if "SQLALCHEMY_DATABASE_URI" not in app.config:
     raise RuntimeError("❌ SQLALCHEMY_DATABASE_URI is missing from config.py!")
