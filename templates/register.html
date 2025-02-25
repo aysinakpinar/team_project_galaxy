@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Quicksand", sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f5f7fa;
+            width: 100%;
+            overflow: hidden;
+        }
+        .ring {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .ring i {
+            position: absolute;
+            inset: 0;
+            border: 2px solid #8e9aaf;
+            transition: 0.5s;
+        }
+        .ring i:nth-child(1) {
+            border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+            animation: animate 6s linear infinite;
+        }
+        .ring i:nth-child(2) {
+            border-radius: 41% 44% 56% 59% / 38% 62% 63% 37%;
+            animation: animate 4s linear infinite;
+        }
+        .ring i:nth-child(3) {
+            border-radius: 41% 44% 56% 59% / 38% 62% 63% 37%;
+            animation: animate2 10s linear infinite;
+        }
+        .ring:hover i {
+            border: 6px solid var(--clr);
+            filter: drop-shadow(0 0 20px var(--clr));
+        }
+        @keyframes animate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes animate2 {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .register {
+            position: absolute;
+            width: 350px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .register h2 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .register .inputBx {
+            position: relative;
+            width: 100%;
+        }
+        .register .inputBx input {
+            position: relative;
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #8e9aaf;
+            border-radius: 40px;
+            font-size: 1.2em;
+            color: #2c3e50;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .register .inputBx input:focus {
+            border-color: #6c757d;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .register .inputBx input[type="submit"] {
+            width: 100%;
+            background: linear-gradient(45deg, #ff357a, #fff172);
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(255, 53, 122, 0.2);
+            margin-top: 10px;
+        }
+        .register .inputBx input[type="submit"]:hover {
+            box-shadow: 0 6px 20px rgba(255, 53, 122, 0.3);
+        }
+        .register .inputBx input::placeholder {
+            color: #8e9aaf;
+        }
+        .register .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .register .links {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .register .links a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-size: 1em;
+            transition: color 0.3s ease;
+        }
+        .register .links a:hover {
+            color: #ff357a;
+        }
+
+        /* Flash Messages Styles */
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .flash-messages .message {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-size: 1em;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeInSlideDown 0.5s ease-out, fadeOutSlideUp 0.5s ease-out 3s forwards;
+        }
+        .flash-messages .danger {
+            background: linear-gradient(45deg, #ff5a5a, #ff8989);
+        }
+        .flash-messages .success {
+            background: linear-gradient(45deg, #28a745, #6adf88);
+        }
+        @keyframes fadeInSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeOutSlideUp {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="ring">
+    <i style="--clr:#00ff0a;"></i>
+    <i style="--clr:#ff0057;"></i>
+    <i style="--clr:#fffd44;"></i>
+    <div class="register">
+        <h2>Register</h2>
+
+        <!-- Flash Messages -->
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.register') }}">
+            {{ form.hidden_tag() }}
+            <div class="inputBx">
+                {{ form.username(class="form-control", placeholder="Username") }}
+                {% if form.username.errors %}
+                    <div class="error">
+                        {% for error in form.username.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="inputBx">
+                {{ form.email(class="form-control", placeholder="Email") }}
+                {% if form.email.errors %}
+                    <div class="error">
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="inputBx">
+                {{ form.phone_number(class="form-control", placeholder="Phone Number") }}
+                {% if form.phone_number.errors %}
+                    <div class="error">
+                        {% for error in form.phone_number.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="inputBx">
+                {{ form.password(class="form-control", placeholder="Password") }}
+                {% if form.password.errors %}
+                    <div class="error">
+                        {% for error in form.password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="inputBx">
+                {{ form.confirm_password(class="form-control", placeholder="Confirm Password") }}
+                {% if form.confirm_password.errors %}
+                    <div class="error">
+                        {% for error in form.confirm_password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="inputBx">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+            <div class="links">
+                <a href="{{ url_for('auth.login') }}">Already have an account? Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const flashMessages = document.querySelectorAll('.flash-messages .message');
+        flashMessages.forEach(message => {
+            setTimeout(() => {
+                message.style.opacity = '0';
+                message.style.transform = 'translateY(-30px)';
+                setTimeout(() => {
+                    message.remove();
+                }, 500); // Wait for fade-out animation to complete
+            }, 3000); // Display the message for 3 seconds
+        });
+    });
+</script>
+</body>
+</html>
