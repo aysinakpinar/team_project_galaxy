@@ -88,3 +88,4 @@ Signup validation rules were tested in test_user using Faker (requires '''pip in
 requirements.txt was updated to include faker library.
 To do:
 Test the rendering of the signup form and page, ensuring error and success messages display correctly.
+Password hash with bcrypt
