@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, make_response
 from sqlalchemy.sql.operators import from_
 from wtforms.validators import email
 
@@ -34,3 +34,17 @@ def login():
         return render_template("login.html", form=form)
     return render_template("login.html", form=form)
 
+# Logout from a session
+@auth.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.modified = True
+
+    #resp = make_response(redirect(url_for("auth.login")))
+    resp = make_response("Logged out successfully!")
+    resp.set_cookie('user_id', expires=0)
+    flash("Logged out successfully!", "success")
+    return resp
+
+
+    
