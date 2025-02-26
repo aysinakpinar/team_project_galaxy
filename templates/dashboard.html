@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        Dashboard
+        <form method="post" action="{{ url_for('dashboard.friends_leaderboard') }}">
+            <!-- CSRF Token  is required by the wtforms library -->
+            {{ form.hidden_tag() }}
+            <div
+                style="
+                    display: flex;
+                    flex-direction: column;
+                    border: 1px solid black;
+                "
+            >
+                <div>{{ form.friends }}</div>
+                <div style="display: flex">
+                    <div>{{ form.friends_weekly }}</div>
+                    <div>{{ form.friends_monthly }}</div>
+                    <div>{{ form.friends_yearly }}</div>
+                    <input type="hidden" name="action" id="action">
+                </div>
+            </div>
+
+        </form>
+        <form method="post" action="{{ url_for('dashboard.global_leaderboard') }}">
+            <!-- CSRF Token  is required by the wtforms library -->
+            {{ form.hidden_tag() }}
+            <div
+                style="
+                    display: flex;
+                    flex-direction: column;
+                    border: 1px solid black;
+                "
+            >
+                <div>{{ form.all_users }}</div>
+                <div style="display: flex">
+                    <div>{{ form.all_users_weekly }}</div>
+                    <div>{{ form.all_users_monthly }}</div>
+                    <div>{{ form.all_users_yearly }}</div>
+                </div>
+            </div>
+        </form>
+        </form>
+        <div>
+            <h2>Leaderboard</h2>
+            {% for user in leaderboard %}
+            <span>{{ user }}</span>
+            {% endfor %}
+        </div>
+    </body>
+</html>

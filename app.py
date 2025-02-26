@@ -8,6 +8,7 @@ from models import *
 from flask_sqlalchemy import SQLAlchemy
 
 from blueprints.auth import auth
+from blueprints.dashboard import dashboard
 
 
 
@@ -34,6 +35,7 @@ except Exception as e:
 
 # Registering blueprints
 app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(dashboard, url_prefix='/dashboard') #register user route
 
 
 
