@@ -22,12 +22,6 @@ def create_app(config_class=None):
     if "SQLALCHEMY_DATABASE_URI" not in app.config:
         raise RuntimeError("❌ SQLALCHEMY_DATABASE_URI is missing from config.py!")
 
-    # Load configuration
-    # app.config.from_object(TestingConfig)
-
-    # if "SQLALCHEMY_DATABASE_URI" not in app.config:
-    #     raise RuntimeError("❌ SQLALCHEMY_DATABASE_URI is missing from config.py!")
-
     # Initialize extensions
     db.init_app(app)  # Initialize the SQLAlchemy instance with the Flask app
     migrate = Migrate(app, db)  # Create a Migrate instance for database migrations
