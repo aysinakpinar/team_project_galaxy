@@ -57,6 +57,12 @@ if __name__ == "__main__":
     except Exception as e:
         print("Failed to connect to PostgreSQL:", str(e))  # Print the error message if connection fails
 
+# Registering blueprints
+app.register_blueprint(auth, url_prefix='/auth')
+
+
+
+if __name__ == "__main__":
     app.run()
 
 
