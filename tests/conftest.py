@@ -39,26 +39,26 @@ def database(app):
         db.drop_all()  # Clean up after test
 
 # create_user fixture -- | Michal |
-@pytest.fixture
-def create_user(app):
-    """Fixture to add a user to the database."""
-    with app.app_context():
-        # Create a user instance
-        test_user = UserModel(
-            id=None,
-            username='test_user',
-            password="Test12345!", 
-            email="test@email.com",
-            location="test_location"
-        )
-        # check if user exists
-        existing_user = UserModel.query.filter_by(username=test_user.username).first()
+# @pytest.fixture
+# def create_user(app):
+#     """Fixture to add a user to the database."""
+#     with app.app_context():
+#         # Create a user instance
+#         test_user = UserModel(
+#             id=None,
+#             username='test_user',
+#             password="Test12345!", 
+#             email="test@email.com",
+#             location="test_location"
+#         )
+#         # check if user exists
+#         existing_user = UserModel.query.filter_by(username=test_user.username).first()
 
-        if existing_user is None:
-            # add user to the database
-            db.session.add(test_user)
-            db.session.commit()  # Commit the changes to the database
-        else:
-            test_user = existing_user
+#         if existing_user is None:
+#             # add user to the database
+#             db.session.add(test_user)
+#             db.session.commit()  # Commit the changes to the database
+#         else:
+#             test_user = existing_user
 
-        return test_user
+#         return test_user
