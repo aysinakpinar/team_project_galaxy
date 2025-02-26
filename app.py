@@ -5,6 +5,7 @@ from models import *
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from blueprints.auth import auth
+from blueprints.workout import workout
 
 def create_app(config_class=None):
     #create and configure the Flask App
@@ -24,6 +25,7 @@ def create_app(config_class=None):
     migrate = Migrate(app, db)  # Create a Migrate instance for database migrations
 
     app.register_blueprint(auth)
+    app.register_blueprint(workout)
 
     return app
 

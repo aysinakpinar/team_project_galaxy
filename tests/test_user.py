@@ -23,7 +23,6 @@ def client():
         yield client
         with app.app_context():
             db.session.remove()
-            db.drop_all()
 
 def test_logout(client):
     with client.session_transaction() as sess:
