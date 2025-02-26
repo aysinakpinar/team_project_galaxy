@@ -80,3 +80,11 @@ class TestingConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = "default_key"
 ```
+## PR3-Aysin
+signup method was implemented in blueprints/auth
+forms/signup_form was created to use in templates/signup.html template
+templates/signup.html was created to render the signup form.
+Signup validation rules were tested in test_user using Faker (requires '''pip install faker''') to generate test inputs.
+requirements.txt was updated to include faker library.
+To do:
+Test the rendering of the signup form and page, ensuring error and success messages display correctly.
