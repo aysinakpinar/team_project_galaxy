@@ -29,7 +29,7 @@ def login():
         else:
             # ||CHANGE REQUIRED|| - redirection to another page and session user_id
             # redirect("/user-dashboard") ???
-            # session['user_id'] = found_user.id
+            session['user_id'] = found_user.id
             print("Success")
         return render_template("login.html", form=form)
     return render_template("login.html", form=form)
