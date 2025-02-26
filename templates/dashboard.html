@@ -6,7 +6,8 @@
         <title>Document</title>
     </head>
     <body>
-        Dashboard
+        <h1>Dashboard</h1>
+        <h2>Leaderboard</h2>
         <form method="post" action="{{ url_for('dashboard.friends_leaderboard') }}">
             <!-- CSRF Token  is required by the wtforms library -->
             {{ form.hidden_tag() }}
@@ -47,7 +48,6 @@
         </form>
         </form>
         <div>
-            <h2>Leaderboard</h2>
             {% for user in leaderboard %}
             <span>{{ user }}</span>
             {% endfor %}
