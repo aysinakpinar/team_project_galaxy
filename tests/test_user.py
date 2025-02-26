@@ -53,7 +53,7 @@ def test_create_user_username(app, database):
         assert saved_user.username == user.username
         assert saved_user.email == user.email
         assert saved_user.location == user.location
-
+#Aysin's code to test signup
 def test_create_user_email(app, database):
     with app.app_context():
         # Create a user with random fake attributes
@@ -68,39 +68,21 @@ def test_create_user_email(app, database):
         assert saved_user.username == user.username
         assert saved_user.email == user.email
         assert saved_user.location == user.location
-
-
-    
+#Aysin's code to test signup    
 def test_unique_user_details(app, database):
     with app.app_context():
-        user = create_user("Frank", "frank@example.com", "London")
+        user = create_user()
         #verify Frank has been created
-        assert UserModel.query.filter_by(username = "Frank").first() is not None
+        assert UserModel.query.filter_by(username = user.username).first() is not None
         # Try creating a user with same email
         with pytest.raises(Exception, match="duplicate key value violates unique constraint"):
-            user = create_user("Aysin", "frank@example.com", "London")
+            user1 = create_user(None, user.email, None)
+            db.session.add(user1)
         db.session.rollback()
-        # Try creating a user with same username
-        # with pytest.raises(Exception, match="duplicate key value violates unique constraint"):
-        #     user3 = UserModel(
-        #         username = "Frank",
-        #         password = "password123",
-        #         email = "alister@example.com",
-        #         phone_number = 111111111
-        #     )
-        #     db.session.add(user3)
-        #     db.session.commit()
-        # db.session.rollback()
-        # # Try creating a user with same phone number
-        # with pytest.raises(Exception, match="duplicate key value violates unique constraint"):
-        #     user4 = UserModel(
-        #         username = "Alister",
-        #         password = "password123",
-        #         email = "louis@example.com",
-        #         phone_number = 123456780
-        #     )
-        #     db.session.add(user4)
-        #     db.session.commit()
-        # db.session.rollback()
+        #Try creating a user with same username
+        with pytest.raises(Exception, match="duplicate key value violates unique constraint"):
+            user2 = create_user(user.username, None, None)
+            db.session.add(user2)
+            db.session.commit()
+        db.session.rollback()
         assert UserModel.query.count() == 1, f"Expected 1 user, found {UserModel.query.count()}"
-    
