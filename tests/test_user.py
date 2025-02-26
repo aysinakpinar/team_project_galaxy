@@ -1,23 +1,23 @@
-# import pytest
-# from models.user import UserModel
-# from extension import db
+import pytest
+from models.user import UserModel
+from extension import db
 # from tests.factories import create_user
 
-# # def test_create_user(app, database):
-# #     with app.app_context():
-# #         user = UserModel(
-# #             username = "Frank",
-# #             password = "password123",
-# #             email = "frank@example.com",
-# #             location = "London"
-# #         )
-# #     db.session.add(user)
-# #     db.session.commit()
+# def test_create_user(app, database):
+#     with app.app_context():
+#         user = UserModel(
+#             username = "Frank",
+#             password = "password123",
+#             email = "frank@example.com",
+#             location = "London"
+#         )
+#     db.session.add(user)
+#     db.session.commit()
     
-# #     saved_user = UserModel.query.filter_by(username = "Frank").first()
-# #     assert user.id is not None
-# #     assert user.location == "London"
-# #     assert user.email == "frank@example.com"
+#     saved_user = UserModel.query.filter_by(username = "Frank").first()
+#     assert user.id is not None
+#     assert user.location == "London"
+#     assert user.email == "frank@example.com"
 
 
 
