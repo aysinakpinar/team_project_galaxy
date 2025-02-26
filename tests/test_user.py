@@ -23,7 +23,7 @@ def client():
         yield client
         with app.app_context():
             db.session.remove()
-            db.drop_all()
+            # db.drop_all() - Michal cannot drop table, cause of the way I defined my tests
 
 def test_logout(client):
     with client.session_transaction() as sess:

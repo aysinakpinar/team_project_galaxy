@@ -4,6 +4,7 @@
 # from datetime import datetime
 # from extension import db
 
+
 # class ExerciseModel(db.Model):
 #     __tablename__ = "exercises"
 #     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -16,3 +17,4 @@
 #     workout_id = Column(Integer, ForeignKey("workouts.id", ondelete = "CASCADE"), nullable = False)
 #     created_at = Column(DateTime, default=datetime.now)
 #     updated_at = Column(DateTime, default=datetime.now)
+
