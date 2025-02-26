@@ -9,6 +9,7 @@ from wtforms.validators import email
 from models.user import UserModel
 from extension import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from forms.signup_form import SignupForm
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -58,3 +59,16 @@ def signup():
 
     # GET request - Just render the form
     return render_template("signup.html", form=form)
+
+# Logout from a session
+@auth.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.modified = True
+
+    #resp = make_response(redirect(url_for("auth.login")))
+    resp = make_response("Logged out successfully!")
+    resp.set_cookie('user_id', expires=0)
+
+    flash("Logged out successfully!", "success")
+    return resp
