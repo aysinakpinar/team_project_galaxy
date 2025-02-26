@@ -1,12 +1,13 @@
 from config import TestingConfig 
+import os
 
 from extension import db
 from flask import Flask
 from flask_migrate import Migrate
 from models import *
-from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-# from blueprints.auth import auth
+
+from blueprints.auth import auth
 
 
 
@@ -32,7 +33,7 @@ except Exception as e:
     print("Failed to connect to PostgreSQL:", str(e))  # Print the error message if connection fails
 
 # Registering blueprints
-# app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(auth, url_prefix='/auth')
 
 
 

@@ -20,6 +20,6 @@ class UserModel(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  
 
     # Relationships
-    exercises = db.relationship("ExerciseModel", backref="user", lazy=True, cascade="all, delete")
-    workouts = db.relationship("WorkoutModel", backref="user", lazy=True, cascade="all, delete")
-    friendships = db.relationship("FriendshipModel", backref="user", lazy=True, cascade="all, delete")
+    # exercises = db.relationship("ExerciseModel", backref="user", lazy=True, cascade="all, delete")
+    # workouts = db.relationship("WorkoutModel", backref="user", lazy=True, cascade="all, delete")
+    # friendships = db.relationship("FriendshipModel", backref="user", lazy=True, cascade="all, delete")

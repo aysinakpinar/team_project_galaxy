@@ -1,5 +1,8 @@
+import os
+
 class Config(object):
     TESTING = False
+    SECRET_KEY = os.urandom(24) # is required for CSRF protection by the wtforms library 
 
 class DevelopmentConfig(Config):
     DEV_DATABASE_NAME = "galaxy_db"
