@@ -14,7 +14,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 friends = Blueprint("friends", __name__, url_prefix= "/friends")
 
-@friends.route('/friends', methods=['GET'])
+@friends.route('/find', methods=['GET'])
 def suggest_friends():
     print("Hi")
     # form = FindFriendForm()
