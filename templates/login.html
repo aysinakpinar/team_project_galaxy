@@ -9,26 +9,34 @@
         <!-- Login form - | Michal | -->
         <h1>Login</h1>
         <form method="post" action="{{ url_for('auth.login') }}">
-            {{ form.hidden_tag() }}  <!-- CSRF Token  is required by the wtforms library --> 
+            {{ form.hidden_tag() }}
+            <!-- CSRF Token  is required by the wtforms library -->
             <div>
-                <labe for=""></labe>
-                {{ form.email.label }}:
-                {{ form.email() }}
-                {% if form.email.errors %}
-                    <span class="errors">{% for error in form.email.errors %}<span>{{ error }}</span>{% endfor %}</span>
+                <label for=""></label>
+                {{ form.email.label }}: {{ form.email() }} {% if
+                form.email.errors %}
+                <span class="errors">
+                    {% for error in form.email.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </span>
                 {% endif %}
             </div>
-            
+
             <div>
-                {{ form.password.label }}:
-                {{ form.password() }}
-                {% if form.password.errors %}
-                    <span class="errors">{% for error in form.password.errors %}<span>{{ error }}</span>{% endfor %}</span>
+                {{ form.password.label }}: {{ form.password() }} {% if
+                form.password.errors %}
+                <span class="errors">
+                    {% for error in form.password.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </span>
                 {% endif %}
             </div>
-            
+
             <div>
                 <button type="submit">Submit</button>
             </div>
+        </form>
     </body>
 </html>
