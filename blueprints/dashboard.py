@@ -11,7 +11,7 @@ dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 @dashboard.route("", methods=['GET', 'POST'])
 def dashboard_home():
     form = DashboardForm()
-            
+        
     return render_template("dashboard.html", form=form)
 
 @dashboard.route("/friends-leaderboard", methods=['GET', 'POST'])
