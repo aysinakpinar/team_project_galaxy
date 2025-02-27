@@ -6,28 +6,27 @@
         <title>Find Friends Form</title>
     </head>
     <body>
-
-
-    <!-- <form method="get" action="{{ url_for('friends.find') }}"> -->
-    <form method="get" action="/friends/find"></form>
-        <label>Location:</label>
-        <input type="text" name="search" placeholder="Search by location" />
-        <button type="submit">Search</button>
-    </form>
-
-    <div>
-        {% if users %}
-            {% for user in users %}
-                <div>
-                    <h2>{{ user.username }}</h2>
-                    <p>{{ user.location }}</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No users found.</p>
-        {% endif %}
-    </div>
-
+        <form method="get" action="{{ url_for('friends.find') }}">
+            {{ form.hidden_tag() }}
+            <label>Location:</label>
+            {{ form.location() }}
+            <button type="submit">Search</button>
+        </form>
+        <div>
+            {% if users is not none %} 
+                {% if users %}
+                    {% for user in users %}
+                        <div>
+                            <h3>{{ user.username }}</h3>
+                            <p>Location: {{ user.location }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No users found in this location.</p>
+                {% endif %}
+            {% endif %}
+        </div>
     </body>
-
 </html>
+
+

@@ -7,5 +7,4 @@ from wtforms import StringField, SubmitField
 class FindFriendsForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
     location = StringField("Location", validators=[DataRequired()])
-    #submit = SubmitField("Search")
     #favourite exercise.
