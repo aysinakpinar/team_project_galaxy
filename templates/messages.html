@@ -1,0 +1,111 @@
+<!-- khadijas code for chatbox  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+        integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+        crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="messages">
+    <input placeholder="message" id= "messageInput" />
+    </div>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: linear-gradient(black, grey);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+            overflow: hidden;
+        }
+
+        .messages {
+            width: 80%;
+            max-height: 500px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            border-radius: 10px;
+            border: 1px solid rgb(48, 22, 48)
+        }
+
+        .messages p {
+            margin: 10px 0;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            background-color: linear-gradient(45deg, #0db2b8, #9e28d0);
+            padding: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            /* animation: pulse 2s infinite ease-in-out; */
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: none;
+            background-color: #3a4b7a;
+            color: white;
+            font-size: 1.2rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        input::placeholder {
+            color: #b9c8d5
+        }
+
+        input:focus {
+            background-color: #1e2a47;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+    </style>
+
+
+    <script>
+        const socket = io();
+
+        let messageContainer = document.querySelector(".messages");
+
+        socket.on("connect", () => {
+            let p = document.createElement("p")
+            p.innerText = "You're connected"
+            messageContainer.appendChild(p)
+        })
+
+        let messageInput = document.getElementById("messageInput")
+        messageInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                let message = messageInput.value.trim();
+                if (message) {
+                    socket.emit("message", message)
+                    messageInput.value = "";
+                }
+            }
+        })
+
+        socket.on('message', (message) => {
+            let messageElement = document.createElement("p")
+            messageElement.innerText = message
+            messageContainer.appendChild(messageElement)
+        })
+
+    </script>
+</body>
+</html>
+
