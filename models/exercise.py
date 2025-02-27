@@ -18,7 +18,7 @@ class ExerciseModel(db.Model):
     done = db.Column(db.Boolean, default=False, nullable=False)
 
     __table_args__ = (
-        CheckConstraint("intensity IN ('easy', 'medium', 'hard')", name='check_intensity'),
+        CheckConstraint("intensity IN ('Low', 'Medium', 'High')", name='check_intensity'),
     )
 
     # Many-to-Many Relationships
