@@ -1,56 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-    </head>
-    <body>
-        <h1>Dashboard</h1>
-        <h2>Leaderboard</h2>
-        <form method="post" action="{{ url_for('dashboard.friends_leaderboard') }}">
-            <!-- CSRF Token  is required by the wtforms library -->
-            {{ form.hidden_tag() }}
-            <div
-                style="
-                    display: flex;
-                    flex-direction: column;
-                    border: 1px solid black;
-                "
-            >
-                <div>{{ form.friends }}</div>
-                <div style="display: flex">
-                    <div>{{ form.friends_weekly }}</div>
-                    <div>{{ form.friends_monthly }}</div>
-                    <div>{{ form.friends_yearly }}</div>
-                    <input type="hidden" name="action" id="action">
-                </div>
-            </div>
+{% extends 'base.html' %}
+<!-- for your custom styles -->
+{% block styles %}
+<style>
+    .leaderboard {
+        border: 1px solid black;
+    }
+    .leaderboard-form {
+        width: 300px;
+    }
+</style>
 
-        </form>
-        <form method="post" action="{{ url_for('dashboard.global_leaderboard') }}">
-            <!-- CSRF Token  is required by the wtforms library -->
-            {{ form.hidden_tag() }}
-            <div
-                style="
-                    display: flex;
-                    flex-direction: column;
-                    border: 1px solid black;
-                "
+{% endblock %}
+<!-- your html content in body -->
+{% block content %}
+<div>
+    <h1>Dashboard</h1>
+    <h2>Leaderboard</h2>
+    <div class="d-flex flex-column leaderboard">
+        <div class="d-flex">
+            <form
+                method="post"
+                action="{{ url_for('dashboard.friends_leaderboard') }}"
+                class="d-flex flex-column leaderboard-form"
             >
-                <div>{{ form.all_users }}</div>
-                <div style="display: flex">
-                    <div>{{ form.all_users_weekly }}</div>
-                    <div>{{ form.all_users_monthly }}</div>
-                    <div>{{ form.all_users_yearly }}</div>
+                <!-- CSRF Token  is required by the wtforms library -->
+                {{ form.hidden_tag() }}
+                <!-- button to friends -->
+                <div class="btn">{{ form.friends }}</div>
+                {% if not users_with_points %}
+                <!-- monthly, yearly buttons -->
+                <div id="friends-buttons-container" class="d-flex">
+                    <input
+                        type="submit"
+                        name="friends_weekly"
+                        value="Week"
+                        class="btn btn-primary {% if points_period=='weekly' %}active{% endif %}"
+                    />
+                    <input
+                        type="submit"
+                        name="friends_monthly"
+                        value="Month"
+                        class="btn btn-primary {% if points_period=='monthly' %}active{% endif %}"
+                    />
+                    <input
+                        type="submit"
+                        name="friends_yearly"
+                        value="Year"
+                        class="btn btn-primary {% if points_period=='yearly' %}active{% endif %}"
+                    />
+                    <input type="hidden" name="action" id="action" />
                 </div>
-            </div>
-        </form>
-        </form>
+                {% endif %}
+            </form>
+            <form
+                method="post"
+                action="{{ url_for('dashboard.global_leaderboard') }}"
+                class="d-flex flex-column leaderboard-form"
+            >
+                <!-- CSRF Token  is required by the wtforms library -->
+                {{ form.hidden_tag() }}
+                <!-- button to friends -->
+                <div class="btn">{{ form.all_users }}</div>
+                {% if users_with_points %}
+                <!-- show only if getting users_with_points from the blueprint -->
+                <!-- monthly, yearly buttons -->
+                <div id="global-buttons-container" class="d-flex;">
+                    <input
+                        type="submit"
+                        name="all_users_weekly"
+                        value="Week"
+                        class="btn btn-primary {% if points_period=='weekly' %}active{% endif %}"
+                    />
+                    <input
+                        type="submit"
+                        name="all_users_monthly"
+                        value="Month"
+                        class="btn btn-primary {% if points_period=='monthly'%}active{% endif %}"
+                    />
+                    <input
+                        type="submit"
+                        name="all_users_yearly"
+                        value="Year"
+                        class="btn btn-primary {% if points_period=='yearly' %}active{% endif %}"
+                    />
+                    <input type="hidden" name="action" id="action" />
+                </div>
+                {% endif %}
+            </form>
+        </div>
         <div>
-            {% for user in leaderboard %}
-            <span>{{ user }}</span>
+            <!-- user[2] - index 2 is weekly points / 3 is monthly points / 4 is yearly points -->
+            {% for user in users_with_points %}
+            <div class="d-flex p-2">
+                <p>{{ loop.index }}</p>
+                <p>{{ user[1] }}</p>
+                <p>{{ user[2] }}</p>
+            </div>
             {% endfor %}
         </div>
-    </body>
-</html>
+    </div>
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-from models.user_point import UserPointsModel
+from models.user_point import UserPointModel
 from models.user import UserModel
 from forms.dashboard_form import DashboardForm
 from extension import db
@@ -11,71 +11,60 @@ dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 @dashboard.route("", methods=['GET', 'POST'])
 def dashboard_home():
     form = DashboardForm()
+            
     return render_template("dashboard.html", form=form)
 
 @dashboard.route("/friends-leaderboard", methods=['GET', 'POST'])
 def friends_leaderboard():
     form = DashboardForm()
+    friends_with_points = []
+    points_period = "weekly"
     if form.validate_on_submit():
+        if form.friends.data:
+            points_period = "weekly"
+            friends_with_points = ["waiting for friendships model - friends"]
         if form.friends_weekly.data:
-            weekly_leaderboard = ["waiting for friendships model - friends"]
-        # elif form.all_users.data:
-        #     chosen_leaderboard = None
-        #     if form.all_users_weekly:
-        #         chosen_leaderboard = UserPointsModel.query.order_by(UserPointsModel.weekly_points.desc()).all()
-        #     elif form.all_users_monthly:
-        #         chosen_leaderboard = UserPointsModel.query.order_by(UserPointsModel.monthly_points.desc()).all()
-        #     elif form.all_users_yearly:
-        #         chosen_leaderboard = UserPointsModel.query.order_by(UserPointsModel.yearly_points.desc()).all()
-            
-
-        # Create a list to store the results (user id and username)
-        leaderboard_with_usernames = []
-
-        # Loop through the leaderboard and get the corresponding user names
-        for user_points in chosen_leaderboard:
-            user_id = user_points.user_id # Get the user id from UserPointsModel
-            
-            # Query the UserModel to get the username corresponding to the user_id
-            user = UserModel.query.filter_by(id=user_id).first()
-            print(user)
-            # if user:
-            #     # Append a tuple of the points and the username
-            #     leaderboard_with_usernames.append({
-            #         'user_id': user.id,
-            #         'username': user.username,
-            #         'weekly_points': user_points.weekly_points
-            #     })
-        return render_template("dashboard.html", form=form, leaderboard=weekly_leaderboard)
-    return render_template("dashboard.html", form=form)
+            points_period = "weekly"
+            friends_with_points = ["waiting for friendships model - friends"]
+        elif form.friends_monthly.data:
+            points_period = "monthly"
+            friends_with_points = ["waiting for friendships model - friends"]
+        elif form.friends_yearly.data:
+            points_period = "yearly"
+            friends_with_points = ["waiting for friendships model - friends"]
+        return render_template("dashboard.html", form=form, friends_with_points=friends_with_points, points_period=points_period)
+    return render_template("dashboard.html", form=form, friends_with_points=friends_with_points, points_period=points_period)
 
 @dashboard.route('/global-leaderboard', methods=['GET', 'POST'])
 def global_leaderboard():
     form = DashboardForm()
+    users_with_points = None
+    points_period = "weekly"
+    # Default weekly points
+    users_with_points_weekly = db.session.query(
+            UserModel.id, 
+            UserModel.username, 
+            UserPointModel.weekly_points,
+            ).join(UserPointModel, UserPointModel.user_id == UserModel.id).order_by(UserPointModel.weekly_points.desc()).all()
     if form.validate_on_submit():
-        chosen_leaderboard = None
-        if form.all_users_weekly:
-            chosen_leaderboard = UserPointsModel.query.order_by(UserPointsModel.weekly_points.desc()).all()
-        elif form.all_users_monthly:
-            chosen_leaderboard = UserPointsModel.query.order_by(UserPointsModel.monthly_points.desc()).all()
-        elif form.all_users_yearly:
-            chosen_leaderboard = UserPointsModel.query.order_by(UserPointsModel.yearly_points.desc()).all()
-        # Create a list to store the results (user id and username)
-        leaderboard_with_usernames = []
-
-        # Loop through the leaderboard and get the corresponding user names
-        for user_points in chosen_leaderboard:
-            user_id = user_points.user_id # Get the user id from UserPointsModel
-            
-            # Query the UserModel to get the username corresponding to the user_id
-            user = UserModel.query.filter_by(id=user_id).first()
-            print(user)
-            # if user:
-            #     # Append a tuple of the points and the username
-            #     leaderboard_with_usernames.append({
-            #         'user_id': user.id,
-            #         'username': user.username,
-            #         'weekly_points': user_points.weekly_points
-            #     })
-        return render_template("dashboard.html", form=form, leaderboard=chosen_leaderboard)
+        if form.all_users.data:
+            users_with_points = users_with_points_weekly
+        if form.all_users_weekly.data:
+            users_with_points = users_with_points_weekly
+            points_period = "weekly"
+        elif form.all_users_monthly.data:
+            users_with_points = db.session.query(
+                UserModel.id, 
+                UserModel.username, 
+                UserPointModel.monthly_points,
+                ).join(UserPointModel, UserPointModel.user_id == UserModel.id).order_by(UserPointModel.monthly_points.desc()).all()
+            points_period = "monthly"
+        elif form.all_users_yearly.data:
+            users_with_points = db.session.query(
+                UserModel.id, 
+                UserModel.username, 
+                UserPointModel.yearly_points
+                ).join(UserPointModel, UserPointModel.user_id == UserModel.id).order_by(UserPointModel.yearly_points.desc()).all()
+            points_period = "yearly"
+        return render_template("dashboard.html", form=form, users_with_points=users_with_points, points_period=points_period)
     return render_template("dashboard.html", form=form)
