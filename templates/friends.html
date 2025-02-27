@@ -7,11 +7,26 @@
     </head>
     <body>
 
-    <form method="get" action="{{ url_for('friends.find') }}">
+
+    <!-- <form method="get" action="{{ url_for('friends.find') }}"> -->
+    <form method="get" action="/friends/find"></form>
         <label>Location:</label>
         <input type="text" name="search" placeholder="Search by location" />
         <button type="submit">Search</button>
     </form>
+
+    <div>
+        {% if users %}
+            {% for user in users %}
+                <div>
+                    <h2>{{ user.username }}</h2>
+                    <p>{{ user.location }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No users found.</p>
+        {% endif %}
+    </div>
 
     </body>
 
