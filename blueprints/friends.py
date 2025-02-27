@@ -13,6 +13,34 @@ friends = Blueprint("friends", __name__, url_prefix="/friends")
 def find():
     form = FindFriendsForm()
 
-
-
+    friends = UserModel.query.filter(
+    (UserModel.location == form.location.data) &
+    (UserModel.username != form.username.data)
+    ).all()
+    
+    if not friends:
+        return "No friends found"
+    
     return render_template("friends.html", form=form)
+
+    
+# @app.route('/', methods=['GET', 'POST'])
+# def home():
+#     if request.method == 'POST':
+#         location = request.form['location']
+#         return redirect(url_for('show_results', location=location))
+#     return render_template('friends.html')
+
+
+
+    #users = []
+
+
+    # if form.validate_on_submit():
+    #     location = form.location.data
+    #     users = UserModel.query.filter(UserModel.location == form.location).all()
+        
+    
+
+
+    # return render_template("friends.html", form=form, users=users)

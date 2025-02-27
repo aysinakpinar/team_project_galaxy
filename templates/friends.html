@@ -7,10 +7,12 @@
     </head>
     <body>
 
-    <form method="post" action="{{ url_for('friends.find') }}">
+    <form method="get" action="{{ url_for('friends.find') }}">
+        <label>Location:</label>
         <input type="text" name="search" placeholder="Search by location" />
         <button type="submit">Search</button>
     </form>
+
     </body>
 
 </html>
