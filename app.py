@@ -2,20 +2,26 @@ from config import TestingConfig
 from extension import db
 from flask import Flask
 from flask_migrate import Migrate
-from models import *
+from models.user import UserModel
+from models.workout import WorkoutModel
+from models.exercise import ExerciseModel
+from models.friendship import FriendshipModel
+from models.gym import GymModel
 from flask_sqlalchemy import SQLAlchemy
-
-
 from blueprints.auth import auth
+import os
 
 def create_app(config_class=None):
     #create and configure the Flask App
     app = Flask(__name__)
 
     if config_class is None:
-        from config import DevelopmentConfig
-        app.config.from_object(DevelopmentConfig)
-    
+        if os.getenv("FLASK_ENV") == "testing":
+            from config import TestingConfig
+            app.config.from_object(TestingConfig)
+        else:
+            from config import DevelopmentConfig
+            app.config.from_object(DevelopmentConfig)
     else:
         app.config.from_object(config_class)
 
@@ -43,15 +49,15 @@ def create_app(config_class=None):
 if __name__ == "__main__":
     app = create_app()
 
-    # Test database connection
-    try:
-        with app.app_context():  # Ensure the code runs within the Flask application context
-            with db.engine.connect() as connection:  # Establish a connection to the database
-                print("PostgreSQL connection successful!")
-    except Exception as e:
-        print("Failed to connect to PostgreSQL:", str(e))  # Print the error message if connection fails
+    # # Test database connection
+    # try:
+    #     with app.app_context():  # Ensure the code runs within the Flask application context
+    #         with db.engine.connect() as connection:  # Establish a connection to the database
+    #             print("PostgreSQL connection successful!")
+    # except Exception as e:
+    #     print("Failed to connect to PostgreSQL:", str(e))  # Print the error message if connection fails
 
-    app.run()
+    app.run(debug=True)
 
 
 
