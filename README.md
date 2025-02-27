@@ -80,7 +80,7 @@ class TestingConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = "default_key"
 ```
-## PR3-Aysin
+## PR4-Aysin
 signup method was implemented in blueprints/auth
 forms/signup_form was created to use in templates/signup.html template
 templates/signup.html was created to render the signup form.
@@ -89,3 +89,18 @@ requirements.txt was updated to include faker library.
 To do:
 Test the rendering of the signup form and page, ensuring error and success messages display correctly.
 Password hash with bcrypt
+
+## PR6-Aysin
+- Users table was updated for the relationships:
+    - one to many for workouts and gyms
+    - many to many for friendships and exercises
+- workouts table was updated:
+    - many to many for exercises
+- friendships table was created.
+- gyms table was created.
+- exercises table was updated:
+    - intensity, 3 options, easy, meduium, hard
+- assosciations model was created for many to many relationships
+
+
+
