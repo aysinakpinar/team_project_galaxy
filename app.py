@@ -4,9 +4,14 @@ from flask import Flask
 from flask_migrate import Migrate
 from models import *
 from flask_sqlalchemy import SQLAlchemy
-
-
 from blueprints.auth import auth
+
+#khaadijas chat cod
+from blueprints.chat import chat
+from flask_socketio import SocketIO # Importing Socketio for real time communications
+
+socketio = SocketIO(cors_allowed_origins="*") #allows all domains to connect using socketio
+
 
 def create_app(config_class=None):
     #create and configure the Flask App
@@ -37,6 +42,10 @@ def create_app(config_class=None):
     # Registering blueprints
     app.register_blueprint(auth, url_prefix='/auth')
 
+    #khadijas chat code
+    app.register_blueprint(chat, url_prefix='/chat')
+    socketio.init_app(app) #connects flask app w socetio for real time chat
+
 
     return app
 
@@ -53,5 +62,5 @@ if __name__ == "__main__":
 
     app.run()
 
-
-
+#khadijas chat code
+    socketio.run(app, debug=True) #starts app using socketio server
