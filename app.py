@@ -10,6 +10,7 @@ from models.gym import GymModel
 from flask_sqlalchemy import SQLAlchemy
 from blueprints.auth import auth
 import os
+from blueprints.friends import friends
 
 def create_app(config_class=None):
     #create and configure the Flask App
@@ -42,6 +43,7 @@ def create_app(config_class=None):
 
     # Registering blueprints
     app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(friends)
 
 
     return app
