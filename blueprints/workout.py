@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 
 workout = Blueprint('exercises', __name__, url_prefix='/workout')
 
-# Mock database (in real app, you'd use a proper database)
+# Mock database
 exercises = []
 workout_plans = {}
 
@@ -66,6 +66,8 @@ def add_exercise_to_plan(plan_id, exercise_id):
         'message': 'Exercise added to plan',
         'plan': workout_plans[plan_id]
     }), 200
+
+# update workout plan - POST
 
 
 # delete exercise from workout plan
