@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block styles %}
+<style></style>
+{% endblock %} {% block content %}
+<div class="mt-4">
+    <form method="get" action="{{ url_for('friends.find') }}">
+        {{ form.hidden_tag() }}
+        <label>Location:</label>
+        {{ form.location() }}
+        <button type="submit">Search</button>
+    </form>
+    <div>
+        {% if users is not none %} {% if users %} {% for user in users %}
+        <div>
+            <h3>{{ user.username }}</h3>
+            <p>Location: {{ user.location }}</p>
+        </div>
+        {% endfor %} {% else %}
+        <p>No users found in this location.</p>
+        {% endif %} {% endif %}
+    </div>
+</div>
+{% endblock %}
