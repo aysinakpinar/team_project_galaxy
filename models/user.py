@@ -18,11 +18,7 @@ class UserModel(db.Model):
     height = db.Column(db.Integer, nullable=True)
     fitness_level = db.Column(db.String(200), nullable=True)  
     favorite_exercise = db.Column(db.String(200), nullable=True)  
-<<<<<<< HEAD
-    created_at = db.Column(db.DateTime, default=datetime.now)  
-=======
-    created_at = db.Column(db.DateTime,default=lambda: datetime.now(timezone.utc))  
->>>>>>> main
+    created_at = db.Column(db.DateTime,default=lambda: datetime.now(timezone.utc)) 
 
     # Relationships
     # exercises = db.relationship("ExerciseModel", backref="user", lazy=True, cascade="all, delete")

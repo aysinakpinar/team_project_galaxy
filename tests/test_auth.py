@@ -31,7 +31,7 @@ def test_correct_login_details_redirects_to_dashboard_in_browser(create_user, pa
         password_input.fill("Test12345!")
 
         # ||CHANGE REQUIRED|| - change this url, once you get defined dashboard or other page user should be redirected after logging in
-        assert page.url == "http://127.0.0.1:5000/user-dashboard"
+        assert page.url == "http://127.0.0.1:5000/dashboard"
 
 # Test login function with incorrect data using Playwright -- | Michal |
 def test_incorrect_login_details_shows_error_in_browser(create_user, page):   

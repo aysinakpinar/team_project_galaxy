@@ -17,7 +17,8 @@ def dashboard_home():
 @dashboard.route("/friends-leaderboard", methods=['GET', 'POST'])
 def friends_leaderboard():
     form = DashboardForm()
-    friends_with_points = []
+    friends_with_points = ["empty"]
+    friends_with_points_weekly = ["empty"]
     points_period = "weekly"
     if form.validate_on_submit():
         if form.friends.data:
@@ -38,7 +39,8 @@ def friends_leaderboard():
 @dashboard.route('/global-leaderboard', methods=['GET', 'POST'])
 def global_leaderboard():
     form = DashboardForm()
-    users_with_points = None
+    users_with_points = ["empty"]
+    users_with_points_weekly = ["empty"]
     points_period = "weekly"
     # Default weekly points
     users_with_points_weekly = db.session.query(
@@ -46,6 +48,7 @@ def global_leaderboard():
             UserModel.username, 
             UserPointModel.weekly_points,
             ).join(UserPointModel, UserPointModel.user_id == UserModel.id).order_by(UserPointModel.weekly_points.desc()).all()
+
     if form.validate_on_submit():
         if form.all_users.data:
             users_with_points = users_with_points_weekly

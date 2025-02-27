@@ -27,7 +27,8 @@
                 {{ form.hidden_tag() }}
                 <!-- button to friends -->
                 <div class="btn">{{ form.friends }}</div>
-                {% if not users_with_points %}
+                {% if not users_with_points and friends_with_points|length > 0
+                %}
                 <!-- monthly, yearly buttons -->
                 <div id="friends-buttons-container" class="d-flex">
                     <input
@@ -61,7 +62,7 @@
                 {{ form.hidden_tag() }}
                 <!-- button to friends -->
                 <div class="btn">{{ form.all_users }}</div>
-                {% if users_with_points %}
+                {% if not friends_with_points %}
                 <!-- show only if getting users_with_points from the blueprint -->
                 <!-- monthly, yearly buttons -->
                 <div id="global-buttons-container" class="d-flex;">
@@ -90,13 +91,15 @@
         </div>
         <div>
             <!-- user[2] - index 2 is weekly points / 3 is monthly points / 4 is yearly points -->
-            {% for user in users_with_points %}
+            {% if users_with_points %} {% for user in users_with_points %}
             <div class="d-flex p-2">
                 <p>{{ loop.index }}</p>
                 <p>{{ user[1] }}</p>
                 <p>{{ user[2] }}</p>
             </div>
-            {% endfor %}
+            {% endfor %} {% else %}
+            <p>empty</p>
+            {% endif %}
         </div>
     </div>
 </div>
