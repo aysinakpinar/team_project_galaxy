@@ -1,4 +1,21 @@
 from playwright.sync_api import Page, expect
+from models.user import UserModel
+import pytest
+
+# # create_user fixture -- | Michal |
+@pytest.fixture
+def create_user(app, database):
+    """Fixture to add a user to the database."""
+    with app.app_context():
+        # Create a user instance
+        test_user = UserModel(
+        id=None,
+        username='test_user',
+        password="Test12345!", 
+        email="test@email.com",
+        location="test_location"
+        )
+
 
 # Test login function with correct data using Playwright -- | Michal |
 def test_correct_login_details_redirects_to_dashboard_in_browser(create_user, page):   

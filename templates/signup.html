@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Quicksand", sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .inputBx {
+            margin-bottom: 15px;
+        }
+        .inputBx input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .inputBx input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #007bff;
+            color: #fff;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .flash-messages {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .flash-messages .message {
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        .danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        /* Running Person Animation */
+        .runner {
+            position: absolute;
+            top: -30px;
+            left: -50px;
+            width: 40px;
+            height: 40px;
+            background: url('https://i.imgur.com/7P0yYBL.png') no-repeat center;
+            background-size: cover;
+            animation: run 4s linear infinite;
+        }
+
+        @keyframes run {
+            0% { left: -50px; }
+            100% { left: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="runner"></div> <!-- Running person animation -->
+    <h2><b>Sign Up</b></h2>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.signup') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="inputBx">
+            {{ form.username(placeholder="Username") }}
+            {% if form.username.errors %}
+                <div class="error">
+                    {% for error in form.username.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="inputBx">
+            {{ form.email(placeholder="Email") }}
+            {% if form.email.errors %}
+                <div class="error">
+                    {% for error in form.email.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="inputBx">
+            {{ form.location(placeholder="Location") }}
+            {% if form.location.errors %}
+                <div class="error">
+                    {% for error in form.location.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="inputBx">
+            {{ form.password(placeholder="Password", type="password") }}
+            {% if form.password.errors %}
+                <div class="error">
+                    {% for error in form.password.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="inputBx">
+            {{ form.confirm_password(placeholder="Confirm Password", type="password") }}
+            {% if form.confirm_password.errors %}
+                <div class="error">
+                    {% for error in form.confirm_password.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="inputBx">
+            {{ form.submit(class="btn") }}
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

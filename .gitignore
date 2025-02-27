@@ -38,3 +38,5 @@ config.py
 
 # Ignore migrations dir
 migrations/
+
+/galaxy_venv
