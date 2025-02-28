@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block styles %}
+<style></style>
+{% endblock %} {% block content %}
+<div class="mt-4">
+    <label>Motivational Quote of the Day:</label>
+    <div>
+        {% if quote %} 
+            <p>{{ quote.body }}</p>
+        {% else %}
+            <p>No motivational quotes available for today.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

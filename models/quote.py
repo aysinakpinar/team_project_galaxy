@@ -5,5 +5,6 @@ from sqlalchemy.engine import TupleResult
 
 class QuoteModel(db.Model):
     __tablename__ = "quotes"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    body = Column(String(255), nullable=False, unique=True)
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    body = db.Column(db.String(255), nullable=False, unique=True)
