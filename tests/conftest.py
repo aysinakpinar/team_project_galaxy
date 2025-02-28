@@ -21,8 +21,10 @@ def app():
     from app import create_app
 
     # using TestingConfig for tests
-    app = create_app(TestingConfig)
-
+    app = create_app()
+    app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = TestingConfig
+    
     # if there is an env var, override
     if os.getenv('TEST_DATABASE_URL'):
         app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('TEST_DATABASE_URL')

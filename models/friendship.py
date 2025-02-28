@@ -1,3 +1,8 @@
+
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import backref
+from sqlalchemy.engine import TupleResult
+from datetime import datetime
 from extension import db
 
 class FriendshipModel(db.Model):
@@ -21,3 +26,4 @@ class FriendshipModel(db.Model):
     )
     def __repr__(self):
         return f"<Friendship {self.user_id} - {self.friend_id}>"
+

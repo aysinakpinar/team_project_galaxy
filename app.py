@@ -9,8 +9,10 @@ from models.friendship import FriendshipModel
 from models.gym import GymModel
 from flask_sqlalchemy import SQLAlchemy
 from blueprints.auth import auth
+from blueprints.dashboard import dashboard
 import os
 from blueprints.friends import friends
+
 
 def create_app(config_class=None):
     #create and configure the Flask App
@@ -43,8 +45,8 @@ def create_app(config_class=None):
 
     # Registering blueprints
     app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(dashboard, url_prefix='/dashboard') #register user route
     app.register_blueprint(friends)
-
 
     return app
 

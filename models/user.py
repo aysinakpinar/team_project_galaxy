@@ -20,6 +20,7 @@ class UserModel(db.Model):
     favorite_exercise = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
+
     # Relationships
     workouts = db.relationship(
         "WorkoutModel", 

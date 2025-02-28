@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+<!-- for your custom styles -->
+{% block styles %}
+<style>
+    .leaderboard-container {
+        width: 100%;
+    }
+    .leaderboard {
+        width: 50%;
+        border-radius: 15px;
+        min-width: 450px;
+        height: 400px;
+        overflow: auto;
+        background-color:#f8ecbf;
+        box-shadow: 1px 1px 5px rgb(119, 119, 119);
+        border:2px solid #f8db73;
+    }
+    .leaderboard-form {
+        width: 300px;
+    }
+    .leaderboard-button {
+        border: none;
+        background-color: #ffc8009a;
+    }
+    .leaderboard-button.active, .leaderboard-button:hover  {
+        background-color: #ffc800;
+    }
+    
+</style>
+
+{% endblock %}
+<!-- your html content in body -->
+{% block content %}
+<div class="d-flex flex-column align-items-center mt-4">
+    <h1 class="mt-2">Dashboard</h1>
+    <!-- LEADERBOARD SECTION -------- START -->
+    <div class="leaderboard-container d-flex flex-column align-items-center mt-5">
+        <section class="leaderboard d-flex flex-column align-items-center mt-2">
+            <h3 class="my-3">Leaderboard</h3>
+            <div class="d-flex">
+                <form
+                    method="post"
+                    action="{{ url_for('dashboard.friends_leaderboard') }}"
+                    class="d-flex flex-column leaderboard-form"
+                >
+                    <!-- CSRF Token  is required by the wtforms library -->
+                    {{ form.hidden_tag() }}
+                    <!-- button to friends -->
+                    <div class="d-flex justify-content-center">
+                        <input
+                            class="btn leaderboard-button {% if friends_with_points %}active{% endif %}"
+                            type="submit"
+                            name="all_friends"
+                            value="Friends"
+                        />
+                    </div>
+                    {% if not users_with_points %}
+                    <!-- monthly, yearly buttons -->
+                    <div id="friends-buttons-container" class="d-flex justify-content-evenly my-3">
+                        <input
+                            type="submit"
+                            name="friends_weekly"
+                            value="Week"
+                            class="btn btn-primary btn-sm {% if points_period=='week' %}active{% endif %}"
+                        />
+                        <input
+                            type="submit"
+                            name="friends_monthly"
+                            value="Month"
+                            class="btn btn-primary btn-sm {% if points_period=='month' %}active{% endif %}"
+                        />
+                        <input
+                            type="submit"
+                            name="friends_yearly"
+                            value="Year"
+                            class="btn btn-primary btn-sm {% if points_period=='year' %}active{% endif %}"
+                        />
+                        <input type="hidden" name="action" id="action" />
+                    </div>
+                    {% endif %}
+                </form>
+                <form
+                    method="post"
+                    action="{{ url_for('dashboard.global_leaderboard') }}"
+                    class="d-flex flex-column leaderboard-form"
+                >
+                    <!-- CSRF Token  is required by the wtforms library -->
+                    {{ form.hidden_tag() }}
+                    <!-- button to friends -->
+                    <div class="d-flex justify-content-center">
+                        <input
+                            class="btn leaderboard-button {% if users_with_points %}active{% endif %}"
+                            type="submit"
+                            name="all_users"
+                            value="Global"
+                        />
+                    </div>
+                    {% if users_with_points|length > 0 %}
+                    <!-- show only if getting users_with_points from the blueprint -->
+                    <!-- monthly, yearly buttons -->
+                    <div id="global-buttons-container" class="d-flex justify-content-evenly my-3">
+                        <input
+                            type="submit"
+                            name="all_users_weekly"
+                            value="Week"
+                            class="btn btn-primary btn-sm {% if points_period=='week' %}active{% endif %}"
+                        />
+                        <input
+                            type="submit"
+                            name="all_users_monthly"
+                            value="Month"
+                            class="btn btn-primary btn-sm {% if points_period=='month'%}active{% endif %}"
+                        />
+                        <input
+                            type="submit"
+                            name="all_users_yearly"
+                            value="Year"
+                            class="btn btn-primary btn-sm {% if points_period=='year' %}active{% endif %}"
+                        />
+                        <input type="hidden" name="action" id="action" />
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="container">
+                {% if users_with_points %}
+                <h5>Global - this {{ points_period }}</h5>
+                {% for user in users_with_points %}
+                <!-- if user id = 0 -->
+                {% if user[0] != 0 %}
+                <div>
+                    <div class="d-flex p-2">
+                        <p>{{ loop.index }}</p>
+                        <p>{{ user[1] }}</p>
+                        <p>{{ user[2] }}</p>
+                    </div>
+                    {% else %}
+                    <!-- else display no data -->
+                    <div class="d-flex p-2">
+                        <p>No data</p>
+                    </div>
+                    {% endif %} {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="container">
+                {% if friends_with_points and not users_with_points %}
+                <h5>Friends - this {{ points_period }}</h5>
+                {% for friend in friends_with_points %}
+                <!-- if friend id = 0 -->
+                {% if friend[0] != 0 %}
+                <div>
+                    <div class="d-flex p-2">
+                        <p>{{ loop.index }}</p>
+                        <p>{{ friend[1] }}</p>
+                        <p>{{ friend[2] }}</p>
+                    </div>
+                    {% else %}
+                    <!-- else display no data -->
+                    <div class="d-flex p-2">
+                        <p>No data</p>
+                    </div>
+                    {% endif %} {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    
+    <!-- LEADERBOARD SECTION ---- END -->
+</div>
+{% endblock %}
