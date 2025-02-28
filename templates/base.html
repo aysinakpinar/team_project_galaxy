@@ -32,38 +32,39 @@
         {% block styles %} {% endblock %}
     </head>
     <body>
-        <!-- navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark base-navbar fixed-top">
-            <div class="container">
-                <a class="navbar-brand" href="#">Galaxy</a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dashboard">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/login">Log in</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/signup">Sign up</a>
-                        </li>
-                        {% if session["user_id"] %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/logout">Log out</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark base-navbar fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">Galaxy</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+
+                {% if session["user_id"] %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('workout.create_workout') }}">Workout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/logout">Log out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/login">Log in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/signup">Sign up</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
 
         <!-- content  -->
         <main class="container">{% block content %} {% endblock %}</main>
