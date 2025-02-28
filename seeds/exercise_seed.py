@@ -1,7 +1,10 @@
+import sys
+import os
 from datetime import datetime
 from extension import db
-from app import create_app  # Replace 'your_app' with your actual Flask app name
 from models.exercise import ExerciseModel
+from app import create_app 
+
 
 def seed_exercises():
     # Sample exercises data
