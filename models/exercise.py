@@ -12,7 +12,8 @@ class ExerciseModel(db.Model):
     name = db.Column(db.String(200), nullable=False, unique=True)
     description = db.Column(db.String(500), nullable=True)
     intensity = db.Column(db.String(50), nullable=True)
-    duration = db.Column(db.String(50), nullable=True)
+    sets = db.Column(db.Integer, nullable=True)
+    reps = db.Column(db.Integer, nullable=True)
     picture_path = db.Column(db.String(200), nullable=True, default=None)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
@@ -25,11 +26,14 @@ class ExerciseModel(db.Model):
     # Many-to-Many Relationships
     users = db.relationship(
         "UserModel", 
-        secondary=user_exercise, 
+        secondary=user_exercise,
+        lazy="subquery", 
         back_populates="exercises"
         )
     
     workouts = db.relationship(
-        "WorkoutModel", 
-        secondary=workout_exercise, 
-        back_populates="exercises")
+        "WorkoutModel",
+        secondary=workout_exercise,
+        lazy="subquery",
+        back_populates="exercises"
+    )

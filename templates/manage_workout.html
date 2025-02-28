@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Manage Workout: {{ workout.name }}</h2>
+<p>Estimated Time: {{ workout.estimated_time }}</p>
+
+<!-- Add Exercise Form -->
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <label for="name">Select an Exercise:</label>
+    {{ form.name(class="form-control") }}
+    <br>
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+
+<!-- Workout Exercises Table -->
+<h3>Exercises in this Workout</h3>
+{% if workout_exercises %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Exercise</th>
+                <th>Description</th>
+                <th>Intensity</th>
+                <th>Sets</th>
+                <th>Reps</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for exercise in workout_exercises %}
+            <tr>
+                <td>
+                    {% if exercise.picture_path %}
+                        <img src="{{ url_for('static', filename=exercise.picture_path.split('/static/')[-1]) }}" 
+                            alt="{{ exercise.name }}" 
+                            style="max-width: 100px; max-height: 100px;">
+                    {% endif %}
+                    <br>
+                    <strong>{{ exercise.name }}</strong>
+                </td>
+                <td>{{ exercise.description }}</td>
+                <td>{{ exercise.intensity }}</td>
+                <td>{{ exercise.sets }}</td>
+                <td>{{ exercise.reps }}</td>
+                <td>
+                    <form action="{{ url_for('workout.remove_exercise', exercise_id=exercise.id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                    <button class="btn btn-success btn-sm">Mark as Done</button>
+                    <button class="btn btn-info btn-sm">Tutorial</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No exercises added yet.</p>
+{% endif %}
+
+<a href="{{ url_for('workout.create_workout') }}" class="btn btn-secondary">Create New Workout</a>
+{% endblock %}
