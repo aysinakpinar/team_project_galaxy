@@ -1,4 +1,4 @@
-from config import TestingConfig 
+from config import TestingConfig
 from extension import db
 from flask import Flask
 from flask_migrate import Migrate

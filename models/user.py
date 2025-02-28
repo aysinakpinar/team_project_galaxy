@@ -17,7 +17,7 @@ class UserModel(db.Model):
     weight = db.Column(db.Integer, nullable=True)
     height = db.Column(db.Integer, nullable=True)
     fitness_level = db.Column(db.String(200), nullable=True)
-    favorite_exercise = db.Column(db.String(200), nullable=True)
+    favourite_exercise = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
 
