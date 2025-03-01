@@ -11,21 +11,7 @@ from tests.factories import create_user
 @pytest.fixture(scope="function")
 def client():
     app = create_app()
-    with app.test_client() as client:
-        with app.app_context():
-            user = UserModel(
-                id=1,
-                username="jack",
-                email="jack@email.com",
-                password="password",
-                location="London"
-            )
-            db.session.add(user)
-
-        yield client
-        with app.app_context():
-            db.session.remove()
-            db.drop_all() 
+    return app.test_client()
 
 def test_logout(client):
     with client.session_transaction() as sess:
