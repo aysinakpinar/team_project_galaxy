@@ -18,10 +18,16 @@ class UserModel(db.Model):
     age = db.Column(db.Integer, nullable=True)
     weight = db.Column(db.Integer, nullable=True)
     height = db.Column(db.Integer, nullable=True)
+<<<<<<< HEAD
     fitness_level = db.Column(db.String(200), nullable=True)
     favorite_exercise = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
+=======
+    fitness_level = db.Column(db.String(200), nullable=True)  
+    favorite_exercise = db.Column(db.String(200), nullable=True)  
+    created_at = db.Column(db.DateTime, default=datetime.now)  
+>>>>>>> 8e12fda66f7b3ae631d8fcd3465c717e43c9cce6
 
     # Relationships
     workouts = db.relationship(

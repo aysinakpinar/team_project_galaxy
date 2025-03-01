@@ -17,7 +17,7 @@ from blueprints.auth import auth
 from blueprints.dashboard import dashboard
 from blueprints.friends import friends
 from blueprints.threads import threads
-
+from blueprints.workout import workout
 
 def create_app(config_class=None):
     #create and configure the Flask App
