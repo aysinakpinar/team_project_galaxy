@@ -12,6 +12,15 @@ from forms import signup_form, login_form
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 
+@auth.route('/shutdown', methods=['GET'])
+def shutdown():
+    """Shutdown the Flask app."""
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+    return 'Server shutting down..'
+
 # Register a new user
 # ----- signup route -- | Aysin | ------
 @auth.route('/signup', methods=['GET', 'POST'])
@@ -63,22 +72,34 @@ def signup():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        submitted_email = form.email.data
-        submitted_password = form.password.data
+        submitted_email = ""
+        submitted_password = ""
+        found_user = None
+        error = None
+        try:
         # check for the data in the database
-        found_user = UserModel.query.filter_by(email=submitted_email).first()
-        # if wrong email
-        if not found_user:
-            form.email.errors.append("Wrong email address")
+            submitted_email = form.email.data
+            submitted_password = form.password.data
+            found_user = UserModel.query.filter_by(email=submitted_email).first()
+            print(submitted_email, submitted_password)
+            print(found_user)
+        except Exception as e:
+            # if wrong email
+            print(e)
         # if wrong password
-        elif found_user.password != submitted_password:
-            form.password.errors.append("Wrong password")
-        # if successfully logged in
+        if found_user is not None:
+            if found_user.password != submitted_password:
+                form.password.errors.append("Wrong password")
+            # if successfully logged in
+            else:
+                # ||CHANGE REQUIRED|| - redirection to another page and session user_id
+                # redirect("/user-dashboard") ???
+                print("success")
+                session['user_id'] = found_user.id
+                return redirect("/dashboard")
         else:
-            # ||CHANGE REQUIRED|| - redirection to another page and session user_id
-            # redirect("/user-dashboard") ???
-            session['user_id'] = found_user.id
-        return redirect("/dashboard")
+            form.email.errors.append("Wrong email address")
+            return render_template("login.html", form=form)
     return render_template("login.html", form=form)
 
 # Logout from a session

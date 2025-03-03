@@ -1,4 +1,4 @@
-from config import TestingConfig 
+from config import DevelopmentConfig
 from extension import db
 from flask import Flask
 from flask_migrate import Migrate
@@ -18,20 +18,17 @@ from blueprints.dashboard import dashboard
 from blueprints.friends import friends
 from blueprints.threads import threads
 from blueprints.workout import workout
+from blueprints.home import home
+
 
 def create_app(config_class=None):
     #create and configure the Flask App
     app = Flask(__name__)
 
-    if config_class is None:
-        if os.getenv("FLASK_ENV") == "testing":
-            from config import TestingConfig
-            app.config.from_object(TestingConfig)
-        else:
-            from config import DevelopmentConfig
-            app.config.from_object(DevelopmentConfig)
-    else:
+    if config_class:
         app.config.from_object(config_class)
+    else:
+        app.config.from_object(DevelopmentConfig)
 
     if "SQLALCHEMY_DATABASE_URI" not in app.config:
         raise RuntimeError("❌ SQLALCHEMY_DATABASE_URI is missing from config.py!")
@@ -53,6 +50,8 @@ def create_app(config_class=None):
     app.register_blueprint(dashboard, url_prefix='/dashboard') #register user route
     app.register_blueprint(friends)
     app.register_blueprint(threads, url_prefix='/threads')
+    app.register_blueprint(home)
+
 
     return app
 

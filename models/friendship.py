@@ -11,6 +11,7 @@ class FriendshipModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # Primary Key
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     friend_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    status = db.Column(db.String(100), nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())  # Optional timestamp
 
     #relationships
