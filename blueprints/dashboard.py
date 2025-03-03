@@ -18,11 +18,11 @@ def get_friends_points(points_period):
         FriendshipModel.friend_id,
         UserModel.username,
         points_column,
+        UserModel.profile_picture
         ).join(UserPointModel, UserPointModel.user_id == FriendshipModel.friend_id) \
         .join(UserModel, UserModel.id == UserPointModel.user_id) \
         .filter(or_(
             FriendshipModel.user_id == session["user_id"],
-            FriendshipModel.friend_id == session["user_id"]
         )) \
         .order_by(points_column.desc()) \
         .all()  
@@ -38,6 +38,7 @@ def get_users_points(points_period):
             UserModel.id, 
             UserModel.username, 
             points_column,
+            UserModel.profile_picture
             ).join(UserPointModel, UserPointModel.user_id == UserModel.id) \
             .order_by(points_column.desc()).all()
     if len(users_with_points) == 0:
@@ -100,3 +101,4 @@ def global_leaderboard():
             users_with_points = get_users_points("yearly")
         return render_template("dashboard.html", form=form, users_with_points=users_with_points, points_period=points_period)
     return render_template("dashboard.html", form=form, users_with_points=users_with_points, points_period=points_period)
+
