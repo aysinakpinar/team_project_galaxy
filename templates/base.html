@@ -29,7 +29,9 @@
         </style>
 
         <!-- custom stylesheets here -->
-        {% block styles %} {% endblock %}
+        {% block styles %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/threads.css') }}">
+        {% endblock %}
     </head>
     <body>
         <!-- navbar -->
@@ -57,6 +59,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/auth/signup">Sign up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/threads/posts">GymThreads</a>
                         </li>
                         {% if session["user_id"] %}
                         <li class="nav-item">

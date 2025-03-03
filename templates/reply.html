@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 post-container">
+        <h1 class="mb-4">Reply to Post</h1>
+        <div class="card mb-4 post-card">
+            <div class="card-body">
+                <p class="card-text"><strong>{{ post.text }}</strong></p>
+                {% if post.img %}
+                    <img src="{{ post.img }}" alt="Post Image" class="img-fluid post-image">
+                {% endif %}
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" class="card p-4">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.text.label(class="form-label") }}
+                {{ form.text(class="form-control", rows=3) }}
+                {% for error in form.text.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.img.label(class="form-label") }}
+                {{ form.img(class="form-control") }}
+                {% for error in form.img.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>{{ form.submit(class="btn btn-primary") }}</div>
+        </form>
+    </div>
+</div>
+{% endblock %}

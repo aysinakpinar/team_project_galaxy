@@ -2,6 +2,8 @@ from datetime import datetime, timezone
 from extension import db
 from models.associations import user_exercise
 from models.friendship import FriendshipModel
+from models.post import PostModel
+from models.reply import ReplyModel
 
 
 class UserModel(db.Model):
@@ -40,7 +42,23 @@ class UserModel(db.Model):
         "ExerciseModel", 
         secondary=user_exercise, 
         back_populates="users"
-    ) 
+    )
+
+    posts = db.relationship(
+        "PostModel",
+        backref="poster",
+        lazy=True,
+        cascade="all, delete"
+    )
+
+    replies = db.relationship(
+        "ReplyModel",
+        backref="replier",
+        lazy=True,
+        cascade="all, delete"
+    )
+
+
     def add_friend(self, friend):
         """Creates a friendship between two users."""
         if not FriendshipModel.query.filter_by(user_id=self.id, friend_id=friend.id).first():
