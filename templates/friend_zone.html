@@ -1,36 +1,16 @@
-{% extends 'base.html' %} {% block styles %}
-<style></style>
-{% endblock %} {% block content %}
-<div class="mt-4">
-    <form method="get" action="{{ url_for('friends.find') }}">
-        {{ form.hidden_tag() }}
-        <label>Location:</label>
-        {{ form.location() }}
-        <label>Age:</label>
-        {{ form.age() }}
-        <label>Fitness Level:</label>
-        {{ form.fitness_level() }}
-        <label>Favourite Exercise:</label>
-        {{ form.favourite_exercise()}}
+{% extends 'base.html' %}
+<!-- for your custom styles -->
+{% block styles %}
+<style>
+    .friends-container,
+    .friendships-container {
+        height: 140px;
+    }
+</style>
 
-        <button type="submit">Search</button>
-    </form>
-    <div>
-        {% if users %} {% for user in users %}
-        <div>
-            <h3>{{ user.username }}</h3>
-            <p>Location: {{ user.location }}</p>
-            <p>Age: {{ user.age }}</p>
-            <p>Fitness level: {{ user.fitness_level }}</p>
-            <p>Favourite Exercise: {{ user.favourite_exercise }}</p>
-        </div>
-        {% endfor %} {% else %}
-        <p>No users found, try searching again.</p>
-        {% endif %}
-    </div>
-</div>
-
-<!-- MICHAL FRIENDS REQUESTS -->
+{% endblock %}
+<!-- your html content in body -->
+{% block content %}
 <h1>My friends</h1>
 <div class="friends-container overflow-auto my-3">
     {% for approved_friend in approved_friends %}

@@ -1,7 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, make_response
+from sqlalchemy import or_, and_
 from models.user import UserModel
 from extension import db
 from forms.find_friends_form import FindFriendsForm
+from forms.accept_friendship_form import AcceptFriendshipForm
+from models.friendship import FriendshipModel
 
 #The user can search for other users based on their location, age, fitness level and favourite exercise.
 
@@ -36,3 +39,46 @@ def find():
     users = query.all()
 
     return render_template("friends.html", form=form, users=users)
+
+
+# ----- | Michal | friend requests --------
+friend_zone = Blueprint("friend-zone", __name__, url_prefix="/friend-zone")
+
+# get points sql function
+def get_friends(status):
+    friends = []
+    friends = db.session.query(
+        FriendshipModel.id,
+        UserModel.username,
+        ).join(UserModel, UserModel.id == FriendshipModel.friend_id) \
+        .filter(and_(
+            FriendshipModel.user_id == session["user_id"],
+            FriendshipModel.status == status
+        )) \
+        .all()   
+    if len(friends) == 0:
+        friends = [(0, 'no data', 0)]
+    return friends
+
+def get_pending_received_friendships():
+    friendships_received = db.session.query(
+        FriendshipModel.id,
+        UserModel.username,
+        ).join(UserModel, UserModel.id == FriendshipModel.user_id) \
+        .filter(and_(
+            FriendshipModel.friend_id == session["user_id"],
+            FriendshipModel.status == "pending"
+        )) \
+        .all() 
+    print(friendships_received)
+    return friendships_received
+
+@friend_zone.route("", methods=['GET', 'POST'])
+def display_friends():
+    form = AcceptFriendshipForm()
+    approved_friends=get_friends("approved")
+    # sent from user
+    friendships_sent=get_friends("pending")
+    friendships_received=get_pending_received_friendships()
+    print(form.data)
+    return render_template("friend_zone.html", form=form, approved_friends=approved_friends, friendships_sent=friendships_sent, friendships_received=friendships_received)
