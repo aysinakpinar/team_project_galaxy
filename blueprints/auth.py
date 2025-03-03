@@ -4,6 +4,8 @@ from wtforms.validators import email
 
 from forms.login_form import LoginForm
 from forms.signup_form import SignupForm
+# from forms.register_form import RegisterForm
+
 from models.user import UserModel
 from extension import db
 from forms import signup_form, login_form
@@ -99,7 +101,6 @@ def login():
             form.email.errors.append("Wrong email address")
             return render_template("login.html", form=form)
     return render_template("login.html", form=form)
-
 
 # Logout from a session
 @auth.route('/logout')

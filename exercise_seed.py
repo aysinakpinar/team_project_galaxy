@@ -1,18 +1,7 @@
-import sys
-import os
 from datetime import datetime
-<<<<<<< HEAD:seeds/exercise_seed.py
-import sys, os
-
-=======
-
-# Add the project root to sys.path BEFORE imports
->>>>>>> main:seeds/3_exercise_seed.py
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from extension import db
+from app import create_app
 from models.exercise import ExerciseModel
-from app import create_app 
-
 
 def seed_exercises():
     # Sample exercises data
@@ -23,7 +12,6 @@ def seed_exercises():
             "intensity": "Medium",
             "duration": "30 seconds",
             "picture_path": "/static/images/exercises/pushups.jpg",
-            "done": False,
         },
         {
             "name": "Squats",
@@ -31,7 +19,6 @@ def seed_exercises():
             "intensity": "Medium",
             "duration": "45 seconds",
             "picture_path": "/static/images/exercises/squats.jpg",
-            "done": False,
         },
         {
             "name": "Plank",
@@ -39,7 +26,6 @@ def seed_exercises():
             "intensity": "Low",
             "duration": "60 seconds",
             "picture_path": "/static/images/exercises/plank.jpg",
-            "done": False,
         },
         {
             "name": "Jumping Jacks",
@@ -47,7 +33,6 @@ def seed_exercises():
             "intensity": "High",
             "duration": "30 seconds",
             "picture_path": "/static/images/exercises/jumpingjacks.jpg",
-            "done": False,
         },
         {
             "name": "Lunges",
@@ -55,7 +40,6 @@ def seed_exercises():
             "intensity": "Medium",
             "duration": "40 seconds",
             "picture_path": "/static/images/exercises/lunges.jpg",
-            "done": False,
         }
     ]
 
@@ -63,7 +47,6 @@ def seed_exercises():
     app = create_app()
 
     with app.app_context():
-        # Clear existing exercises (optional - remove if you want to keep existing data)
         db.session.commit()
 
         # Add new exercises
@@ -75,8 +58,7 @@ def seed_exercises():
                 duration=exercise_data["duration"],
                 picture_path=exercise_data["picture_path"],
                 created_at=datetime.now(),
-                updated_at=datetime.now(),
-                done=exercise_data["done"],
+                updated_at=datetime.now()
             )
             db.session.add(exercise)
         

@@ -1,0 +1,116 @@
+body {
+    margin-top: 5rem;
+    background-color: #fafafa !important;
+    color: #262626;
+    font-family: "Quicksand", sans-serif;
+}
+
+.post-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.post-card, .reply-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #262626;
+}
+
+.card-text {
+    font-size: 15px;
+    line-height: 1.4;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.post-image, .reply-image {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.post-footer {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #8e8e8e;
+}
+
+.btn-outline-primary {
+    border-color: #0095f6;
+    color: #0095f6;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0095f6;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: #0095f6;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.btn-primary:hover {
+    background-color: #007bb5;
+}
+
+.reply-container {
+    margin-left: 30px;
+    border-left: 2px solid #dbdbdb;
+    padding-left: 20px;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #dbdbdb;
+    font-size: 15px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #262626;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+a {
+    color: #0095f6;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.alert {
+    border-radius: 8px;
+    font-size: 14px;
+}

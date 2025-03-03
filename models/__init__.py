@@ -8,3 +8,4 @@ from .user_point import UserPointModel
 from .workout import WorkoutModel
 from .exercise import ExerciseModel
 from .gym import GymModel
+from .quote import QuoteModel

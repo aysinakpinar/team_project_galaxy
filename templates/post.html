@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 post-container">
+        <h1 class="mb-4">Post</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="card mb-4 post-card">
+            <div class="card-body">
+                <p class="card-title username"><strong>{{ post.poster.username }}</strong></p>
+                <p class="card-text">{{ post.text }}</p>
+                {% if post.img %}
+                    <img src="{{ post.img }}" alt="Post Image" class="img-fluid post-image">
+                {% endif %}
+                <div class="post-footer">
+                    <span>{{ reply_count }} replies</span>
+                    <a href="{{ url_for('threads.reply', post_id=post.id) }}" class="btn btn-outline-primary btn-sm ms-3">Reply</a>
+                </div>
+            </div>
+        </div>
+        <h2>Replies</h2>
+        <div class="reply-container">
+            {% for reply in post.replies %}
+                <div class="card mb-3 reply-card">
+                    <div class="card-body">
+                        <p class="card-title username"><strong>{{ reply.replier.username }}</strong></p>
+                        <p class="card-text">{{ reply.text }}</p>
+                        {% if reply.img %}
+                            <img src="{{ reply.img }}" alt="Reply Image" class="img-fluid reply-image">
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('threads.reply', post_id=post.id) }}" class="btn btn-primary mt-3">Reply to this Post</a>
+    </div>
+</div>
+{% endblock %}

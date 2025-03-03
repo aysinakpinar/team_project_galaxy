@@ -2,17 +2,24 @@ from config import DevelopmentConfig
 from extension import db
 from flask import Flask
 from flask_migrate import Migrate
+import os
+
 from models.user import UserModel
 from models.workout import WorkoutModel
 from models.exercise import ExerciseModel
 from models.friendship import FriendshipModel
+from models.post import PostModel
+from models.reply import ReplyModel
 from models.gym import GymModel
+
 from flask_sqlalchemy import SQLAlchemy
 from blueprints.auth import auth
 from blueprints.dashboard import dashboard
-import os
 from blueprints.friends import friends
 from blueprints.users import users
+from blueprints.threads import threads
+from blueprints.workout import workout
+from blueprints.home import home
 
 
 def create_app(config_class=None):
@@ -43,7 +50,13 @@ def create_app(config_class=None):
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(dashboard, url_prefix='/dashboard') #register user route
     app.register_blueprint(friends)
+<<<<<<< HEAD
     app.register_blueprint(users)
+=======
+    app.register_blueprint(threads, url_prefix='/threads')
+    app.register_blueprint(home)
+
+>>>>>>> main
 
     return app
 

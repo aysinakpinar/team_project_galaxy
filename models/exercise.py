@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from extension import db
 from models.associations import user_exercise, workout_exercise
 
+
 class ExerciseModel(db.Model):
     __tablename__ = "exercises"
 
