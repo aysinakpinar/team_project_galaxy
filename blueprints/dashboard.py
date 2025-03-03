@@ -72,7 +72,6 @@ def friends_leaderboard():
         elif form.friends_yearly.data:
             points_period = "year"
             friends_with_points = get_friends_points("yearly")
-        print(friends_with_points)
         return render_template("dashboard.html", form=form, friends_with_points=friends_with_points, points_period=points_period)
     return render_template("dashboard.html", form=form, friends_with_points=friends_with_points, points_period=points_period)
 
