@@ -1,8 +1,6 @@
-{% extends 'base.html' %} 
-{% block styles %}
+{% extends 'base.html' %} {% block styles %}
 <style></style>
-{% endblock %} 
-{% block content %}
+{% endblock %} {% block content %}
 <div class="mt-4">
     <form method="get" action="{{ url_for('friends.find') }}">
         {{ form.hidden_tag() }}
@@ -18,24 +16,17 @@
         <button type="submit">Search</button>
     </form>
     <div>
-        {% if users is not none %} {% if users %} {% for user in users %}
+        {% if users %} {% for user in users %}
         <div>
-            {% if users is not none %} 
-                {% if users %}
-                    {% for user in users %}
-                        <div>
-                            <h3>{{ user.username }}</h3>
-                            <p>Location: {{ user.location }}</p>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <p>No users found in this location.</p>
-                {% endif %}
-            {% endif %}
+            <h3>{{ user.username }}</h3>
+            <p>Location: {{ user.location }}</p>
+            <p>Age: {{ user.age }}</p>
+            <p>Fitness level: {{ user.fitness_level }}</p>
+            <p>Favourite Exercise: {{ user.favourite_exercise }}</p>
         </div>
         {% endfor %} {% else %}
-        <p>No users found in this location.</p>
-        {% endif %} {% endif %}
+        <p>No users found, try searching again.</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
