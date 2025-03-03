@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Edit Your Profile</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    
+    <label>Username:</label>
+    {{ form.username() }}
+    
+    <label>Email:</label>
+    {{ form.email() }}
+
+    <label>Location:</label>
+    {{ form.location() }}
+
+    <label>Age:</label>
+    {{ form.age() }}
+
+    <label>Weight:</label>
+    {{ form.weight() }}
+
+    <label>Height:</label>
+    {{ form.height() }}
+
+    <label>Fitness Level:</label>
+    {{ form.fitness_level() }}
+
+    <label>Favourite Exercise:</label>
+    {{ form.favourite_exercise() }}
+
+    <button type="submit">Update Profile</button>
+</form>
+{% endblock %}
