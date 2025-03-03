@@ -10,14 +10,6 @@ from forms import signup_form, login_form
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 
-@auth.route('/shutdown', methods=['GET'])
-def shutdown():
-    """Shutdown the Flask app."""
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-    return 'Server shutting down..'
 
 # Register a new user
 # ----- signup route -- | Aysin | ------
@@ -112,6 +104,3 @@ def logout():
     resp.set_cookie('user_id', expires=0)
     flash("Logged out successfully!", "success")
     return resp
-
-
-    

@@ -18,7 +18,7 @@
     <div>{{ pending_friend[1] }}</div>
     {% endfor %}
     <!-- TODO: CHANGE ONCE MERGED -->
-    <form method="post" action="{{ url_for('dashboard.display_friendlist') }}">
+    <form method="post" action="{{ url_for('user-profile.display_friends') }}">
         <!-- CSRF Token  is required by the wtforms library -->
         {{ form.hidden_tag() }}
         <input

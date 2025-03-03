@@ -12,6 +12,7 @@ from blueprints.auth import auth
 from blueprints.dashboard import dashboard
 import os
 from blueprints.friends import friends
+from blueprints.user_profile import user_profile
 
 
 def create_app(config_class=None):
@@ -42,6 +43,7 @@ def create_app(config_class=None):
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(dashboard, url_prefix='/dashboard') #register user route
     app.register_blueprint(friends)
+    app.register_blueprint(user_profile)
 
     return app
 
