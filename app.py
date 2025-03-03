@@ -50,13 +50,9 @@ def create_app(config_class=None):
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(dashboard, url_prefix='/dashboard') #register user route
     app.register_blueprint(friends)
-<<<<<<< HEAD
     app.register_blueprint(users)
-=======
     app.register_blueprint(threads, url_prefix='/threads')
     app.register_blueprint(home)
-
->>>>>>> main
 
     return app
 
