@@ -18,19 +18,24 @@
         <button type="submit">Search</button>
     </form>
     <div>
-        {% if users %} 
-            {% for user in users %}
-                <div>
-                    <h3>{{ user.username }}</h3>
-                    <p>Location: {{ user.location }}</p>
-                    <p>Age: {{ user.age }}</p>
-                    <p>Fitness level: {{ user.fitness_level }}</p>
-                    <p>Favourite Exercise: {{ user.favourite_exercise }}</p>
-                </div>
-            {% endfor %} 
-        {% else %}
-            <p>No users found, try searching again.</p>
-        {% endif %} 
+        {% if users is not none %} {% if users %} {% for user in users %}
+        <div>
+            {% if users is not none %} 
+                {% if users %}
+                    {% for user in users %}
+                        <div>
+                            <h3>{{ user.username }}</h3>
+                            <p>Location: {{ user.location }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No users found in this location.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% endfor %} {% else %}
+        <p>No users found in this location.</p>
+        {% endif %} {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -1,3 +1,9 @@
+import sys
+import os
+# Add the project root to sys.path BEFORE imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
 from flask_sqlalchemy import SQLAlchemy
 from extension import db
 from models.quote import QuoteModel
@@ -25,16 +31,31 @@ def seed_quotes():
         },
         {
             "body": "“The only place where success comes before work is in the dictionary.”  Vidal Sassoon"
+        },
+        {
+            "body": "“There is no magic pill.” Arnold Schwarzenegger"
+        },
+        {
+            "body": "“Success is usually a culmination of controlling failure.” Sylvester Stallone"
+        },
+        {
+            "body": "“A year from now you may wish you had started today.” Karen Lamb"
+        },
+        {
+            "body": "“Everyone's dream can come true if you just stick to it and work hard.” Serena Williams"
+        },
+        {
+            "body": "“Acknowledge the fear and do it anyway.“ Emma Lovewell"
         }
     ]
     # Create application contex
     app = create_app()
 
     with app.app_context():
-        # Clear existing exercises (optional - remove if you want to keep existing data)
+        # # Clear existing quotes (optional - remove if you want to keep existing data)
         db.session.commit()
 
-        # Add new exercises
+        # Add new quotes
         for quote_data in quotes:
             quote = QuoteModel(
                 body=quote_data["body"],
