@@ -38,18 +38,26 @@ def find():
     #if no filter applied, show all users
     users = query.all()
 
-    return render_template("friends.html", form=form, users=users)
+    # ---------- MICHAL - FRIEND REQUESTS -------------------
+    form_friendship = AcceptFriendshipForm()
+    approved_friends=get_friends("approved")
+    # sent from user
+    friendships_sent=get_friends("pending")
+    friendships_received=get_pending_received_friendships()
+    print(form_friendship.data)
+    return render_template("friends.html",form=form, users=users, form_friendship=form_friendship, approved_friends=approved_friends, friendships_sent=friendships_sent, friendships_received=friendships_received)
 
 
 # ----- | Michal | friend requests --------
-friend_zone = Blueprint("friend-zone", __name__, url_prefix="/friend-zone")
 
 # get points sql function
 def get_friends(status):
     friends = []
     friends = db.session.query(
-        FriendshipModel.id,
+        FriendshipModel.user_id,
         UserModel.username,
+        UserModel.profile_picture,
+        UserModel.id,
         ).join(UserModel, UserModel.id == FriendshipModel.friend_id) \
         .filter(and_(
             FriendshipModel.user_id == session["user_id"],
@@ -64,6 +72,8 @@ def get_pending_received_friendships():
     friendships_received = db.session.query(
         FriendshipModel.id,
         UserModel.username,
+        UserModel.profile_picture,
+        UserModel.id,
         ).join(UserModel, UserModel.id == FriendshipModel.user_id) \
         .filter(and_(
             FriendshipModel.friend_id == session["user_id"],
@@ -73,12 +83,12 @@ def get_pending_received_friendships():
     print(friendships_received)
     return friendships_received
 
-@friend_zone.route("", methods=['GET', 'POST'])
-def display_friends():
-    form = AcceptFriendshipForm()
-    approved_friends=get_friends("approved")
-    # sent from user
-    friendships_sent=get_friends("pending")
-    friendships_received=get_pending_received_friendships()
-    print(form.data)
-    return render_template("friend_zone.html", form=form, approved_friends=approved_friends, friendships_sent=friendships_sent, friendships_received=friendships_received)
+# @friends.route("/requests", methods=['GET', 'POST'])
+# def display_friends():
+#     form_friendship = AcceptFriendshipForm()
+#     approved_friends=get_friends("approved")
+#     # sent from user
+#     friendships_sent=get_friends("pending")
+#     friendships_received=get_pending_received_friendships()
+#     print(form_friendship.data)
+#     return render_template("friends.html", form_friendship=form_friendship, approved_friends=approved_friends, friendships_sent=friendships_sent, friendships_received=friendships_received)
