@@ -63,6 +63,25 @@
     #global-buttons-container {
         border-top: 0.5px solid gray;
     }
+    .leaderboard__users-list__container,
+    .leaderboard__friends-list__container {
+        width: 250px;
+    }
+    .leaderboard__users-list__username,
+    .leaderboard__friends-list__username {
+        text-decoration: none;
+        color: #212529;
+    }
+    .leaderboard__users-list__position,
+    .leaderboard__friends-list__position {
+        width: 40px;
+        text-align: center;
+    }
+    .leaderboard__users-list__points,
+    .leaderboard__friends-list__points {
+        width: 100px;
+        text-align: center;
+    }
 </style>
 
 {% endblock %}
@@ -207,11 +226,22 @@
                     <div
                         class="d-flex justify-content-evenly align-items-center w-100"
                     >
-                        <div class="d-flex align-items-center">
-                            <span class="mx-2 px-1 py-3">{{ loop.index }}</span>
-                            <span class="mx-2 px-1 py-3">{{ user[1] }}</span>
+                        <div
+                            class="d-flex align-items-center leaderboard__users-list__container"
+                        >
+                            <span
+                                class="mx-2 px-1 py-3 leaderboard__users-list__position"
+                                >{{ loop.index }}</span
+                            >
+                            <a
+                                href="user/{{ user[0] }}"
+                                class="mx-2 px-1 py-3 leaderboard__users-list__username"
+                                >{{ user[1] }}</a
+                            >
                         </div>
-                        <span>{{ user[2] }}</span>
+                        <span class="leaderboard__users-list__points">
+                            {{ user[2] }}</span
+                        >
                     </div>
                 </div>
                 {% else %}
@@ -238,11 +268,22 @@
                     <div
                         class="d-flex justify-content-evenly align-items-center w-100"
                     >
-                        <div class="d-flex align-items-center">
-                            <span class="mx-2 px-1 py-3">{{ loop.index }}</span>
-                            <span class="mx-2 px-1 py-3">{{ friend[1] }}</span>
+                        <div
+                            class="d-flex align-items-center leaderboard__friends-list__container"
+                        >
+                            <span
+                                class="mx-2 px-1 py-3 leaderboard__friends-list__position"
+                                >{{ loop.index }}</span
+                            >
+                            <a
+                                href="user/{{ friend[0] }}"
+                                class="mx-2 px-1 py-3 leaderboard__friends-list__username"
+                                >{{ friend[1] }}</a
+                            >
                         </div>
-                        <span>{{ friend[2] }}</span>
+                        <span class="leaderboard__friends-list__points"
+                            >{{ friend[2] }}</span
+                        >
                     </div>
                 </div>
                 {% else %}
