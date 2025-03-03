@@ -29,8 +29,7 @@ def get_friends(status):
 @user_profile.route("", methods=['GET', 'POST'])
 def display_friends():
     form = AcceptFriendshipForm()
-    friends=get_friends("approved")
-    print(friends)
-    return render_template("user_profile.html", form=form)
-    # 
-    # points_period = "week"
+    approved_friends=get_friends("approved")
+    pending_friends=get_friends("pending")
+    print(form.data)
+    return render_template("user_profile.html", form=form, approved_friends=approved_friends, pending_friends=pending_friends)
