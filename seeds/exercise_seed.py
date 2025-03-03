@@ -1,4 +1,7 @@
 from datetime import datetime
+import sys, os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from extension import db
 from app import create_app  # Replace 'your_app' with your actual Flask app name
 from models.exercise import ExerciseModel

@@ -4,7 +4,7 @@ from wtforms.validators import email
 
 from forms.login_form import LoginForm
 from forms.signup_form import SignupForm
-from forms.register_form import RegisterForm
+# from forms.register_form import RegisterForm
 
 from models.user import UserModel
 from extension import db
@@ -13,7 +13,6 @@ from forms import signup_form, login_form
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 # Register a new user
-<<<<<<< HEAD
 # ----- signup route -- | Aysin | ------
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():

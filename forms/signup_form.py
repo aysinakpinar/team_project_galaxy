@@ -14,7 +14,7 @@ class SignupForm(FlaskForm):
     weight = IntegerField("Weight", validators=[Optional(), NumberRange(min=0)])
     height = IntegerField("Height", validators=[Optional(), NumberRange(min=0)])
     fitness_level = StringField("Fitness Level", validators=[Optional()])
-    favorite_exercise = StringField("Favorite Exercise", validators=[Optional()])
+    favourite_exercise = StringField("Favourite Exercise", validators=[Optional()])
     
 
     submit = SubmitField("Sign Up")
