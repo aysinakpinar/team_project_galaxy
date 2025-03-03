@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, EmailField, FloatField, SelectField
+from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Email, Length, EqualTo, NumberRange, Optional
 from email_validator import *
 
@@ -22,6 +23,7 @@ class UserProfileForm(FlaskForm):
                                 ], 
                                 validators=[Optional()])
     favourite_exercise = StringField("Favourite Exercise", validators=[Optional()])
-    
+    profile_picture = FileField("Upload Profile Picture", 
+                                validators=[FileAllowed(["jpg", "png", "jpeg"]) ])    
 
     submit = SubmitField("Update")

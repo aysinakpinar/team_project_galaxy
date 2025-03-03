@@ -2,6 +2,12 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from models.user import UserModel
 from extension import db
 from forms.user_profile_form import UserProfileForm
+import os
+from flask import current_app
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = "static/profile_pics"
+
 
 #Millie -User profile and ability to edit user account details
 
@@ -40,6 +46,14 @@ def edit_profile():
         user.fitness_level = form.fitness_level.data
         user.favourite_exercise = form.favourite_exercise.data
 
+        if form.profile_picture.data:
+            picture_file = form.profile_picture.data
+            filename = secure_filename(f"user_{user.id}.jpg") 
+            filepath = os.path.join(UPLOAD_FOLDER, filename)
+            picture_file.save(filepath) 
+            
+            user.profile_picture = filename  # Store filename in DB
+
         try:
             db.session.commit()  # Save changes
             flash("Profile updated successfully!", "success")
@@ -54,4 +68,4 @@ def edit_profile():
     if request.method == "POST":
         print("🛠 Form submission received!")
 
-    return render_template("profile.html", form=form)
+    return render_template("profile.html", form=form, user=user)

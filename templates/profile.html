@@ -3,7 +3,13 @@
 {% block content %}
 <h2>Edit Your Profile</h2>
 
-<form method="POST">
+{% if user.profile_picture %}
+    <img src="{{ url_for('static', filename='profile_pics/' + user.profile_picture) }}" alt="Profile Picture" width="150">
+{% else %}
+    <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Default Profile Picture" width="150">
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     
     <label>Username:</label>
@@ -35,6 +41,9 @@
 
     <label>Favourite Exercise:</label>
     {{ form.favourite_exercise() }}
+
+    <label>Profile Picture:</label>
+    {{ form.profile_picture() }}
 
     <button type="submit">Update Profile</button>
 </form>
