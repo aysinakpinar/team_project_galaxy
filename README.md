@@ -102,5 +102,20 @@ Password hash with bcrypt
     - intensity, 3 options, easy, meduium, hard
 - assosciations model was created for many to many relationships
 
-
+## PR17-Aysin
+- Users can create a new workout plan.
+- Users can add new exercises to the workout plan.
+- Users can remove the exercises from the workout plan.
+- Users can mark the exercises as done and undone.
+- New model was created to store workout specific exercises with workout_id and exercise_id and also done columns to mark them as done.
+- base.html was updated to show Workout, Friends, Dashboard, GymThreads and Log out buttons at nav bar when users are logged in. Otherwise onl login and sign up buttons are visible. 
+- 3_exercise_seed.py was update to include 30 different exercises. galaxy_db database needs to be seeded first to see all of the exercises in the drop down menu to add exercises to the workout. 
+- Please first create a new migration. upgrade the db and seed all of the seed files (if already seeded first clean the tables and retry seeding)
+'''
+python seeds/0_user_seed.py
+python seeds/1_friendship_seed.py
+python seeds/2_user_point_seed.py
+python seeds/3_exercise_seed.py
+python seeds/4_quote_seed.py
+'''
 
