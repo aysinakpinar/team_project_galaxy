@@ -14,118 +14,152 @@ def seed_friendships():
         {
             "user_id": 1,
             "friend_id": 2,
+            "status": "approved"
         },
         {
             "user_id": 1,
             "friend_id": 3,
+            "status": "approved"
         },
         {
             "user_id": 1,
             "friend_id": 4,
+            "status": "pending"
         },
         {
             "user_id": 1,
             "friend_id": 5,
+            "status": "pending"
         },
         {
             "user_id": 1,
             "friend_id": 6,
+            "status": "approved"
         },
         {
             "user_id": 1,
             "friend_id": 7,
+            "status": "pending"
+        },
+        {
+            "user_id": 1,
+            "friend_id": 8,
+            "status": "approved"
         },
         {
             "user_id": 2,
             "friend_id": 8,
+            "status": "pending"
         },
         {
             "user_id": 2,
             "friend_id": 9,
+            "status": "pending"
         },
         {
             "user_id": 2,
             "friend_id": 10,
+            "status": "pending"
         },
         {
             "user_id": 2,
             "friend_id": 11,
+            "status": "approved"
         },
         {
             "user_id": 3,
             "friend_id": 13,
+            "status": "approved"
         },
         {
             "user_id": 3,
             "friend_id": 4,
+            "status": "pending"
         },
         {
             "user_id": 3,
             "friend_id": 6,
+            "status": "pending"
         },
         {
             "user_id": 3,
             "friend_id": 8,
+            "status": "approved"
         },
         {
             "user_id": 3,
             "friend_id": 10,
+            "status": "pending"
         },
         {
             "user_id": 4,
             "friend_id": 5,
+            "status": "pending"
         },
         {
             "user_id": 4,
             "friend_id": 8,
+            "status": "approved"
         },
         {
             "user_id": 4,
             "friend_id": 13,
+            "status": "approved"
         },
         {
             "user_id": 4,
             "friend_id": 14,
+            "status": "approved"
         },
         {
             "user_id": 5,
             "friend_id": 11,
+            "status": "pending"
         },
         {
             "user_id": 5,
             "friend_id": 13,
+            "status": "pending"
         },
         {
             "user_id": 5,
             "friend_id": 14,
+            "status": "pending"
         },
         {
             "user_id": 6,
             "friend_id": 8,
+            "status": "pending"
         },
         {
             "user_id": 6,
             "friend_id": 10,
+            "status": "approved"
         },
         {
             "user_id": 6,
             "friend_id": 13,
+            "status": "pending"
         },
         {
             "user_id": 6,
             "friend_id": 14,
+            "status": "approved"
         },
         {
             "user_id": 7,
             "friend_id": 8,
+            "status": "pending"
         },
         {
             "user_id": 7,
             "friend_id": 9,
+            "status": "pending"
         },
         {
             "user_id": 7,
             "friend_id": 13,
+            "status": "pending"
         }
 ]
 
@@ -141,6 +175,7 @@ def seed_friendships():
             friendship = FriendshipModel(
                 user_id=friendship_data["user_id"],
                 friend_id=friendship_data["friend_id"],
+                status=friendship_data["status"],
                 created_at=datetime.now(),
             )
             db.session.add(friendship)

@@ -19,8 +19,8 @@ def seed_user_points():
         },
         {
             "weekly_points": 25,
-            "monthly_points": 100,
-            "yearly_points": 800,
+            "monthly_points": 50,
+            "yearly_points": 50,
             "user_id": 2
         },
         {
@@ -55,8 +55,8 @@ def seed_user_points():
         },
         {
             "weekly_points": 35,
-            "monthly_points": 120,
-            "yearly_points": 900,
+            "monthly_points": 35,
+            "yearly_points": 300,
             "user_id": 8
         },
         {
