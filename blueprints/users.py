@@ -13,7 +13,24 @@ UPLOAD_FOLDER = "static/profile_pics"
 
 users = Blueprint("users", __name__, url_prefix="/users")
 
-@users.route('/profile', methods=['GET', 'POST'])
+@users.route('/profile', methods=['GET'])
+def profile():
+    print(f"📡 Request method: {request.method}")
+
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You need to log in first!", "danger")
+        return redirect(url_for("auth.login"))
+    
+    user = UserModel.query.get(user_id)
+    if not user:
+        flash("User not found!", "danger")
+        return redirect(url_for("auth.login"))
+    
+    return render_template("profile.html", user=user)
+
+
+@users.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
     print(f"📡 Request method: {request.method}")
 
@@ -68,4 +85,4 @@ def edit_profile():
     if request.method == "POST":
         print("🛠 Form submission received!")
 
-    return render_template("profile.html", form=form, user=user)
+    return render_template("edit_profile.html", form=form, user=user)
