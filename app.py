@@ -11,6 +11,7 @@ from models.friendship import FriendshipModel
 from models.post import PostModel
 from models.reply import ReplyModel
 from models.gym import GymModel
+from models.associations import *
 
 from flask_sqlalchemy import SQLAlchemy
 from blueprints.auth import auth
@@ -51,6 +52,7 @@ def create_app(config_class=None):
     app.register_blueprint(friends)
     app.register_blueprint(threads, url_prefix='/threads')
     app.register_blueprint(home)
+    app.register_blueprint(workout, url_prefix='/workout')
 
 
     return app
