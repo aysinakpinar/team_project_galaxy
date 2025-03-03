@@ -52,6 +52,7 @@ def create_app(config_class=None):
     app.register_blueprint(friends)
     app.register_blueprint(threads, url_prefix='/threads')
     app.register_blueprint(home)
+    app.register_blueprint(workout, url_prefix='/workout')
 
 
     return app
