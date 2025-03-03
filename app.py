@@ -11,6 +11,7 @@ from models.friendship import FriendshipModel
 from models.post import PostModel
 from models.reply import ReplyModel
 from models.gym import GymModel
+from models.associations import *
 
 from flask_sqlalchemy import SQLAlchemy
 from blueprints.auth import auth

@@ -4,6 +4,7 @@ from extension import db
 from models.exercise import ExerciseModel
 from models.workout import WorkoutModel
 from models.user import UserModel
+from models.associations import WorkoutExercise
 
 
 # 🏋️‍♂️ Create a new workout
@@ -35,8 +36,6 @@ def create_workout():
         return redirect(url_for("workout.create_workout"))
     current_user = UserModel.query.get(user_id)
     user_workouts = current_user.workouts if current_user else []
-
-
     return render_template("create_workout.html", user=current_user, user_workouts=user_workouts)  # Render form on GET request
 
 # 🏋️‍♀️ Manage Workout (Add Exercises + Show Workout List)
@@ -44,7 +43,7 @@ def create_workout():
 def manage_workout():
     form = AddExerciseForm()
 
-    # Fetch all exercises from the database for dropdown
+    # Fetch all exercises for the dropdown menu
     form.name.choices = [(exercise.id, exercise.name) for exercise in ExerciseModel.query.all()]
 
     # Retrieve the workout ID from session
@@ -63,20 +62,38 @@ def manage_workout():
     if form.validate_on_submit():
         selected_exercise = ExerciseModel.query.get(form.name.data)
 
-        if selected_exercise and selected_exercise not in current_workout.exercises:
-            current_workout.exercises.append(selected_exercise)
-            db.session.commit()
+        # Check if exercise already exists in the workout
+        existing_entry = WorkoutExercise.query.filter_by(
+            workout_id=workout_id, exercise_id=selected_exercise.id
+        ).first()
 
+        if not existing_entry:
+            new_entry = WorkoutExercise(workout_id=workout_id, exercise_id=selected_exercise.id)
+            db.session.add(new_entry)
+            db.session.commit()
             flash(f'Added {selected_exercise.name} to "{current_workout.name}"!', 'success')
         else:
-            flash(f'Exercise already exists in the workout!', 'warning')
+            flash("Exercise already exists in the workout!", "warning")
 
-        return redirect(url_for('workout.manage_workout'))  # Stay on the page to refresh list
+        return redirect(url_for('workout.manage_workout'))
 
-    # Fetch list of added exercises
-    workout_exercises = current_workout.exercises  # ORM relationship
+    # ✅ Fetch list of added exercises WITH WorkoutExercise objects
+    workout_exercises = (
+        db.session.query(WorkoutExercise)
+        .join(ExerciseModel, WorkoutExercise.exercise_id == ExerciseModel.id)
+        .filter(WorkoutExercise.workout_id == workout_id)
+        .all()
+    )
 
-    return render_template('manage_workout.html', form=form, workout=current_workout, workout_exercises=workout_exercises)
+    # Debugging: Print fetched exercises
+    print("Fetched exercises for workout:", [entry.exercise.name for entry in workout_exercises])
+
+    return render_template(
+        'manage_workout.html',
+        form=form,
+        workout=current_workout,
+        workout_exercises=workout_exercises  # Now contains WorkoutExercise objects
+    )
 #remove workout
 @workout.route('/remove_workout/<int:workout_id>', methods=['POST'])
 def remove_workout(workout_id):
@@ -128,14 +145,51 @@ def remove_exercise(exercise_id):
         flash("Workout not found.", "danger")
         return redirect(url_for("workout.create_workout"))
 
-    # Find the exercise in the workout
-    exercise_to_remove = ExerciseModel.query.get(exercise_id)
+    # Find the workout-exercise association
+    exercise_to_remove = WorkoutExercise.query.filter_by(
+        workout_id=workout_id, 
+        exercise_id=exercise_id).first()
+    exercise_name = exercise_to_remove.exercise.name  
 
-    if exercise_to_remove and exercise_to_remove in current_workout.exercises:
-        current_workout.exercises.remove(exercise_to_remove)
+
+    if exercise_to_remove:
+        db.session.delete(exercise_to_remove)  # ✅ Correctly removes the association
         db.session.commit()
-        flash(f'Removed {exercise_to_remove.name} from "{current_workout.name}"!', 'success')
+        flash(f'Removed {exercise_name} from "{current_workout.name}"!', 'success')
     else:
         flash("Exercise not found in workout.", "warning")
 
     return redirect(url_for('workout.manage_workout'))
+
+@workout.route('/exercise_done/<int:exercise_id>', methods=['POST'])
+def mark_done(exercise_id):
+    # Retrieve the workout ID from session
+    workout_id = session.get("workout_id")
+
+    if not workout_id:
+        flash("No workout selected. Please create a workout first.", "warning")
+        return redirect(url_for("workout.create_workout"))
+
+    # Fetch the current workout
+    current_workout = WorkoutModel.query.get(workout_id)
+    if not current_workout:
+        flash("Workout not found.", "danger")
+        return redirect(url_for("workout.create_workout"))
+
+    # Find the exercise in the workout
+    exercise_entry = WorkoutExercise.query.filter_by(
+    workout_id=current_workout.id,
+    exercise_id=exercise_id).first()
+
+    if not exercise_entry:
+        flash("Exercise not found in workout.", "warning")
+        return redirect(url_for("workout.manage_workout"))
+
+    # Toggle exercise completion status
+    exercise_entry.done = not exercise_entry.done  
+    db.session.commit()
+
+    status = "done" if exercise_entry.done else "undone"
+    flash(f"Exercise marked as {status}!", "success")
+
+    return redirect(url_for("workout.manage_workout"))
