@@ -1,7 +1,13 @@
+import sys
+import os
 from datetime import datetime
+
+# Add the project root to sys.path BEFORE imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from extension import db
-from app import create_app  # Replace 'your_app' with your actual Flask app name
 from models.exercise import ExerciseModel
+from app import create_app 
+
 
 def seed_exercises():
     # Sample exercises data
