@@ -22,6 +22,7 @@ class UserModel(db.Model):
     fitness_level = db.Column(db.String(200), nullable=True)
     favourite_exercise = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    profile_picture = db.Column(db.String(100), nullable=True, default="default.jpg")
 
 
     # Relationships

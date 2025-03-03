@@ -17,6 +17,7 @@ from flask_sqlalchemy import SQLAlchemy
 from blueprints.auth import auth
 from blueprints.dashboard import dashboard
 from blueprints.friends import friends
+from blueprints.users import users
 from blueprints.threads import threads
 from blueprints.workout import workout
 from blueprints.home import home
@@ -50,10 +51,10 @@ def create_app(config_class=None):
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(dashboard, url_prefix='/dashboard') #register user route
     app.register_blueprint(friends)
+    app.register_blueprint(users)
     app.register_blueprint(threads, url_prefix='/threads')
     app.register_blueprint(home)
     app.register_blueprint(workout, url_prefix='/workout')
-
 
     return app
 
