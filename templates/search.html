@@ -1,0 +1,109 @@
+<!-- <!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Google Map</h1>
+
+<div id="googleMap" style="width:100%;height:400px;"></div>
+
+<script>
+function myMap() {
+var mapProp= {
+    center:new google.maps.LatLng(51.508742,-0.120850),
+    zoom:5,
+};
+var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+}
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCctO8HTJKGB3UB7-8IlxRRWnkIXtkq-Y&callback=myMap"></script>
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Gym</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCctO8HTJKGB3UB7-8IlxRRWnkIXtkq-Y &libraries=places"></script>
+    <style>
+    /* Simple styling for the map */
+    #map {
+        height: 500px;
+        width: 100%;
+    }
+    </style>
+</head>
+<body>
+    <h1>Find a Gym</h1>
+        <input id="location" name="location" type="text" placeholder="Enter a location" />
+        <button onclick="findGyms()">Search for Gyms</button>
+    <div id="map"></div>
+
+    <script>
+    let map;
+    let service;
+    let infowindow;
+
+    function initMap() {
+      // Initialize the map at a default location
+      const defaultLocation = { lat: 51.509865, lng: -0.118092 }; // London coordinates
+
+        map = new google.maps.Map(document.getElementById("map"), {
+        center: defaultLocation,
+        zoom: 12,
+        });
+
+        infowindow = new google.maps.InfoWindow();
+    }
+
+    function findGyms() {
+        const searchLocation = document.getElementById("location").value;
+        const geocoder = new google.maps.Geocoder();
+
+      // Geocode the location to get latitude and longitude
+        geocoder.geocode({ address: searchLocation }, function (results, status) {
+        if (status === "OK") {
+            const location = results[0].geometry.location;
+            map.setCenter(location);
+            map.setZoom(14);  // Zoom in to a more focused area
+
+          // Search for gyms around the geocoded location
+            const request = {
+            location: location,
+            radius: 5000, // Search within 5 km radius
+            type: ["gym"], // Type of place we're searching for (gym in this case)
+            };
+
+            const service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, function (results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                for (let i = 0; i < results.length; i++) {
+                    const place = results[i];
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: place.geometry.location,
+                    });
+
+                google.maps.event.addListener(marker, "click", function () {
+                    infowindow.setContent(place.name);
+                    infowindow.open(map, this);
+                });
+                }
+            } else {
+                alert("No gyms found in this area.");
+            }
+            });
+        } else {
+            alert("Geocode was not successful for the following reason: " + status);
+        }
+        });
+    }
+
+    // Initialize the map when the page loads
+    google.maps.event.addDomListener(window, "load", initMap);
+    </script>
+</body>
+</html>

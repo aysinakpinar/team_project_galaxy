@@ -13,6 +13,7 @@ from blueprints.dashboard import dashboard
 import os
 from blueprints.friends import friends
 from blueprints.quote import quote
+from blueprints.gym_search import gym_search
 
 
 
@@ -45,6 +46,7 @@ def create_app(config_class=None):
     app.register_blueprint(dashboard, url_prefix='/dashboard') #register user route
     app.register_blueprint(friends)
     app.register_blueprint(quote)
+    app.register_blueprint(gym_search)
 
     return app
 

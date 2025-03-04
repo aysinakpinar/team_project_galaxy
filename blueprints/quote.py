@@ -9,7 +9,5 @@ quote = Blueprint("home", __name__, url_prefix="/home")
 @quote.route('/quote', methods=['GET'])
 def quote_of_day():
     quotes = db.session.query(QuoteModel).all()
-    print("hi")
-    print(quotes)
     quote = random.choice(quotes)
     return render_template("home.html", quote=quote)

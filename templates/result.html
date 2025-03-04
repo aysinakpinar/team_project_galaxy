@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gyms Found</title>
+</head>
+<body>
+    <h1>Found Gyms</h1>
+    <ul>
+        {% for gym in gyms %}
+            <li>{{ gym.name }} - {{ gym.location }}</li>
+        {% endfor %}
+    </ul>
+</body>
+<!-- <body>
+    <gmpx-api-loader key="AIzaSyDCctO8HTJKGB3UB7-8IlxRRWnkIXtkq-Y"></gmpx-api-loader>
+    <gmpx-split-layout>
+        <gmpx-place-overview slot="fixed" place="gcpkdpe3yk"></gmpx-place-overview>
+        <gmp-map slot="main" center="51.45754 -0.96206" zoom="15" map-id="GALAXY-GYM">
+            <gmp-avanced-marker position=""></gmp-avanced-marker>
+        </gmp-map>
+    </gmpx-split-layout>
+</body> -->
+</html> 
