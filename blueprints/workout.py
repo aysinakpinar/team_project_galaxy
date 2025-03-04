@@ -192,4 +192,6 @@ def mark_done(exercise_id):
     status = "done" if exercise_entry.done else "undone"
     flash(f"Exercise marked as {status}!", "success")
 
+    # ------ ANALYTICS ----- | Michal |
+    
     return redirect(url_for("workout.manage_workout"))

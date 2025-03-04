@@ -10,3 +10,4 @@ from .exercise import ExerciseModel
 from .associations import WorkoutExercise
 from .gym import GymModel
 from .quote import QuoteModel
+from .exercise_analytics import ExerciseAnalyticsModel

@@ -46,7 +46,6 @@ def find():
         if form_friendship.cancel_sent_friendship.data:
             action="cancel"
             clicked_id = form_friendship.friendship_sent_id.data
-            print("if",clicked_id)
             
         if form_friendship.reject_received_friendship.data:
             action="reject"
