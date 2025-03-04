@@ -69,20 +69,30 @@ GOOGLE_PLACES_URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/jso
 
 #gym_search = Blueprint('gym_search', __name__)
 
-@gym_search.route('/search', methods=['GET', 'POST'])
+@gym_search.route('/search_gyms', methods=['GET', 'POST'])
 def search_gyms():
     form = GymSearchForm()
+    query = GymModel.query
+    print(form, "caf")
     if request.method == 'GET':
-        location = request.form.get('location')
-        gyms = search_gyms_from_google(location) # Call the helper function
+        print("ahoj")
+        location = request.args.get('location') or form.location.data 
+        print(location, "dnes")
+        #gyms = GymModel.query.all()
+        #gym_query = session.query(GymModel)  # Create a query object
+        if location:
+            filtered_query = query.filter(GymModel.location.ilike(f"%{location.strip()}%"))
+            #filtered_gyms = gym_query.filter(GymModel.location.ilike(f"%{location.strip()}%")).all()
+            #filtered_gyms = gyms.filter(GymModel.location.ilike(f"%{location.strip()}%"))
+            print(filtered_query, "vecer")
+        #gyms = search_gyms_from_google(location) # Call the helper function
         # Perform the search for gyms based on the location
         # Call Google Maps API to get the gyms
         # Store gyms in the database
         # Return a result template
-        if gyms:
-            return render_template('result.html', gyms=gyms)
-        else:
-            return render_template('search.html', error="No gyms found or invalid location")
+            if filtered_query.count() != 0:
+                print(filtered_query.count(), "staci")
+                return render_template('search.html', form=form, gyms=filtered_query)
+            else:
+                return render_template('search.html', form=form, error="No gyms found or invalid location")
     return render_template('search.html', form=form)
-
-

@@ -38,10 +38,24 @@ var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 </head>
 <body>
     <h1>Find a Gym</h1>
+    <form method="get" action="{{ url_for('gym_search.search_gyms') }}">
+        {{ form.hidden_tag() }}
         <input id="location" name="location" type="text" placeholder="Enter a location" />
         <button onclick="findGyms()">Search for Gyms</button>
     <div id="map"></div>
-
+<div>
+    {% if gyms or error %}
+    <h1>Found Gyms</h1>
+    <p>{{error}}</p>
+    {% if gyms is not none %} 
+    <ul>
+            {% for gym in gyms %}
+                <li>{{ gym.name }} - {{ gym.location }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endif %}
+</div>
     <script>
     let map;
     let service;
@@ -57,6 +71,7 @@ var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
         });
 
         infowindow = new google.maps.InfoWindow();
+    
     }
 
     function findGyms() {
@@ -105,5 +120,6 @@ var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
     // Initialize the map when the page loads
     google.maps.event.addDomListener(window, "load", initMap);
     </script>
+    </form>
 </body>
 </html>
