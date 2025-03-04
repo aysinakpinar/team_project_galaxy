@@ -40,11 +40,27 @@ def find():
 
     # ---------- MICHAL - FRIEND REQUESTS -------------------
     form_friendship = AcceptFriendshipForm()
+    if form_friendship.validate_on_submit():  # Ensures form is submitted properly
+        if form_friendship.reject_friendship.data:
+            print("------data-------")
+            # print(form_friendship.friendship_received_id.data)
+            print(form_friendship.friendship_sent_id.data)
+        if form_friendship.accept_friendship.data:
+            print(form_friendship.friendship_sent_id.data)
+            # print(form_friendship.friendship_received_id.data)
+            # print(form_friendship.friendship_id.data)
+
     approved_friends=get_friends("approved")
     # sent from user
     friendships_sent=get_friends("pending")
     friendships_received=get_pending_received_friendships()
-    print(form_friendship.data)
+    # print(form_friendship.data)
+    if len(approved_friends) == 0:
+        approved_friends = [(0, 'no data', 0, 0)]
+    if len(friendships_received) == 0:
+        friendships_received = [(0, 'no data', 0, 0)]
+    if len(friendships_sent) == 0:
+        friendships_sent = [(0, 'no data', 0, 0)]
     return render_template("friends.html",form=form, users=users, form_friendship=form_friendship, approved_friends=approved_friends, friendships_sent=friendships_sent, friendships_received=friendships_received)
 
 
@@ -82,13 +98,3 @@ def get_pending_received_friendships():
         .all() 
     print(friendships_received)
     return friendships_received
-
-# @friends.route("/requests", methods=['GET', 'POST'])
-# def display_friends():
-#     form_friendship = AcceptFriendshipForm()
-#     approved_friends=get_friends("approved")
-#     # sent from user
-#     friendships_sent=get_friends("pending")
-#     friendships_received=get_pending_received_friendships()
-#     print(form_friendship.data)
-#     return render_template("friends.html", form_friendship=form_friendship, approved_friends=approved_friends, friendships_sent=friendships_sent, friendships_received=friendships_received)

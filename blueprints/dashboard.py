@@ -15,17 +15,22 @@ def get_friends_points(points_period):
     friends_with_points = []
     points_column = getattr(UserPointModel, f"{points_period}_points")
     friends_with_points = db.session.query(
-        FriendshipModel.friend_id,
+        FriendshipModel.id,
+        UserModel.id,
         UserModel.username,
-        points_column,
-        UserModel.profile_picture
-        ).join(UserPointModel, UserPointModel.user_id == FriendshipModel.friend_id) \
-        .join(UserModel, UserModel.id == UserPointModel.user_id) \
-        .filter(or_(
-            FriendshipModel.user_id == session["user_id"],
-        )) \
-        .order_by(points_column.desc()) \
-        .all()  
+        UserModel.profile_picture,
+        points_column
+    ).join(UserModel, or_(
+        UserModel.id == FriendshipModel.user_id,
+        UserModel.id == FriendshipModel.friend_id
+    )).outerjoin(UserPointModel, UserPointModel.user_id == UserModel.id) \
+    .filter(or_(
+        FriendshipModel.user_id == session["user_id"],
+        FriendshipModel.friend_id == session["user_id"]
+    )) \
+    .filter(UserModel.id != session["user_id"]) \
+    .order_by(points_column.desc()) \
+    .all()  
     if len(friends_with_points) == 0:
         friends_with_points = [(0, 'no data', 0)]
     return friends_with_points

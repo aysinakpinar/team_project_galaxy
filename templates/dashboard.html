@@ -283,15 +283,15 @@
                                 >{{ loop.index }}</span
                             >
                             <a
-                                href="user/{{ friend[0] }}"
+                                href="user/{{ friend[1] }}"
                                 class="mx-2 px-1 py-3 leaderboard__friends-list__username"
                             >
                                 <img src="{{ friend[3] }}" class="user-img" />
-                                {{ friend[1] }}
+                                {{ friend[2] }}
                             </a>
                         </div>
                         <span class="leaderboard__friends-list__points"
-                            >{{ friend[2] }}</span
+                            >{{ friend[4] }}</span
                         >
                     </div>
                 </div>
