@@ -5,6 +5,7 @@ from forms.user_profile_form import UserProfileForm
 import os
 from flask import current_app
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
 
 UPLOAD_FOLDER = "static/profile_pics"
 
@@ -51,7 +52,7 @@ def edit_profile():
     form = UserProfileForm(obj=user)  # Pre-fill the form with existing user data
 
     if form.validate_on_submit():
-        print("Form submitted!")  # Debugging line
+        print("Form submitted!") 
 
         # Update user attributes with new form data
         user.username = form.username.data
@@ -63,13 +64,24 @@ def edit_profile():
         user.fitness_level = form.fitness_level.data
         user.favourite_exercise = form.favourite_exercise.data
 
-        if form.profile_picture.data:
-            picture_file = form.profile_picture.data
-            filename = secure_filename(f"user_{user.id}.jpg") 
-            filepath = os.path.join(UPLOAD_FOLDER, filename)
-            picture_file.save(filepath) 
-            
-            user.profile_picture = filename  # Store filename in DB
+        # Profile picture upload
+        picture_file = form.profile_picture.data  
+
+        if picture_file and isinstance(picture_file, FileStorage):  # Ensure it's a valid uploaded file
+            filename = secure_filename(picture_file.filename)
+
+            if filename:  # Avoid saving empty filenames
+                filepath = os.path.join("static/profile_pics", filename)
+                picture_file.save(filepath)
+                user.profile_picture = filename
+
+        # # Profile picture upload
+        # picture_file = form.profile_picture.data
+        # if picture_file:
+        #     filename = secure_filename(picture_file.filename) 
+        #     filepath = os.path.join("static/profile_pics", filename)
+        #     picture_file.save(filepath) 
+        #     user.profile_picture = filename  # Store new filename in database
 
         try:
             db.session.commit()  # Save changes
