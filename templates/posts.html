@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 post-container">
+        <h1 class="mb-4">All Posts</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% for post in posts %}
+            <div class="card mb-3 post-card">
+                <div class="card-body">
+                    <p class="card-title username"><strong>{{ post.poster.username }}</strong></p>
+                    <p class="card-text">{{ post.text }}</p>
+                    {% if post.img %}
+                        <img src="{{ post.img }}" alt="Post Image" class="img-fluid post-image">
+                    {% endif %}
+                    <div class="post-footer">
+                        <span>{{ post.replies|length }} replies</span>
+                        <a href="{{ url_for('threads.reply', post_id=post.id) }}" class="btn btn-outline-primary btn-sm ms-3">Reply</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <a href="{{ url_for('threads.create_post') }}" class="btn btn-primary mt-3">Create New Post</a>
+    </div>
+</div>
+{% endblock %}

@@ -29,13 +29,15 @@
         </style>
 
         <!-- custom stylesheets here -->
-        {% block styles %} {% endblock %}
+        {% block styles %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/threads.css') }}">
+        {% endblock %}
     </head>
     <body>
         <!-- navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark base-navbar fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="#">Galaxy</a>
+                <a class="navbar-brand" href="/home">Galaxy</a>
                 <button
                     class="navbar-toggler"
                     type="button"
@@ -46,22 +48,29 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/friends/find">Friends</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dashboard">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/login">Log in</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/signup">Sign up</a>
-                        </li>
                         {% if session["user_id"] %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/logout">Log out</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('workout.create_workout') }}">Workout</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/friends/find">Friends</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/dashboard">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/threads/posts">GymThreads</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/auth/logout">Log out</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/auth/login">Log in</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/auth/signup">Sign up</a>
+                            </li>
                         {% endif %}
                     </ul>
                 </div>
