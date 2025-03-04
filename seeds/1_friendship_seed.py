@@ -14,22 +14,22 @@ def seed_friendships():
         {
             "user_id": 2,
             "friend_id": 1,
-            "status": "pending"
+            "status": "pending-received"
         },
         {
             "user_id": 3,
             "friend_id": 1,
-            "status": "pending"
+            "status": "pending-received"
         },
         {
             "user_id": 1,
             "friend_id": 4,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 1,
             "friend_id": 5,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 1,
@@ -39,7 +39,7 @@ def seed_friendships():
         {
             "user_id": 1,
             "friend_id": 7,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 1,
@@ -49,17 +49,17 @@ def seed_friendships():
         {
             "user_id": 2,
             "friend_id": 8,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 2,
             "friend_id": 9,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 2,
             "friend_id": 10,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 2,
@@ -74,12 +74,12 @@ def seed_friendships():
         {
             "user_id": 3,
             "friend_id": 4,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 3,
             "friend_id": 6,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 3,
@@ -89,12 +89,12 @@ def seed_friendships():
         {
             "user_id": 3,
             "friend_id": 10,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 4,
             "friend_id": 5,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 4,
@@ -114,22 +114,22 @@ def seed_friendships():
         {
             "user_id": 5,
             "friend_id": 11,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 5,
             "friend_id": 13,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 5,
             "friend_id": 14,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 6,
             "friend_id": 8,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 6,
@@ -139,7 +139,7 @@ def seed_friendships():
         {
             "user_id": 6,
             "friend_id": 13,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 6,
@@ -149,17 +149,17 @@ def seed_friendships():
         {
             "user_id": 7,
             "friend_id": 8,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 7,
             "friend_id": 9,
-            "status": "pending"
+            "status": "pending-sent"
         },
         {
             "user_id": 7,
             "friend_id": 13,
-            "status": "pending"
+            "status": "pending-sent"
         }
 ]
 

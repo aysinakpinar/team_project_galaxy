@@ -40,20 +40,39 @@ def find():
 
     # ---------- MICHAL - FRIEND REQUESTS -------------------
     form_friendship = AcceptFriendshipForm()
-    if form_friendship.validate_on_submit():  # Ensures form is submitted properly
-        if form_friendship.reject_friendship.data:
-            print("------data-------")
-            # print(form_friendship.friendship_received_id.data)
-            print(form_friendship.friendship_sent_id.data)
-        if form_friendship.accept_friendship.data:
-            print(form_friendship.friendship_sent_id.data)
-            # print(form_friendship.friendship_received_id.data)
-            # print(form_friendship.friendship_id.data)
+    if form_friendship.validate_on_submit(): 
+        action=None
+        clicked_id=None
+        print("cancel", form_friendship.cancel_sent_friendship.data)
+        print("received reject", form_friendship.reject_received_friendship)
+        print("received reject", form_friendship.accept_received_friendship.data)
+        if form_friendship.cancel_sent_friendship.data:
+            action="cancel"
+            clicked_id = form_friendship.friendship_sent_id.data
+            print("if",clicked_id)
+            
+        if form_friendship.reject_received_friendship.data:
+            action="reject"
+            clicked_id = form_friendship.friendship_received_id.data
+        if form_friendship.accept_received_friendship.data:
+            action="accept"
+            clicked_id = form_friendship.friendship_received_id.data
+        found_friendship = FriendshipModel.query.filter_by(id=clicked_id).first()
+        
+        if found_friendship and action=="reject":
+            found_friendship.status = ""
+            db.session.commit()
+        if found_friendship and action=="accept":
+            found_friendship.status = "approved"
+            db.session.commit()
+        if found_friendship and action=="cancel":
+            found_friendship.status = ""
+            db.session.commit()
 
     approved_friends=get_friends("approved")
     # sent from user
-    friendships_sent=get_friends("pending")
-    friendships_received=get_pending_received_friendships()
+    friendships_sent=get_pending_friendships("pending-sent")
+    friendships_received=get_pending_friendships("pending-received")
     # print(form_friendship.data)
     if len(approved_friends) == 0:
         approved_friends = [(0, 'no data', 0, 0)]
@@ -70,31 +89,28 @@ def find():
 def get_friends(status):
     friends = []
     friends = db.session.query(
-        FriendshipModel.user_id,
-        UserModel.username,
-        UserModel.profile_picture,
-        UserModel.id,
-        ).join(UserModel, UserModel.id == FriendshipModel.friend_id) \
-        .filter(and_(
-            FriendshipModel.user_id == session["user_id"],
-            FriendshipModel.status == status
-        )) \
-        .all()   
-    if len(friends) == 0:
-        friends = [(0, 'no data', 0)]
-    return friends
-
-def get_pending_received_friendships():
-    friendships_received = db.session.query(
         FriendshipModel.id,
         UserModel.username,
         UserModel.profile_picture,
         UserModel.id,
-        ).join(UserModel, UserModel.id == FriendshipModel.user_id) \
-        .filter(and_(
-            FriendshipModel.friend_id == session["user_id"],
-            FriendshipModel.status == "pending"
-        )) \
-        .all() 
-    print(friendships_received)
-    return friendships_received
+        ).join(UserModel, or_(
+        and_(UserModel.id == FriendshipModel.friend_id, FriendshipModel.user_id == session["user_id"]),
+        and_(UserModel.id == FriendshipModel.user_id, FriendshipModel.friend_id == session["user_id"])
+        )).filter(
+            FriendshipModel.status == status
+        ).all() 
+    return friends
+
+def get_pending_friendships(status):
+    friendships_pending = db.session.query(
+        FriendshipModel.id,
+        UserModel.username,
+        UserModel.profile_picture,
+        UserModel.id,
+        ).join(UserModel, or_(
+        and_(UserModel.id == FriendshipModel.friend_id, FriendshipModel.user_id == session["user_id"]),
+        and_(UserModel.id == FriendshipModel.user_id, FriendshipModel.friend_id == session["user_id"])
+        )).filter(
+            FriendshipModel.status == status
+        ).all() 
+    return friendships_pending
