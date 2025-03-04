@@ -25,4 +25,23 @@
     <p><strong>Favourite Exercise:</strong> {{ user.favourite_exercise }}</p>
 
     
+    <h3>Your Friends</h3>
+    {% if friends %}
+        <ul>
+            {% for friend in friends %}
+                <li>
+                    <a href="{{ url_for('users.profile', user_id=friend.id) }}">
+                        {{ friend.username }}
+                        {{ friend.location }}
+                        {{ friend.age }}
+                        {{ friend.fitness_level }}
+                        {{ friend.favourite_exercise }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no friends yet. <a href="/friends/find">Search for a workout buddy.</a> </p>
+    {% endif %}
+
 {% endblock %}
