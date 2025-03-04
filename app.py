@@ -23,6 +23,7 @@ from blueprints.workout import workout
 from blueprints.home import home
 
 
+
 def create_app(config_class=None):
     #create and configure the Flask App
     app = Flask(__name__)

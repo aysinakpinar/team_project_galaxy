@@ -1,32 +1,184 @@
 {% extends 'base.html' %} {% block styles %}
-<style></style>
+<style>
+    .friends-container,
+    .friendships-container {
+        height: 140px;
+        width: 450px;
+    }
+    .users-list {
+        max-height: 500px;
+        overflow: auto;
+    }
+    .approval-buttons__container {
+        width: 250px;
+    }
+    .user-img {
+        width: 35px;
+        height: 35px;
+        border-radius: 15px;
+    }
+    .user-name {
+        text-decoration: none;
+        color: black;
+    }
+</style>
 {% endblock %} {% block content %}
-<div class="mt-4">
-    <form method="get" action="{{ url_for('friends.find') }}">
-        {{ form.hidden_tag() }}
-        <label>Location:</label>
-        {{ form.location() }}
-        <label>Age:</label>
-        {{ form.age() }}
-        <label>Fitness Level:</label>
-        {{ form.fitness_level() }}
-        <label>Favourite Exercise:</label>
-        {{ form.favourite_exercise()}}
+<div class="d-flex m-4">
+    <section class="d-flex flex-column">
+        <div class="d-flex flex-column m-4">
+            <form
+                method="get"
+                action="{{ url_for('friends.find') }}"
+                class="d-flex flex-column"
+            >
+                {{ form.hidden_tag() }}
+                <label>Location:</label>
+                {{ form.location() }}
+                <label>Age:</label>
+                {{ form.age() }}
+                <label>Fitness Level:</label>
+                {{ form.fitness_level() }}
+                <label>Favourite Exercise:</label>
+                {{ form.favourite_exercise()}}
 
-        <button type="submit">Search</button>
-    </form>
-    <div>
-        {% if users %} {% for user in users %}
-        <div>
-            <h3>{{ user.username }}</h3>
-            <p>Location: {{ user.location }}</p>
-            <p>Age: {{ user.age }}</p>
-            <p>Fitness level: {{ user.fitness_level }}</p>
-            <p>Favourite Exercise: {{ user.favourite_exercise }}</p>
+                <button type="submit">Search</button>
+            </form>
+            <div class="users-list">
+                {% if users %} {% for user in users %}
+                <div>
+                    <h3>{{ user.username }}</h3>
+                    <p>Location: {{ user.location }}</p>
+                    <p>Age: {{ user.age }}</p>
+                    <p>Fitness level: {{ user.fitness_level }}</p>
+                    <p>Favourite Exercise: {{ user.favourite_exercise }}</p>
+                </div>
+                {% endfor %} {% else %}
+                <p>No users found, try searching again.</p>
+                {% endif %}
+            </div>
         </div>
-        {% endfor %} {% else %}
-        <p>No users found, try searching again.</p>
-        {% endif %}
-    </div>
+    </section>
+
+    <!-- MICHAL FRIENDS REQUESTS -->
+    <section class="m-4">
+        <!-- SENT REQUESTS SECTION -->
+        <h1>Sent requests</h1>
+        <div class="friendships-container overflow-auto my-4">
+            {% for friendship_sent in friendships_sent %} {% if
+            friendship_sent[0] != 0 %}
+            <div
+                class="d-flex align-items-center justify-content-between w-100"
+            >
+                <a
+                    href="http://127.0.0.1:5000/user/{{ friendship_sent[3] }}"
+                    class="user-name"
+                >
+                    <img src="{{ friendship_sent[2] }}" class="user-img" />
+                    {{ friendship_sent[1] }}
+                </a>
+
+                <!-- TODO: FORM SENT FRIENSHIPS -->
+                <form
+                    method="post"
+                    action="{{ url_for('friends.find') }}"
+                    class="d-flex justify-content-center approval-buttons__container"
+                >
+                    <!-- CSRF Token  is required by the wtforms library -->
+                    {{ form.hidden_tag() }}
+                    <!-- <input
+                        type="submit"
+                        name="accept_sent_friendship"
+                        value="Accept"
+                        class="btn btn-sm btn-outline-success px-3 mx-3 my-3"
+                    /> -->
+                    <input
+                        type="submit"
+                        name="cancel_sent_friendship"
+                        value="Cancel"
+                        class="btn btn-sm btn-outline-danger px-3 mx-3 my-3"
+                    />
+                    <!-- pending_friend[0] is the friendship id -->
+                    <input
+                        type="hidden"
+                        name="friendship_sent_id"
+                        value="{{ friendship_sent[0] }}"
+                    />
+                </form>
+            </div>
+            {% else %}
+            <div class="d-flex p-2">
+                <p>No requests!</p>
+            </div>
+            {% endif %} {% endfor %}
+        </div>
+        <!-- RECEIVED  REQUESTS SECTION -->
+        <h1>Received requests</h1>
+        <div class="friendships-container overflow-auto my-4">
+            {% for friendship_received in friendships_received %} {% if
+            friendship_received[0] != 0 %}
+            <div
+                class="d-flex align-items-center justify-content-between w-100"
+            >
+                <a
+                    href="http://127.0.0.1:5000/user/{{ friendship_received[3] }}"
+                    class="user-name"
+                >
+                    <img src="{{ friendship_received[2] }}" class="user-img" />
+                    {{ friendship_received[1] }}
+                </a>
+
+                <!-- TODO: FORM RECEIVED FRIENSHIPS -->
+                <form
+                    method="post"
+                    action="{{ url_for('friends.find') }}"
+                    class="d-flex justify-content-center approval-buttons__container"
+                >
+                    <!-- CSRF Token  is required by the wtforms library -->
+                    {{ form.hidden_tag() }}
+                    <input
+                        type="submit"
+                        name="accept_received_friendship"
+                        value="Accept"
+                        class="btn btn-sm btn-outline-success px-3 mx-3 my-3"
+                    />
+                    <input
+                        type="submit"
+                        name="reject_received_friendship"
+                        value="Reject"
+                        class="btn btn-sm btn-outline-danger px-3 mx-3 my-3"
+                    />
+                    <!-- pending_friend[0] is the friendship id -->
+                    <input
+                        type="hidden"
+                        name="friendship_received_id"
+                        value="{{ friendship_received[0] }}"
+                    />
+                </form>
+            </div>
+            {% else %}
+            <div class="d-flex p-2">
+                <p>No requests!</p>
+            </div>
+            {% endif %} {% endfor %}
+        </div>
+        <!-- MY FRIENDS SECTION -->
+        <h1>My friends</h1>
+        <div class="friends-container d-flex flex-column overflow-auto my-4">
+            {% for approved_friend in approved_friends %} {% if
+            approved_friend[0] != 0 %}
+            <a
+                href="http://127.0.0.1:5000/user/{{ approved_friend[3] }}"
+                class="user-name m-2"
+            >
+                <img src="{{ approved_friend[2] }}" class="user-img" />
+                {{ approved_friend[1] }}
+            </a>
+            {% else %}
+            <div class="d-flex p-2">
+                <p>No friends!</p>
+            </div>
+            {% endif %} {% endfor %}
+        </div>
+    </section>
 </div>
 {% endblock %}
