@@ -43,9 +43,6 @@ def find():
     if form_friendship.validate_on_submit(): 
         action=None
         clicked_id=None
-        print("cancel", form_friendship.cancel_sent_friendship.data)
-        print("received reject", form_friendship.reject_received_friendship)
-        print("received reject", form_friendship.accept_received_friendship.data)
         if form_friendship.cancel_sent_friendship.data:
             action="cancel"
             clicked_id = form_friendship.friendship_sent_id.data

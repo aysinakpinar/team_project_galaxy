@@ -26,7 +26,11 @@
 <div class="d-flex m-4">
     <section class="d-flex flex-column">
         <div class="d-flex flex-column m-4">
-            <form method="get" action="{{ url_for('friends.find') }}">
+            <form
+                method="get"
+                action="{{ url_for('friends.find') }}"
+                class="d-flex flex-column"
+            >
                 {{ form.hidden_tag() }}
                 <label>Location:</label>
                 {{ form.location() }}
@@ -39,7 +43,7 @@
 
                 <button type="submit">Search</button>
             </form>
-            <div>
+            <div class="users-list">
                 {% if users %} {% for user in users %}
                 <div>
                     <h3>{{ user.username }}</h3>
@@ -176,6 +180,5 @@
             {% endif %} {% endfor %}
         </div>
     </section>
-    </div>
-    {% endblock %}
 </div>
+{% endblock %}
