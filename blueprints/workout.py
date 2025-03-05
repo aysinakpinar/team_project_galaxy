@@ -76,18 +76,31 @@ def create_workout():
     if not user_id:
         flash("You must be logged in to create a workout.", "danger")
         return redirect(url_for("auth.login"))
+
     if request.method == "POST":
         workout_name = request.form.get("workout_name")
-        estimated_time = request.form.get("estimated_time", "30 min")
+        estimated_time = request.form.get("estimated_time", "10")  # Default value to '30' if not provided
+        
+        # Check if the estimated_time is a valid integer
+        if not estimated_time.isdigit():  # Check if the value contains only digits
+            flash("Estimated time must be a valid number.", "danger")
+            return redirect(url_for("workout.create_workout"))
+        
+        estimated_time = int(estimated_time)  # Convert the string to an integer
+
         if not workout_name:
             flash("Workout name is required!", "warning")
             return redirect(url_for("workout.create_workout"))
+        
+        # Create the new workout
         new_workout = WorkoutModel(name=workout_name, estimated_time=estimated_time, user_id=user_id)
         db.session.add(new_workout)
         db.session.commit()
+
         session["workout_id"] = new_workout.id
         flash(f'Workout "{workout_name}" created successfully! Now add exercises.', "success")
         return redirect(url_for("workout.create_workout"))
+
     current_user = UserModel.query.get(user_id)
     user_workouts = current_user.workouts if current_user else []
     return render_template("create_workout.html", user=current_user, user_workouts=user_workouts)

@@ -2,12 +2,27 @@
 
 {% block content %}
 <h1>Create a New Workout</h1>
+
+<!-- Show flash messages specific to this page -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-dismissible fade show" role="alert">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- Workout Creation Form -->
 <form method="POST">
     <label for="workout_name">Workout Name:</label>
     <input type="text" name="workout_name" required placeholder="e.g. Legs">
 
     <label for="estimated_time">Estimated Time:</label>
-    <input type="text" name="estimated_time" placeholder="e.g. 10 min">
+    <input type="text" name="estimated_time" required placeholder="e.g. 10">
 
     <button type="submit">Create Workout</button>
 </form>
