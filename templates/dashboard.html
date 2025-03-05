@@ -8,20 +8,17 @@
         width: 50%;
         min-width: 350px;
         border-radius: 25px;
-        position: relative;
-        visibility: hidden;
+        display: block;
     }
-    .piechart-container {
-        visibility: visible;
-    }
+    /* .display-none {
+        display: none;
+    } */
 
     .main-svg {
         border-radius: 25px;
         border: 2px solid rgb(125, 125, 125);
     }
-    .display-none {
-        display: none;
-    }
+
     .leaderboard-container {
         width: 100%;
     }
@@ -119,12 +116,9 @@
         <button id="piechart-button">Piechart</button>
         <button id="barchart-button">Barchart</button>
     </div>
-    <div>
-        <div class="barchart-container">{{ bar_chart|safe }}</div>
-    </div>
-    <div>
-        <div class="piechart-container display-none">{{ pie_chart|safe }}</div>
-    </div>
+
+    <div class="barchart-container">{{ bar_chart|safe }}</div>
+    <div class="piechart-container display-none">{{ pie_chart|safe }}</div>
 
     <!-- LEADERBOARD SECTION -------- START -->
     <div
@@ -347,12 +341,16 @@
     const barchartContainer = document.querySelector(".barchart-container");
 
     piechartButton.addEventListener("click", function () {
-        pieChartContainer.style.visibility = "visible";
-        barChartContainer.style.visibility = "hidden";
+        barChartContainer.style.display = "none";
+        pieChartContainer.style.display = "block";
+
+        // Plotly.relayout(pieChartContainer, { autosize: true });
     });
     barchartButton.addEventListener("click", function () {
-        barChartContainer.style.visibility = "hidden";
-        pieChartContainer.style.visibility = "visible";
+        pieChartContainer.style.display = "none";
+        barChartContainer.style.display = "block";
+
+        // Plotly.relayout(barChartContainer, { autosize: true });
     });
 </script>
 {% endblock %}
