@@ -2,6 +2,23 @@
 <!-- for your custom styles -->
 {% block styles %}
 <style>
+    /* CHART  */
+    .barchart-container,
+    .piechart-container {
+        width: 50%;
+        min-width: 350px;
+        border-radius: 25px;
+        display: block;
+    }
+    /* .display-none {
+        display: none;
+    } */
+
+    .main-svg {
+        border-radius: 25px;
+        border: 2px solid rgb(125, 125, 125);
+    }
+
     .leaderboard-container {
         width: 100%;
     }
@@ -94,6 +111,15 @@
 {% block content %}
 <div class="d-flex flex-column align-items-center mt-4">
     <h1 class="mt-2">Dashboard</h1>
+    <!-- ANALYTICS SECTION ------- START -->
+    <!-- <div>
+        <button id="piechart-button">Piechart</button>
+        <button id="barchart-button">Barchart</button>
+    </div> -->
+
+    <div class="barchart-container">{{ bar_chart|safe }}</div>
+    <!-- <div class="piechart-container display-none">{{ pie_chart|safe }}</div> -->
+
     <!-- LEADERBOARD SECTION -------- START -->
     <div
         class="leaderboard-container d-flex flex-column align-items-center mt-5"
@@ -307,4 +333,24 @@
 
     <!-- LEADERBOARD SECTION ---- END -->
 </div>
+{% endblock %} {% block javasript %}
+<script>
+    const piechartButton = document.getElementById("piechart-button");
+    const barchartButton = document.getElementById("barchart-button");
+    const piechartContainer = document.querySelector(".piechart-container");
+    const barchartContainer = document.querySelector(".barchart-container");
+
+    piechartButton.addEventListener("click", function () {
+        barChartContainer.style.display = "none";
+        pieChartContainer.style.display = "block";
+
+        // Plotly.relayout(pieChartContainer, { autosize: true });
+    });
+    barchartButton.addEventListener("click", function () {
+        pieChartContainer.style.display = "none";
+        barChartContainer.style.display = "block";
+
+        // Plotly.relayout(barChartContainer, { autosize: true });
+    });
+</script>
 {% endblock %}

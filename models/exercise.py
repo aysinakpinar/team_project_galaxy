@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 from extension import db
 from models.associations import user_exercise, WorkoutExercise
-
 class ExerciseModel(db.Model):
     __tablename__ = "exercises"
 

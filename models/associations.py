@@ -21,3 +21,5 @@ class WorkoutExercise(db.Model):
     workout = db.relationship("WorkoutModel", back_populates="workout_exercises")
     exercise = db.relationship("ExerciseModel", back_populates="exercise_workouts")
 
+    analytics_ref = db.relationship("ExerciseAnalyticsModel", backref="workout_exercise", lazy=True, cascade="all, delete")
+
