@@ -127,9 +127,10 @@ python seeds/4_quote_seed.py
         running Mistral 7
     - pip install -r requirements.txt
     - brew install ollama
+    - ollama --version #check if it was installed
+    - ollama serve (opens for the port for mistral) #should run during running the app.
     - ollama pull mistral
     - ollama run mistral
-    - ollama serve (opens the port for mistral)
     - flask run (in another terminal)
 - enum in exercise model changed to string
 

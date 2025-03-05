@@ -2,7 +2,6 @@ import requests
 import json
 from flask import Blueprint, render_template, request, flash
 
-
 chatbot = Blueprint('chatbot', __name__)
 
 # Route to handle chatbot interactions
@@ -15,7 +14,7 @@ def chat_with_bot():
         user_message = request.form.get('message', '')
 
         if not user_message:
-            flash("Please ask a workout-related question!", "warning")
+            flash("Please ask a workout-related question!", "chatbot")
         else:
             try:
                 # Sending request to the local Ollama server
@@ -30,10 +29,8 @@ def chat_with_bot():
                     bot_response = f"Error: Received non-200 status code {response.status_code} from server."
                     return render_template('chat_with_bot.html', user_message=user_message, bot_response=bot_response)
 
-                
                 print(f"Raw response: {response.text}")
 
-                
                 full_response = ""
 
                 # Process the response as a stream of JSON objects
@@ -42,8 +39,7 @@ def chat_with_bot():
                         try:
                             # Attempt to decode and parse each line as JSON
                             line_data = line.decode('utf-8')
-                            
-                            
+
                             if not line_data.strip():
                                 continue
                             
@@ -53,12 +49,10 @@ def chat_with_bot():
                                 if "response" in json_data:
                                     full_response += json_data["response"]
                             except ValueError as e:
-                                
                                 print(f"Error parsing chunk: {line_data} | Error: {str(e)}")
                                 continue
                             
                         except Exception as e:
-                    
                             print(f"Unexpected error: {str(e)}")
 
                 # Final response after processing all chunks
