@@ -84,6 +84,19 @@ body {
     align-items: center;
     font-size: 14px;
     color: #8e8e8e;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.post-footer .btn {
+    display: flex;
+    font-size: 14px;
+    color: #8e8e8e;
+    width: 60px;
+    padding: 4px 0;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .btn-outline-primary {
