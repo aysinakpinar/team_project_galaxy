@@ -17,25 +17,30 @@
         <!-- New Post Form -->
         <div class="card post-card mb-4">
             <div class="card-body">
-                <form method="POST" enctype="multipart/form-data">
+                <form class="post-textarea" method="POST" enctype="multipart/form-data">
                     {{ form.csrf_token }}
                     <div class="mb-3 d-flex align-items-start">
-                        <img src="{{ url_for('static', filename='profile_pics/' + current_user.profile_picture) }}" class="profile-pic" alt="{{ current_user.username }}'s profile">
+                        <img src="{{ url_for('static', filename='profile_pics/' + current_user.profile_picture) }}" class="profile-pic me-3" alt="{{ current_user.username }}'s profile">
                         <div class="flex-grow-1">
-                            {{ form.text(class="form-control post-textarea", placeholder="What's on your mind?", rows="5") }}
+                            {{ form.text() }}
                             {% for error in form.text.errors %}
                                 <div class="text-danger">{{ error }}</div>
                             {% endfor %}
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="img" class="form-label">Add an image (optional):</label>
-                        {{ form.img(class="form-control", id="img", accept="image/*") }}
+                        <div class="input-group">
+                            <label class="input-group-text btn btn-outline-secondary" for="img">
+                                <i class="bi bi-image-fill"></i> <!-- Bootstrap Icons image icon -->
+                            </label>
+                            <span class="form-control">Add an image (optional)</span>
+                            {{ form.img(class="d-none", id="img") }} <!-- Hidden input -->
+                        </div>
                         {% for error in form.img.errors %}
                             <div class="text-danger">{{ error }}</div>
                         {% endfor %}
                     </div>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i></button>  
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i></button>
                 </form>
             </div>
         </div>

@@ -46,7 +46,13 @@
                 {% endfor %}
             </div>
             <div class="mb-3">
-                {{ form.img(class="form-control") }}
+                <div class="input-group">
+                    <label class="input-group-text btn btn-outline-secondary" for="img">
+                        <i class="bi bi-image-fill"></i> <!-- Bootstrap Icons image icon -->
+                    </label>
+                    <span class="form-control">Add an image (optional)</span>
+                    {{ form.img(class="d-none", id="img") }} <!-- Hidden input -->
+                </div>
                 {% for error in form.img.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
