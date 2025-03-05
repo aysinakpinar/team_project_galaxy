@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Edit Your Profile</h2>
+
+{% if user.profile_picture %}
+    <img src="{{ url_for('static', filename='profile_pics/' + user.profile_picture) }}" alt="Profile Picture" width="150">
+{% else %}
+    <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Default Profile Picture" width="150">
+{% endif %}
+
+<h3>Hello {{user.username}}!</h3>
+
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    
+    <label>Username:</label>
+    {{ form.username() }}
+    
+    <label>Email:</label>
+    {{ form.email() }}
+
+    <label>Password:</label>
+    {{ form.password(placeholder="change password") }}
+
+    <label>Confirm Password:</label>
+    {{ form.confirm_password(placeholder="confirm new password") }}
+
+    <label>Location:</label>
+    {{ form.location(placeholder="location")}}
+
+    <label>Age:</label>
+    {{ form.age() }}
+
+    <label>Weight:</label>
+    {{ form.weight() }}
+
+    <label>Height:</label>
+    {{ form.height(placeholder="ft in (eg. 5.7)") }}
+
+    <label>Fitness Level:</label>
+    {{ form.fitness_level() }}
+
+    <label>Favourite Exercise:</label>
+    {{ form.favourite_exercise() }}
+
+    <label>Profile Picture:</label>
+    {{ form.profile_picture() }}
+
+    <button type="submit">Update Profile</button>
+</form>
+{% endblock %}
