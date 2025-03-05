@@ -204,6 +204,9 @@ def mark_done(exercise_id, workout_id):
     # ------ ANALYTICS ----- | Michal |
 
     now = datetime.now(timezone.utc)
+    print("-----------------------exercise id")
+    print(exercise_entry.id)
+    print("-----------------------exercise id")
     today_date = now.date()
     exercise_details = exercise_entry.exercise
     workout_details = exercise_entry.workout
@@ -215,7 +218,7 @@ def mark_done(exercise_id, workout_id):
         status="Done", 
         user_id = workout_details.user_id,
         workout_id=workout_details.id,
-        workout_exercise_id=exercise_details.id
+        workout_exercise_id=exercise_entry.id
     )
 
     # check if there's an exercise with today's date, same name and workout id
@@ -225,8 +228,7 @@ def mark_done(exercise_id, workout_id):
         ExerciseAnalyticsModel.workout_id == workout_details.id
     ).first()
     # if there's an exercise, remove it (when the user presses undone)
-    print(00000)
-    print(exercise_in_database)
+
     if exercise_in_database:
         db.session.delete(exercise_in_database)
         db.session.commit()

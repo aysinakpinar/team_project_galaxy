@@ -14,7 +14,7 @@ class UserModel(db.Model):
     description = db.Column(db.String(200), nullable=True)
     password = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(200), nullable=False, unique=True)
-    profile_picture = db.Column(db.String(200), nullable=True)
+    # profile_picture = db.Column(db.String(200), nullable=True)
     location = db.Column(db.String(200), nullable=False)
     age = db.Column(db.Integer, nullable=True)
     weight = db.Column(db.Integer, nullable=True)
@@ -22,7 +22,7 @@ class UserModel(db.Model):
     fitness_level = db.Column(db.String(200), nullable=True)
     favourite_exercise = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
-    profile_picture = db.Column(db.String(100), nullable=True, default="default.jpg")
+    profile_picture = db.Column(db.String(300), nullable=True, default="default.jpg")
 
 
     # Relationships
