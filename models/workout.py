@@ -17,4 +17,4 @@ class WorkoutModel(db.Model):
 
     # Many-to-Many Relationship with Exercises
     workout_exercises = db.relationship("WorkoutExercise", back_populates="workout", cascade="all, delete-orphan")
-
+    analytics_ref = db.relationship("ExerciseAnalyticsModel", backref="workout", lazy=True, cascade="all, delete")

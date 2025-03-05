@@ -194,7 +194,6 @@ def mark_done(exercise_id, workout_id):
         return redirect(url_for("workout.manage_workout"))
 
     # Toggle exercise completion status
-    
     exercise_entry.done = not exercise_entry.done  
 
     db.session.commit()
@@ -216,7 +215,7 @@ def mark_done(exercise_id, workout_id):
         status="Done", 
         user_id = workout_details.user_id,
         workout_id=workout_details.id,
-        exercise_id=exercise_details.id
+        workout_exercise_id=exercise_details.id
     )
 
     # check if there's an exercise with today's date, same name and workout id
@@ -226,7 +225,8 @@ def mark_done(exercise_id, workout_id):
         ExerciseAnalyticsModel.workout_id == workout_details.id
     ).first()
     # if there's an exercise, remove it (when the user presses undone)
-
+    print(00000)
+    print(exercise_in_database)
     if exercise_in_database:
         db.session.delete(exercise_in_database)
         db.session.commit()

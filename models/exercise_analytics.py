@@ -13,6 +13,6 @@ class ExerciseAnalyticsModel(db.Model):
     status = db.Column(db.String(100), nullable=True) # None/DONE
     workout_id = db.Column(db.Integer, ForeignKey("workouts.id", ondelete="CASCADE"), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    exercise_id = db.Column(db.Integer, ForeignKey("exercises.id", ondelete="CASCADE"), nullable=False)
+    workout_exercise_id = db.Column(db.Integer, ForeignKey("workout_exercise.id", ondelete="CASCADE"), nullable=False)
 
-    workout = db.relationship("WorkoutModel", backref="analytics", lazy=True, cascade="all, delete")
+    # workout = db.relationship("WorkoutModel", backref="analytics", lazy=True, cascade="all, delete")

@@ -33,4 +33,3 @@ class ExerciseModel(db.Model):
 
     # Relationship with WorkoutExercise (Tracks Done ✅)
     exercise_workouts = db.relationship("WorkoutExercise", back_populates="exercise", cascade="all, delete-orphan")
-    analytics_ref = db.relationship("ExerciseAnalyticsModel", backref="exercise", lazy=True, cascade="all, delete")
