@@ -2,6 +2,16 @@
 <!-- for your custom styles -->
 {% block styles %}
 <style>
+    /* CHART  */
+    .chart-container {
+        width: 50%;
+        min-width: 350px;
+        border-radius: 25px;
+        border: 2px solid rgb(125, 125, 125);
+    }
+    .main-svg {
+        border-radius: 25px;
+    }
     .leaderboard-container {
         width: 100%;
     }
@@ -306,5 +316,8 @@
     </div>
 
     <!-- LEADERBOARD SECTION ---- END -->
+
+    <!-- ANALYTICS SECTION ------- START -->
+    <div class="chart-container">{{ bar_chart|safe }}</div>
 </div>
 {% endblock %}

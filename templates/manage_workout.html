@@ -1,6 +1,4 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <h2>Manage Workout: {{ workout.name }}</h2>
 <p><strong>Estimated Time:</strong> {{ workout.estimated_time }}</p>
 
@@ -9,72 +7,96 @@
     {{ form.hidden_tag() }}
     <label for="name" class="form-label">Select an Exercise:</label>
     {{ form.name(class="form-control") }}
-    <br>
+    <br />
     <button type="submit" class="btn btn-primary">Add Exercise</button>
 </form>
 
 <!-- Workout Exercises Table -->
 <h3>Exercises in This Workout</h3>
 {% if workout_exercises %}
-    <table class="table table-striped text-center align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Exercise</th>
-                <th>Description</th>
-                <th>Intensity</th>
-                <th>Sets</th>
-                <th>Reps</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for entry in workout_exercises %}
-            <tr>
-                <td>
-                    {% if entry.exercise and entry.exercise.picture_path %}
-                        <img src="{{ url_for('static', filename=entry.exercise.picture_path.split('/static/')[-1]) }}" 
-                            alt="{{ entry.exercise.name }}" class="img-thumbnail" 
-                            style="max-width: 80px; max-height: 80px;">
-                    {% else %}
-                        <p>No image available</p>
-                    {% endif %}
-                    <br>
-                    <strong>{{ entry.exercise.name if entry.exercise else 'Unknown Exercise' }}</strong>
-                </td>
-                <td>{{ entry.exercise.description if entry.exercise else 'N/A' }}</td>
-                <td>{{ entry.exercise.intensity if entry.exercise else 'N/A' }}</td>
-                <td>{{ entry.exercise.sets if entry.exercise else 'N/A' }}</td>
-                <td>{{ entry.exercise.reps if entry.exercise else 'N/A' }}</td>
-                <td>
-                    {% if entry.done %}
-                        <span class="badge bg-success">✅ Done</span>
-                    {% else %}
-                        <span class="badge bg-warning text-dark">❌ Not Done</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <form action="{{ url_for('workout.remove_exercise', exercise_id=entry.exercise.id) }}" method="POST" class="d-inline">
-                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
-                    </form>
-                    <form action="{{ url_for('workout.mark_done', exercise_id=entry.exercise.id) }}" method="POST" class="d-inline">
-                        <button type="submit" class="btn btn-success btn-sm">
-                            {% if entry.done %}Undo{% else %}Mark as Done{% endif %}
-                        </button>
-                    </form>
-                    <button class="btn btn-info btn-sm" data-bs-toggle="tooltip" title="View tutorial for this exercise">
-                        Tutorial
+<table class="table table-striped text-center align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Exercise</th>
+            <th>Description</th>
+            <th>Intensity</th>
+            <th>Sets</th>
+            <th>Reps</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in workout_exercises %}
+        <tr>
+            <td>
+                {% if entry.exercise and entry.exercise.picture_path %}
+                <img
+                    src="{{ url_for('static', filename=entry.exercise.picture_path.split('/static/')[-1]) }}"
+                    alt="{{ entry.exercise.name }}"
+                    class="img-thumbnail"
+                    style="max-width: 80px; max-height: 80px"
+                />
+                {% else %}
+                <p>No image available</p>
+                {% endif %}
+                <br />
+                <strong
+                    >{{ entry.exercise.name if entry.exercise else 'Unknown
+                    Exercise' }}</strong
+                >
+            </td>
+            <td>
+                {{ entry.exercise.description if entry.exercise else 'N/A' }}
+            </td>
+            <td>{{ entry.exercise.intensity if entry.exercise else 'N/A' }}</td>
+            <td>{{ entry.exercise.sets if entry.exercise else 'N/A' }}</td>
+            <td>{{ entry.exercise.reps if entry.exercise else 'N/A' }}</td>
+            <td>
+                {% if entry.done %}
+                <span class="badge bg-success">✅ Done</span>
+                {% else %}
+                <span class="badge bg-warning text-dark">❌ Not Done</span>
+                {% endif %}
+            </td>
+            <td>
+                <form
+                    action="{{ url_for('workout.remove_exercise', exercise_id=entry.exercise.id) }}"
+                    method="POST"
+                    class="d-inline"
+                >
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        Remove
                     </button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                </form>
+                <form
+                    action="{{ url_for('workout.mark_done', exercise_id=entry.exercise.id, workout_id=workout.id) }}"
+                    method="POST"
+                    class="d-inline"
+                >
+                    <button type="submit" class="btn btn-success btn-sm">
+                        {% if entry.done %}Undo{% else %}Mark as Done{% endif %}
+                    </button>
+                </form>
+                <button
+                    class="btn btn-info btn-sm"
+                    data-bs-toggle="tooltip"
+                    title="View tutorial for this exercise"
+                >
+                    Tutorial
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% else %}
-    <p class="text-muted">No exercises added yet.</p>
+<p class="text-muted">No exercises added yet.</p>
 {% endif %}
 
 <!-- Navigation Buttons -->
-<a href="{{ url_for('workout.create_workout') }}" class="btn btn-secondary">Create New Workout</a>
+<a href="{{ url_for('workout.create_workout') }}" class="btn btn-secondary"
+    >Create New Workout</a
+>
 
 {% endblock %}

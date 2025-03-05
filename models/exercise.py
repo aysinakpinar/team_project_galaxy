@@ -4,10 +4,10 @@ from datetime import datetime, timezone
 from extension import db
 from models.associations import user_exercise, WorkoutExercise
 
-class IntensityEnum(Enum):
-    LOW = "Low"
-    MEDIUM = "Medium"
-    HIGH = "High"
+# class IntensityEnum(Enum):
+#     LOW = "Low"
+#     MEDIUM = "Medium"
+#     HIGH = "High"
 
 
 class ExerciseModel(db.Model):
@@ -16,7 +16,7 @@ class ExerciseModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
     description = db.Column(db.String(500), nullable=True)
-    intensity = db.Column(Enum("Low", "Medium", "High", name="intensity_enum"), nullable=True)  # ✅ Enum
+    intensity = db.Column(db.String(100), nullable=True)  # ✅ Enum
     sets = db.Column(db.Integer, nullable=True)
     reps = db.Column(db.Integer, nullable=True)
     picture_path = db.Column(db.String(200), nullable=True, default=None)
@@ -33,3 +33,4 @@ class ExerciseModel(db.Model):
 
     # Relationship with WorkoutExercise (Tracks Done ✅)
     exercise_workouts = db.relationship("WorkoutExercise", back_populates="exercise", cascade="all, delete-orphan")
+    analytics_ref = db.relationship("ExerciseAnalyticsModel", backref="exercise", lazy=True, cascade="all, delete")
