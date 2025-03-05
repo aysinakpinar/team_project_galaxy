@@ -11,3 +11,7 @@ from .associations import WorkoutExercise
 from .gym import GymModel
 from .quote import QuoteModel
 from .exercise_analytics import ExerciseAnalyticsModel
+from .like import LikeModel
+from .post import PostModel
+from .reply import ReplyModel
+

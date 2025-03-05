@@ -5,11 +5,51 @@
 <!-- Add Exercise Form -->
 <form method="POST" class="mb-4">
     {{ form.hidden_tag() }}
+
+    <input type="hidden" name="workout_id" value="{{ workout.id }}" />
+
     <label for="name" class="form-label">Select an Exercise:</label>
     {{ form.name(class="form-control") }}
     <br />
     <button type="submit" class="btn btn-primary">Add Exercise</button>
 </form>
+
+<!-- Suggested Exercises Based on User Profile -->
+<h3>Suggested Exercises Based on Your Profile</h3>
+{% if suggested_exercises %}
+<ul>
+    {% for exercise in suggested_exercises %}
+    <li>
+        {{ exercise.name }} {% if exercise.picture_path %}
+        <img
+            src="{{ url_for('static', filename=exercise.picture_path.split('/static/')[-1]) }}"
+            alt="{{ exercise.name }}"
+            class="img-thumbnail"
+            style="width: 100px"
+        />
+        {% endif %}
+
+        <form
+            action="{{ url_for('workout.add_suggested_exercise') }}"
+            method="POST"
+            class="d-inline"
+        >
+            <input type="hidden" name="workout_id" value="{{ workout.id }}" />
+            <input
+                type="hidden"
+                name="suggested_exercise_id"
+                value="{{ exercise.id }}"
+            />
+            <button type="submit" class="btn btn-primary btn-sm">
+                Add to Workout
+            </button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No suggested exercises available at the moment.</p>
+{% endif %}
 
 <!-- Workout Exercises Table -->
 <h3>Exercises in This Workout</h3>
@@ -60,8 +100,9 @@
                 {% endif %}
             </td>
             <td>
+                <!-- Remove Exercise -->
                 <form
-                    action="{{ url_for('workout.remove_exercise', exercise_id=entry.exercise.id) }}"
+                    action="{{ url_for('workout.remove_exercise', workout_id=workout.id, exercise_id=entry.exercise.id) }}"
                     method="POST"
                     class="d-inline"
                 >
@@ -69,8 +110,9 @@
                         Remove
                     </button>
                 </form>
+                <!-- Mark as Done/Undo -->
                 <form
-                    action="{{ url_for('workout.mark_done', exercise_id=entry.exercise.id, workout_id=workout.id) }}"
+                    action="{{ url_for('workout.mark_done', workout_id=workout.id, exercise_id=entry.exercise.id) }}"
                     method="POST"
                     class="d-inline"
                 >
