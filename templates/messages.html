@@ -1,126 +1,134 @@
-<!-- khadijas code for chatbox  -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
-        integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
-        crossorigin="anonymous"></script>
-    <title>Private Chat</title>
+    <title>Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Basic styling for the chat interface */
+        #container {
+            display: flex;
+            height: 100vh;
+        }
+        #sidebar {
+            width: 250px;
+            height: 100%;
+            border-right: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        #chat {
+            flex-grow: 1;
+            height: 100%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        #messages {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            overflow-y: auto;
+            height: 80%;
+        }
+        #message-input {
+            padding: 10px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        #send-button {
+            padding: 10px;
+        }
+        .user-link {
+            cursor: pointer;
+            padding: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+        }
+        .user-link:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
-    <div class="main container">
-        <div class="user-container">
-            <div class="search box">
-                <input type="text" id="searchInput" placeholder="Search for a friend" />
-            </div>
-            <div id="userList" class="user-list"
+    <div id="container">
+        <!-- Sidebar for users -->
+        <div id="sidebar">
+            <h3>Users</h3>
+            <ul id="user-list"></ul>
+        </div>
+
+        <!-- Chat window -->
+        <div id="chat">
+            <div id="messages"></div>
+
+            <!-- Message input and send button -->
+            <input type="text" id="message-input" placeholder="Type your message here...">
+            <button id="send-button">Send</button>
         </div>
     </div>
 
+    <script type="text/javascript">
+        // Connect to the Socket.IO server
+        var socket = io();
+        var currentRoom = null;
 
-    <style>
-        body {
-            font-family: sans-serif;
-            background-color: linear-gradient(black, grey);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            color: white;
-            overflow: hidden;
-        }
+        // Fetch and display the list of users
+        $.get('/chat/get_users', function(users) {
+            users.forEach(function(user) {
+                $('#user-list').append(
+                    '<li><a href="#" class="user-link" data-user-id="' + user.id + '">' + user.username + '</a></li>'
+                );
+            });
+        });
 
-        .messages {
-            width: 80%;
-            max-height: 500px;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            overflow-y: auto;
-            border-radius: 10px;
-            border: 1px solid rgb(48, 22, 48)
-        }
-
-        .messages p {
-            margin: 10px 0;
-            font-size: 1.2rem;
-            line-height: 1.5;
-            background-image: linear-gradient(45deg, #0db2b8, #9e28d0);
-            padding: 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            /* animation: pulse 2s infinite ease-in-out; */
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 10px;
-            border: none;
-            background-color: #3a4b7a;
-            color: white;
-            font-size: 1.2rem;
-            outline: none;
-            box-sizing: border-box;
-        }
-
-        input::placeholder {
-            color: #b9c8d5
-        }
-
-        input:focus {
-            background-color: #1e2a47;
-        }
-
-        p {
-            margin: 5px 0;
-        }
-    </style>
-
-
-    <script>
-        const socket = io();
-
-        let username = "khadija";
-
-        let messageContainer = document.getElementById("messageContainer");
-        if (!messageContainer) {
-            console.error("🚨 Error: .messages container not found");
-        }
-
-        socket.on("connect", () => {
-            let p = document.createElement("p")
-            p.innerText = "You're connected"
-            messageContainer.appendChild(p)
-        })
-
-        let messageInput = document.getElementById("messageInput")
-        messageInput.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                let message = messageInput.value.trim();
-                if (message) {
-                    socket.emit("message", {message: message})
-                    messageInput.value = "";
-                }
+        // Handle clicking on a user to start a private chat
+        $('body').on('click', '.user-link', function(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            var userId = $(this).data('user-id');
+            if (currentRoom) {
+                socket.emit('leave_room', {room: currentRoom});
             }
-        })
+            currentRoom = userId; // Set the new user as the current room
+            socket.emit('join_room', {room: currentRoom});
+            $('#messages').html(''); // Clear previous messages
+            console.log('Joined room:', currentRoom); // Debugging
+        });
 
-        socket.on('message', (message) => {
-            console.log("Received message:", message);  // Debugging
-            let messageElement = document.createElement("p")
-            messageElement.innerText = message
-            messageContainer.appendChild(messageElement)
+        // Handle sending a message
+        $('#send-button').click(function() {
+            var message = $('#message-input').val();
+            if (message && currentRoom) {
+                socket.emit('send_message', {room: currentRoom, message: message});
+                $('#message-input').val('');
+            }
+        });
 
-            // Auto-scroll to the bottom of the chat
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-        })
+        // Handle receiving a message
+        socket.on('receive_message', function(data) {
+            $('#messages').append(
+                '<div><strong>' + data.sender_username + ':</strong> ' + data.message + '</div>'
+            );
+            // Auto scroll to the bottom of the messages
+            $('#messages').scrollTop($('#messages')[0].scrollHeight);
+        });
 
+        // Handle updating the user list
+        socket.on('update_user_list', function(user_ids) {
+            $('#user-list').empty(); // Clear the user list first
+            $.get('/chat/get_users', function(users) {
+                users.forEach(function(user) {
+                    if (user_ids.includes(user.id)) {
+                        $('#user-list').append(
+                            '<li><a href="#" class="user-link" data-user-id="' + user.id + '">' + user.username + '</a></li>'
+                        );
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
-
