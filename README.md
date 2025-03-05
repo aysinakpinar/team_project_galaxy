@@ -118,10 +118,18 @@ python seeds/2_user_point_seed.py
 python seeds/3_exercise_seed.py
 python seeds/4_quote_seed.py
 '''
+## PR26
+- Users can display the exercises in the workout page.
+- Users can also add user specific suggested exercises to the workouts.
+- Bugs were fixed for displaying, removing and marking the exercises done for each workouts.
+- Mistral chatbot is responding but a bit late (about 9 secs response).
+- To use chatbot 
+        running Mistral 7
+    - pip install -r requirements.txt
+    - brew install ollama
+    - ollama pull mistral
+    - ollama run mistral
+    - ollama serve (opens the port for mistral)
+    - flask run (in another terminal)
+- enum in exercise model changed to string
 
-## running Mistral 7
-pip install -r requirements.txt
-brew install ollama
-ollama pull mistral
-ollama run mistral
-ollama serve  
