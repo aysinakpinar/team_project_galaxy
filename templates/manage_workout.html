@@ -7,12 +7,40 @@
 <!-- Add Exercise Form -->
 <form method="POST" class="mb-4">
     {{ form.hidden_tag() }}
+    
+    <!-- Hidden input to ensure the correct workout_id is submitted -->
+    <input type="hidden" name="workout_id" value="{{ workout.id }}">
+
     <label for="name" class="form-label">Select an Exercise:</label>
     {{ form.name(class="form-control") }}
     <br>
     <button type="submit" class="btn btn-primary">Add Exercise</button>
 </form>
 
+<!-- Suggested Exercises Based on User Profile -->
+<h3>Suggested Exercises Based on Your Profile</h3>
+{% if suggested_exercises %}
+    <ul>
+        {% for exercise in suggested_exercises %}
+            <li>
+                {{ exercise.name }}
+                <!-- Display Image for Exercise if available -->
+                {% if exercise.picture_path %}
+                    <img src="{{ url_for('static', filename=exercise.picture_path) }}" alt="{{ exercise.name }}" class="img-thumbnail" style="width: 100px;">
+                {% endif %}
+                <!-- Add Suggested Exercise to Workout -->
+                <form action="{{ url_for('workout.add_suggested_exercise') }}" method="POST" class="d-inline">
+                    <input type="hidden" name="suggested_exercise_id" value="{{ exercise.id }}">
+                    <button type="submit" class="btn btn-primary btn-sm">Add to Workout</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No suggested exercises available at the moment.</p>
+{% endif %}
+
+<!-- Workout Exercises Table -->
 <!-- Workout Exercises Table -->
 <h3>Exercises in This Workout</h3>
 {% if workout_exercises %}
