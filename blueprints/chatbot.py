@@ -1,29 +1,73 @@
-import os
-import openai
-from flask import Blueprint, request, jsonify, render_template
-from dotenv import load_dotenv
+import requests
+import json
+from flask import Blueprint, render_template, request, flash
 
-# Load environment variables
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Initialize Flask Blueprint
+chatbot = Blueprint('chatbot', __name__)
 
-# Define a Flask Blueprint
-chatbot = Blueprint("chatbot", __name__, template_folder="../templates", url_prefix="/chatbot")
+# Route to handle chatbot interactions
+@chatbot.route('/chat_with_bot', methods=['GET', 'POST'])
+def chat_with_bot():
+    user_message = ""
+    bot_response = ""
 
-@chatbot.route("/")
-def chatbot_home():
-    return render_template("chatbot.html")
+    if request.method == 'POST':
+        user_message = request.form.get('message', '')
 
-@chatbot.route("/ask", methods=["POST"])
-def ask():
-    user_question = request.form["question"]
+        if not user_message:
+            flash("Please ask a workout-related question!", "warning")
+        else:
+            try:
+                # Sending request to the local Ollama server
+                response = requests.post(
+                    "http://localhost:11434/api/generate",
+                    json={"model": "mistral", "prompt": f"Answer this workout-related question: {user_message}"},
+                    stream=True  # Enable streaming
+                )
 
-    # OpenAI API call
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "system", "content": "You are a fitness expert who provides workout advice."},
-                {"role": "user", "content": user_question}]
-    )
+                # Check if the response is successful
+                if response.status_code != 200:
+                    bot_response = f"Error: Received non-200 status code {response.status_code} from server."
+                    return render_template('chat_with_bot.html', user_message=user_message, bot_response=bot_response)
 
-    answer = response["choices"][0]["message"]["content"]
-    return jsonify({"answer": answer})
+                # Log the raw response for debugging
+                print(f"Raw response: {response.text}")
+
+                # Initialize an empty string to accumulate the full response
+                full_response = ""
+
+                # Process the response as a stream of JSON objects
+                for line in response.iter_lines():
+                    if line:
+                        try:
+                            # Attempt to decode and parse each line as JSON
+                            line_data = line.decode('utf-8')
+                            
+                            # Skip empty lines or lines with extra data
+                            if not line_data.strip():
+                                continue
+                            
+                            # Attempt to parse the line as JSON
+                            try:
+                                json_data = json.loads(line_data)
+                                if "response" in json_data:
+                                    full_response += json_data["response"]
+                            except ValueError as e:
+                                # If the line is not valid JSON, log the error and continue
+                                print(f"Error parsing chunk: {line_data} | Error: {str(e)}")
+                                continue
+                            
+                        except Exception as e:
+                            # Log any unexpected errors
+                            print(f"Unexpected error: {str(e)}")
+
+                # Final response after processing all chunks
+                bot_response = full_response.strip()
+
+                if not bot_response:
+                    bot_response = "Error: No valid response generated."
+
+            except Exception as e:
+                bot_response = f"Error: {str(e)}"
+
+    return render_template('chat_with_bot.html', user_message=user_message, bot_response=bot_response)
