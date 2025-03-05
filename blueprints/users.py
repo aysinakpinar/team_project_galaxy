@@ -1,8 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, make_response
 from models.user import UserModel
+from models.friendship import FriendshipModel
 from extension import db
 from forms.user_profile_form import UserProfileForm
 import os
+from sqlalchemy import or_, and_
+
 from flask import current_app
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
@@ -18,17 +21,35 @@ users = Blueprint("users", __name__, url_prefix="/users")
 def profile():
     print(f"📡 Request method: {request.method}")
 
-    user_id = session.get('user_id')
+    # Check if a specific user_id is provided (for friends' profiles)
+    user_id = request.args.get('user_id', session.get('user_id'))
+
     if not user_id:
         flash("You need to log in first!", "danger")
         return redirect(url_for("auth.login"))
-    
+
     user = UserModel.query.get(user_id)
     if not user:
         flash("User not found!", "danger")
         return redirect(url_for("auth.login"))
+
+    # Fetch approved friends for the profile being viewed
+    friends = get_friends_of_user(user_id)
+
+    return render_template("profile.html", user=user, friends=friends)
+
+
+    # user_id = session.get('user_id')
+    # if not user_id:
+    #     flash("You need to log in first!", "danger")
+    #     return redirect(url_for("auth.login"))
     
-    return render_template("profile.html", user=user)
+    # user = UserModel.query.get(user_id)
+    # if not user:
+    #     flash("User not found!", "danger")
+    #     return redirect(url_for("auth.login"))
+    
+    # return render_template("profile.html", user=user)
 
 
 @users.route('/edit_profile', methods=['GET', 'POST'])
@@ -98,3 +119,21 @@ def edit_profile():
         print("🛠 Form submission received!")
 
     return render_template("edit_profile.html", form=form, user=user)
+
+
+def get_friends_of_user(user_id):
+    friends = db.session.query(
+        UserModel.id,
+        UserModel.username,
+        UserModel.location,
+        UserModel.age,
+        UserModel.fitness_level,
+        UserModel.favourite_exercise
+    ).join(FriendshipModel, or_(
+        and_(UserModel.id == FriendshipModel.friend_id, FriendshipModel.user_id == user_id),
+        and_(UserModel.id == FriendshipModel.user_id, FriendshipModel.friend_id == user_id)
+    )).filter(
+        FriendshipModel.status == "approved"
+    ).all()
+    
+    return friends
