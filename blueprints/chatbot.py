@@ -2,7 +2,7 @@ import requests
 import json
 from flask import Blueprint, render_template, request, flash
 
-# Initialize Flask Blueprint
+
 chatbot = Blueprint('chatbot', __name__)
 
 # Route to handle chatbot interactions
@@ -30,10 +30,10 @@ def chat_with_bot():
                     bot_response = f"Error: Received non-200 status code {response.status_code} from server."
                     return render_template('chat_with_bot.html', user_message=user_message, bot_response=bot_response)
 
-                # Log the raw response for debugging
+                
                 print(f"Raw response: {response.text}")
 
-                # Initialize an empty string to accumulate the full response
+                
                 full_response = ""
 
                 # Process the response as a stream of JSON objects
@@ -43,7 +43,7 @@ def chat_with_bot():
                             # Attempt to decode and parse each line as JSON
                             line_data = line.decode('utf-8')
                             
-                            # Skip empty lines or lines with extra data
+                            
                             if not line_data.strip():
                                 continue
                             
@@ -53,12 +53,12 @@ def chat_with_bot():
                                 if "response" in json_data:
                                     full_response += json_data["response"]
                             except ValueError as e:
-                                # If the line is not valid JSON, log the error and continue
+                                
                                 print(f"Error parsing chunk: {line_data} | Error: {str(e)}")
                                 continue
                             
                         except Exception as e:
-                            # Log any unexpected errors
+                    
                             print(f"Unexpected error: {str(e)}")
 
                 # Final response after processing all chunks

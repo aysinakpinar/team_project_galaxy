@@ -19,6 +19,7 @@
         <tr>
             <th>Workout</th>
             <th>Estimated Time</th>
+            <th>Exercises</th> 
             <th>Actions</th>
         </tr>
     </thead>
@@ -27,12 +28,64 @@
         <tr>
             <td>{{ workout.name }}</td>
             <td>{{ workout.estimated_time }}</td>
+            
+            <!-- Display exercises under each workout as a table -->
             <td>
+                {% if workout.workout_exercises %}
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Description</th>
+                                <th>Intensity</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in workout.workout_exercises %}
+                            <tr>
+                                <td>
+                                    {% if entry.exercise and entry.exercise.picture_path %}
+                                        <img src="{{ url_for('static', filename=entry.exercise.picture_path.split('/static/')[-1]) }}" 
+                                            alt="{{ entry.exercise.name }}" class="img-thumbnail" 
+                                            style="max-width: 80px; max-height: 80px;">
+                                    {% else %}
+                                        <p>No image available</p>
+                                    {% endif %}
+                                    <br>
+                                    <strong>{{ entry.exercise.name if entry.exercise else 'Unknown Exercise' }}</strong>
+                                </td>
+                                <td>{{ entry.exercise.description if entry.exercise else 'N/A' }}</td>
+                                <td>{{ entry.exercise.intensity if entry.exercise.intensity else 'N/A' }}</td>
+                                <td>{{ entry.exercise.sets if entry.exercise.sets else 'N/A' }}</td>
+                                <td>{{ entry.exercise.reps if entry.exercise.reps else 'N/A' }}</td>
+                                <td>
+                                    {% if entry.done %}
+                                        <span class="badge bg-success">✅ Done</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">❌ Not Done</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No exercises added yet.</p>
+                {% endif %}
+            </td>
+            
+            <td>
+                <!-- Remove Workout -->
                 <form action="{{ url_for('workout.remove_workout', workout_id=workout.id) }}" method="POST">
                     <button type="submit" class="btn btn-danger btn-sm">Remove</button>
                 </form>
+                
+                <!-- Edit Workout -->
                 <form action="{{ url_for('workout.manage_workout', workout_id=workout.id) }}" method="POST">
-                    <button type="submit" class="btn btn-info btn-sm">Edit workout</button>
+                    <button type="submit" class="btn btn-info btn-sm">Edit Workout</button>
                 </form>
             </td>
         </tr>
