@@ -26,10 +26,14 @@ class ExerciseModel(db.Model):
     # Many-to-Many Relationships
     users = db.relationship(
         "UserModel", 
-        secondary="user_exercise",  # ✅ Kept this Many-to-Many
+        secondary="user_exercise",  # Kept this Many-to-Many
         lazy="subquery", 
         back_populates="exercises"
     )
 
-    # Relationship with WorkoutExercise (Tracks Done ✅)
-    exercise_workouts = db.relationship("WorkoutExercise", back_populates="exercise", cascade="all, delete-orphan")
+    # Relationship with WorkoutExercise (Tracks Done)
+    exercise_workouts = db.relationship(
+        "WorkoutExercise", 
+        back_populates="exercise", 
+        cascade="all, delete-orphan"
+        )
