@@ -13,29 +13,36 @@ def seed_gyms():
     gyms = [
         {
             "name": "Galaxy Gym",
-            "picture_path": "https://www.primalstrength.com/cdn/shop/files/gymdesign_render_Two_collumn_grid_cb1b5850-fa8e-4a7b-a2b3-190c2e45facd.jpg?v=1680719688&width=1500",
+            "picture_path": "https://media.istockphoto.com/id/654899206/photo/interior-of-modern-gym.jpg?s=612x612&w=0&k=20&c=ceWQahSTwGkGtQOFTpavOYAcAsnbOASjeoRzA6uZWFQ=",
             "user_id": 1,
             "location": "Liverpool",
-            "lat": "53.373454",
-            "lng": "-2.938456",
+            "lat": 53.373454,
+            "lng": -2.938456,
         },
         {
             "name": "Big Bang Gym",
-            "picture_path": "https://www.city.ac.uk/__data/assets/image/0005/639815/varieties/breakpoint-max.jpg",
+            "picture_path": "https://media.istockphoto.com/id/512753734/photo/3d-rendering-of-a-gym-interior-design.jpg?s=612x612&w=0&k=20&c=-NqI_14sMalmGfV78wuxRO9IA04c4YT1OjmGUbHMbsc=",
             "user_id": 9,
             "location": "Bristol",
-            "lat": "51.454082",
-            "lng": "-2.577701",
+            "lat": 51.454082,
+            "lng": -2.577701,
         },
         {
             "name": "Milky Way",
-            "picture_path": "https://i.pinimg.com/1200x/d7/f0/45/d7f045fcf5b29b5408e0335e06609dd4.jpg",
+            "picture_path": "https://media.istockphoto.com/id/2076695984/photo/3d-render-gym-fitness-yoga-pilates-studio.jpg?s=612x612&w=0&k=20&c=bc24OK5hHGoHlWg5SO4iOG5MR5hgOJJv-za9_TPomVM=",
             "user_id": 10,
             "location": "Birmingham",
-            "lat": "52.480859",
-            "lng": "-1.902460",
+            "lat": 52.480859,
+            "lng": -1.902460,
         },
-        
+        {
+            "name": "Solar Gym",
+            "picture_path": "https://media.istockphoto.com/id/515238274/photo/modern-and-big-gym.jpg?s=612x612&w=0&k=20&c=E0sTLMBF5zUX5204SUwwCNf2vcRoAYp5CS60c2LvSKk=",
+            "user_id": 5,
+            "location": "Liverpool",
+            "lat": 53.413580,
+            "lng": -2.994577,
+        }
     ]
     # Create application contex
     app = create_app()

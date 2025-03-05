@@ -1,3 +1,4 @@
+from encodings import undefined
 from sqlite3 import IntegrityError
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, make_response
 from models.gym import GymModel
@@ -5,7 +6,8 @@ from extension import db
 from datetime import datetime
 from forms.gym_search_form import GymSearchForm
 from services.gym_search_service import search_gyms_from_google
-import random
+#import random
+import googlemaps
 
 gym_search = Blueprint("gym_search", __name__, url_prefix="/gym_search")
 
@@ -68,6 +70,17 @@ GOOGLE_PLACES_URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/jso
 #         return "Location not found", 400
 
 #gym_search = Blueprint('gym_search', __name__)
+# Initialize Google Maps client
+gmaps = googlemaps.Client(key='AIzaSyDCctO8HTJKGB3UB7-8IlxRRWnkIXtkq-Y')
+def get_lat_lng_from_location(location):
+    geocode_result = gmaps.geocode(location)
+    print(geocode_result, "druha")
+    if geocode_result:
+        lat = geocode_result[0] ['geometry']['location']['lat']
+        lng = geocode_result[0] ['geometry']['location']['lng']
+        print(lat, "prva")
+        return lat,lng
+    return None, None #Return None if the location couldn't be geocoded
 
 @gym_search.route('/search_gyms', methods=['GET', 'POST'])
 def search_gyms():
@@ -85,14 +98,22 @@ def search_gyms():
             #filtered_gyms = gym_query.filter(GymModel.location.ilike(f"%{location.strip()}%")).all()
             #filtered_gyms = gyms.filter(GymModel.location.ilike(f"%{location.strip()}%"))
             print(filtered_query, "vecer")
-        #gyms = search_gyms_from_google(location) # Call the helper function
+            #gyms = search_gyms_from_google(location) # Call the helper function
         # Perform the search for gyms based on the location
         # Call Google Maps API to get the gyms
         # Store gyms in the database
         # Return a result template
+            lat, lng = get_lat_lng_from_location(location)
+            print(lat,lng, "tretia")
             if filtered_query.count() != 0:
                 print(filtered_query.count(), "staci")
-                return render_template('search.html', form=form, gyms=filtered_query)
+                #lat = filtered_query(lat)
+                #lng = filtered_query(lng)
+                #reverse_geocode_result = gmaps.reverse_geocode(filtered_query(lat, lng))
+                #return render_template('search.html', form=form, location=reverse_geocode_result, gyms=filtered_query)
+                return render_template('search.html', form=form, location=location, gyms=filtered_query, lat=lat, lng=lng)
             else:
-                return render_template('search.html', form=form, error="No gyms found or invalid location")
+                #return render_template('search.html', form=form, location=reverse_geocode_result, error="No gyms found or invalid location")
+                return render_template('search.html', form=form, location=location, lat=lat, lng=lng, error="No gyms found or invalid location")
     return render_template('search.html', form=form)
+#address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyDCctO8HTJKGB3UB7-8IlxRRWnkIXtkq-Y

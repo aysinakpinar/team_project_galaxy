@@ -7,15 +7,15 @@
 </head>
 <body>
     <h1>Found Gyms</h1>
+    <ul>
+        {% for gym in gyms %}
+            <li>{{ gym.name }} - {{ gym.location }}</li>
+        {% endfor %}
+    </ul>
     <gmpx-api-loader key="AIzaSyDCctO8HTJKGB3UB7-8IlxRRWnkIXtkq-Y"></gmpx-api-loader>
     <gmpx-split-layout>
         <gmpx-place-overview slot="fixed" place="gcpkdpe3yk"></gmpx-place-overview>
         <gmp-map slot="main" center="51.45754 -0.96206" zoom="15" map-id="GALAXY-GYM">
-            <ul>
-                {% for gym in gyms %}
-                    <li>{{ gym.name }} - {{ gym.location }}</li>
-                {% endfor %}
-            </ul>
             <gmp-avanced-marker position=""></gmp-avanced-marker>
         </gmp-map>
     </gmpx-split-layout>
