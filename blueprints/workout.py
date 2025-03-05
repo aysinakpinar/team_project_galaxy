@@ -215,7 +215,7 @@ def mark_done(exercise_id, workout_id):
         status="Done", 
         user_id = workout_details.user_id,
         workout_id=workout_details.id,
-        workout_exercise_id=exercise_details.id
+        workout_exercise_id=exercise_entry.id
     )
 
     # check if there's an exercise with today's date, same name and workout id

@@ -23,7 +23,8 @@ def dashboard_home():
     # default, when the page is open
     friends_with_points = get_friends_points("weekly")
     bar_chart = create_bar_chart()
-    return render_template("dashboard.html", form=form, friends_with_points=friends_with_points, points_period=points_period, bar_chart=bar_chart)
+    pie_chart = create_pie_chart()
+    return render_template("dashboard.html", form=form, friends_with_points=friends_with_points, points_period=points_period, bar_chart=bar_chart, pie_chart=pie_chart)
 
 @dashboard.route("/friends-leaderboard", methods=['GET', 'POST'])
 def friends_leaderboard():
@@ -73,6 +74,17 @@ def global_leaderboard():
         return render_template("dashboard.html", form=form, users_with_points=users_with_points, points_period=points_period)
     return render_template("dashboard.html", form=form, users_with_points=users_with_points, points_period=points_period)
 
+def create_pie_chart():
+    labels = ['Oxygen','Hydrogen','Carbon_Dioxide','Nitrogen']
+    values = [4500, 2500, 1053, 500]
+
+    # Use `hole` to create a donut-like pie chart
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.3)])
+    # Get the HTML representation of the figure for embedding in the template
+    graph_html = fig.to_html(full_html=False)
+
+    return graph_html
+
 def create_bar_chart():
     data = get_chart_data()
     # Data for the bar chart
@@ -100,6 +112,8 @@ def create_bar_chart():
         marker=dict(color=intensity_colours),
         hoverinfo='x+y'  # Show hover information on bars
     )])
+
+    fig.update_yaxes(range=[0, 120])
 
     # Customize the layout
     fig.update_layout(

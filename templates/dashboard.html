@@ -3,14 +3,24 @@
 {% block styles %}
 <style>
     /* CHART  */
-    .chart-container {
+    .barchart-container,
+    .piechart-container {
         width: 50%;
         min-width: 350px;
         border-radius: 25px;
-        border: 2px solid rgb(125, 125, 125);
+        position: relative;
+        visibility: hidden;
     }
+    .piechart-container {
+        visibility: visible;
+    }
+
     .main-svg {
         border-radius: 25px;
+        border: 2px solid rgb(125, 125, 125);
+    }
+    .display-none {
+        display: none;
     }
     .leaderboard-container {
         width: 100%;
@@ -104,6 +114,18 @@
 {% block content %}
 <div class="d-flex flex-column align-items-center mt-4">
     <h1 class="mt-2">Dashboard</h1>
+    <!-- ANALYTICS SECTION ------- START -->
+    <div>
+        <button id="piechart-button">Piechart</button>
+        <button id="barchart-button">Barchart</button>
+    </div>
+    <div>
+        <div class="barchart-container">{{ bar_chart|safe }}</div>
+    </div>
+    <div>
+        <div class="piechart-container display-none">{{ pie_chart|safe }}</div>
+    </div>
+
     <!-- LEADERBOARD SECTION -------- START -->
     <div
         class="leaderboard-container d-flex flex-column align-items-center mt-5"
@@ -316,8 +338,21 @@
     </div>
 
     <!-- LEADERBOARD SECTION ---- END -->
-
-    <!-- ANALYTICS SECTION ------- START -->
-    <div class="chart-container">{{ bar_chart|safe }}</div>
 </div>
+{% endblock %} {% block javasript %}
+<script>
+    const piechartButton = document.getElementById("piechart-button");
+    const barchartButton = document.getElementById("barchart-button");
+    const piechartContainer = document.querySelector(".piechart-container");
+    const barchartContainer = document.querySelector(".barchart-container");
+
+    piechartButton.addEventListener("click", function () {
+        pieChartContainer.style.visibility = "visible";
+        barChartContainer.style.visibility = "hidden";
+    });
+    barchartButton.addEventListener("click", function () {
+        barChartContainer.style.visibility = "hidden";
+        pieChartContainer.style.visibility = "visible";
+    });
+</script>
 {% endblock %}
