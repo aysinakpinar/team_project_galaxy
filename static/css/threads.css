@@ -1,3 +1,20 @@
+.post-textarea {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    padding: 15px;
+    min-height: 120px;
+    max-width: 600px;
+    width: 100%;
+    resize: vertical;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #dbdbdb;
+    font-size: 15px;
+}
+
 body {
     margin-top: 5rem;
     background-color: #fafafa !important;
@@ -20,6 +37,17 @@ body {
 
 .card-body {
     padding: 20px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+    border: 1px solid #dbdbdb;
 }
 
 .username {
@@ -27,6 +55,7 @@ body {
     font-weight: 600;
     margin-bottom: 8px;
     color: #262626;
+    display: inline;
 }
 
 .card-text {
@@ -36,10 +65,18 @@ body {
     margin-bottom: 12px;
 }
 
+.content-wrapper {
+    flex-grow: 1;
+}
+
 .post-image, .reply-image {
     max-width: 100%;
+    max-height: 400px;
     border-radius: 8px;
     margin-top: 10px;
+    object-fit: cover;
+    width: auto;
+    height: auto;
 }
 
 .post-footer {
@@ -74,16 +111,23 @@ body {
     background-color: #007bb5;
 }
 
+.btn-secondary {
+    background-color: #dbdbdb;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #262626;
+}
+
+.btn-secondary:hover {
+    background-color: #c7c7c7;
+}
+
 .reply-container {
     margin-left: 30px;
     border-left: 2px solid #dbdbdb;
     padding-left: 20px;
-}
-
-.form-control {
-    border-radius: 8px;
-    border: 1px solid #dbdbdb;
-    font-size: 15px;
 }
 
 h1 {
@@ -113,4 +157,8 @@ a:hover {
 .alert {
     border-radius: 8px;
     font-size: 14px;
+}
+
+.reply-card.highlighted {
+    background-color: #e9ecef;
 }

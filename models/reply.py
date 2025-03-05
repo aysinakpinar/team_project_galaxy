@@ -11,6 +11,5 @@ class ReplyModel(db.Model):
     text = db.Column(db.Text, nullable=False)
     img = db.Column(db.String(200), nullable=True)
     replied_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
 
