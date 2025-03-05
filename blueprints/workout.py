@@ -106,38 +106,33 @@ def create_workout():
     return render_template("create_workout.html", user=current_user, user_workouts=user_workouts)  # Render form on GET request
 
 # 🏋️‍♀️ Manage Workout (Add Exercises + Show Workout List)
-@workout.route('/manage_workout', methods=['GET', 'POST'])
-def manage_workout():
+@workout.route('/manage_workout/<int:workout_id>', methods=['GET', 'POST'])
+def manage_workout(workout_id):
     form = AddExerciseForm()
 
-    # Fetch all exercises for the dropdown menu (manual addition)
+    # Fetch all exercises for the dropdown menu
     form.name.choices = [(exercise.id, exercise.name) for exercise in ExerciseModel.query.all()]
 
-    # Retrieve the workout ID from session
-    workout_id = session.get("workout_id")
-
-    if not workout_id:
-        flash("No workout selected. Please create a workout first.", "warning")
-        return redirect(url_for("workout.create_workout"))
-
     # Fetch the current workout
-    current_workout = WorkoutModel.query.get(workout_id)
-    if not current_workout:
-        flash("Workout not found.", "danger")
-        return redirect(url_for("workout.create_workout"))
+    current_workout = WorkoutModel.query.get_or_404(workout_id)
 
     # Fetch the current user
     current_user = UserModel.query.get(session.get("user_id"))
 
-    # Get suggested exercises based on user's profile
-    suggested_exercises = get_suggested_exercises()  # Fetch the exercises from Mistral
+    # Get suggested exercises from AI (Mistral)
+    suggested_exercises = get_suggested_exercises()
 
     print(f"Suggested exercises from backend: {suggested_exercises}")
-    # Process the manual form if it's submitted
+
+    # Process manual form submission
     if form.validate_on_submit():
         selected_exercise = ExerciseModel.query.get(form.name.data)
 
-        # Check if exercise already exists in the workout
+        if not selected_exercise:
+            flash("Selected exercise not found.", "danger")
+            return redirect(url_for('workout.manage_workout', workout_id=workout_id))
+
+        # Check if the exercise already exists in the workout
         existing_entry = WorkoutExercise.query.filter_by(
             workout_id=workout_id, exercise_id=selected_exercise.id
         ).first()
@@ -146,18 +141,21 @@ def manage_workout():
             new_entry = WorkoutExercise(workout_id=workout_id, exercise_id=selected_exercise.id)
             db.session.add(new_entry)
             db.session.commit()
-            flash(f'Added {selected_exercise.name} to "{current_workout.name}"!', 'success')
+            flash(f'Added "{selected_exercise.name}" to "{current_workout.name}"!', 'success')
         else:
             flash("Exercise already exists in the workout!", "warning")
 
-        return redirect(url_for('workout.manage_workout'))
+        return redirect(url_for('workout.manage_workout', workout_id=workout_id))
 
-    # Process the AI-suggested exercise if the user clicks 'Add' for any exercise
-    if 'add_suggested_exercise' in request.form:
+    # Process AI-suggested exercise addition
+    if request.method == 'POST' and 'add_suggested_exercise' in request.form:
         exercise_id = request.form.get('suggested_exercise_id')
         selected_exercise = ExerciseModel.query.get(exercise_id)
 
-        # Check if the exercise is already in the workout
+        if not selected_exercise:
+            flash("Invalid suggested exercise.", "danger")
+            return redirect(url_for('workout.manage_workout', workout_id=workout_id))
+
         existing_entry = WorkoutExercise.query.filter_by(
             workout_id=workout_id, exercise_id=selected_exercise.id
         ).first()
@@ -170,7 +168,7 @@ def manage_workout():
         else:
             flash("Exercise already exists in the workout!", "warning")
 
-        return redirect(url_for('workout.manage_workout'))
+        return redirect(url_for('workout.manage_workout', workout_id=workout_id))
 
     # Fetch list of added exercises WITH WorkoutExercise objects
     workout_exercises = (
@@ -179,13 +177,15 @@ def manage_workout():
         .filter(WorkoutExercise.workout_id == current_workout.id)
         .all()
     )
+
     print(f"Workout Exercises for {current_workout.name}: {workout_exercises}")
+
     return render_template(
         'manage_workout.html',
         form=form,
         workout=current_workout,
-        workout_exercises=workout_exercises,  # Now contains WorkoutExercise objects
-        suggested_exercises=suggested_exercises  # Display the suggested exercises
+        workout_exercises=workout_exercises,
+        suggested_exercises=suggested_exercises
     )
 
 #remove workout

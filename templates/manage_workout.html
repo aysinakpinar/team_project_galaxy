@@ -29,7 +29,7 @@
                     <img src="{{ url_for('static', filename=exercise.picture_path) }}" alt="{{ exercise.name }}" class="img-thumbnail" style="width: 100px;">
                 {% endif %}
                 <!-- Add Suggested Exercise to Workout -->
-                <form action="{{ url_for('workout.add_suggested_exercise') }}" method="POST" class="d-inline">
+                <form action="{{ url_for('workout.manage_workout', workout_id=workout.id) }}" method="POST" class="d-inline">
                     <input type="hidden" name="suggested_exercise_id" value="{{ exercise.id }}">
                     <button type="submit" class="btn btn-primary btn-sm">Add to Workout</button>
                 </form>
@@ -40,7 +40,6 @@
     <p>No suggested exercises available at the moment.</p>
 {% endif %}
 
-<!-- Workout Exercises Table -->
 <!-- Workout Exercises Table -->
 <h3>Exercises in This Workout</h3>
 {% if workout_exercises %}
@@ -82,10 +81,12 @@
                     {% endif %}
                 </td>
                 <td>
-                    <form action="{{ url_for('workout.remove_exercise', exercise_id=entry.exercise.id) }}" method="POST" class="d-inline">
+                    <!-- Remove Exercise -->
+                    <form action="{{ url_for('workout.remove_exercise', workout_id=workout.id, exercise_id=entry.exercise.id) }}" method="POST" class="d-inline">
                         <button type="submit" class="btn btn-danger btn-sm">Remove</button>
                     </form>
-                    <form action="{{ url_for('workout.mark_done', exercise_id=entry.exercise.id) }}" method="POST" class="d-inline">
+                    <!-- Mark as Done/Undo -->
+                    <form action="{{ url_for('workout.mark_done', workout_id=workout.id, exercise_id=entry.exercise.id) }}" method="POST" class="d-inline">
                         <button type="submit" class="btn btn-success btn-sm">
                             {% if entry.done %}Undo{% else %}Mark as Done{% endif %}
                         </button>
