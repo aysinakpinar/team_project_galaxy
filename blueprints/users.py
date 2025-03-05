@@ -137,3 +137,13 @@ def get_friends_of_user(user_id):
     ).all()
     
     return friends
+
+
+@users.route('/profile/<int:user_id>', methods=['GET'])
+def view_profile(user_id):
+    user = UserModel.query.get(user_id)
+    if not user:
+        flash("User not found!", "danger")
+        return redirect(url_for("users.profile"))  # Redirect to logged-in user's profile
+    
+    return render_template("profile.html", user=user)

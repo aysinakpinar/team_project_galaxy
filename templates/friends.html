@@ -166,10 +166,11 @@
         <div class="friends-container d-flex flex-column overflow-auto my-4">
             {% for approved_friend in approved_friends %} {% if
             approved_friend[0] != 0 %}
-            <a
+            <!-- <a
                 href="http://127.0.0.1:5000/user/{{ approved_friend[3] }}"
                 class="user-name m-2"
-            >
+            > -->
+            <a href="{{ url_for('users.view_profile', user_id=approved_friend[3]) }}" class="user-name m-2">
                 <img src="{{ approved_friend[2] }}" class="user-img" />
                 {{ approved_friend[1] }}
             </a>
