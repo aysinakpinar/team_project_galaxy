@@ -119,3 +119,9 @@ python seeds/3_exercise_seed.py
 python seeds/4_quote_seed.py
 '''
 
+## running Mistral 7
+pip install -r requirements.txt
+brew install ollama
+ollama pull mistral
+ollama run mistral
+ollama serve  
