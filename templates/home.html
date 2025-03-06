@@ -1,14 +1,80 @@
-{% extends 'base.html' %} {% block styles %}
-<style></style>
-{% endblock %} {% block content %}
-<div class="mt-4">
-    <label>Motivational Quote for You:</label>
+{% extends 'base.html' %}
+
+{% block styles %}
+<style>
+    .hero-section {
+        background-color: #f4f7f6; /* Light background color */
+        color: #333; /* Darker text color */
+        padding: 100px 0;
+        text-align: center;
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #2c3e50; /* Darker text color */
+    }
+
+    .hero-section p {
+        font-size: 1.25rem;
+        font-weight: 300;
+        margin-bottom: 30px;
+        color: #34495e; /* Darker text color */
+    }
+
+    .hero-section .btn {
+        font-size: 1.2rem;
+        padding: 15px 30px;
+        text-transform: uppercase;
+    }
+    
+    .quote-section {
+        margin-top: 50px;
+        background-color: #ffffff; /* White background for the quote section */
+        padding: 40px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    
+    .quote-section h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #2c3e50; /* Darker text color */
+    }
+
+    .quote-section p {
+        font-size: 1.5rem;
+        font-weight: 500;
+        font-style: italic;
+        color: #333; /* Darker text color */
+    }
+
+    .quote-section .quote-author {
+        font-size: 1.2rem;
+        margin-top: 15px;
+        font-weight: 700;
+        color: #555; /* Darker text color */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="quote-section">
+    <p>Your Daily Dose of Motivation</p>
     <div>
-        {% if quote %} 
-            <p>{{ quote.body }}</p>
+        {% if quote %}
+        <h2>{{ quote.body }}</h2>
         {% else %}
-            <p>No motivational quotes available for today.</p>
+            <p>No motivational quotes available for today. Keep striving, and your hard work will pay off!</p>
         {% endif %}
     </div>
+</div>
+
+<div class="hero-section">
+    <h1 class="display-4 font-weight-bold">Welcome to Your Fitness Journey</h1>
+    <p class="lead">Join a vibrant community where you can connect, motivate, and achieve your fitness goals together!</p>
+    <p class="lead">Stay committed, stay focused, and surround yourself with like-minded individuals who push you to be your best self!</p>
 </div>
 {% endblock %}
