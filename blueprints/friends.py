@@ -115,10 +115,17 @@ def find():
 
     # ----------- MICHAL - CHANGES --------
     #if no filter applied, show all user which have no frienship connection
-    users = users = db.session.query(
+    users = db.session.query(
         UserModel.id,
         UserModel.username,
-        UserModel.profile_picture
+        UserModel.description,
+        UserModel.profile_picture,
+        UserModel.location, 
+        UserModel.age, 
+        UserModel.weight,
+        UserModel.height, 
+        UserModel.fitness_level,
+        UserModel.favourite_exercise
     ).outerjoin(
         FriendshipModel, or_(
             and_(UserModel.id == FriendshipModel.friend_id, FriendshipModel.user_id == session["user_id"]),
