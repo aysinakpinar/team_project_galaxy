@@ -27,9 +27,8 @@ from blueprints.chatbot import chatbot
 
 #khaadijas chat cod
 from blueprints.chat import chat, init_socketio
-
 from flask_socketio import SocketIO # Importing Socketio for real time communications
-
+# initialise socketio globally
 socketio = SocketIO(cors_allowed_origins="*") #allows all domains to connect using socketio
 
 def create_app(config_class=None):
@@ -70,15 +69,15 @@ def create_app(config_class=None):
 
     #khadijas chat code
     app.register_blueprint(chat, url_prefix='/chat')
-    socketio = SocketIO(app)
+    socketio.init_app(app) #initialise socketio w app
     init_socketio(socketio)
 
 
-    return app, socketio
+    return app
 
 if __name__ == "__main__":
-    app, socketio = create_app()
+    app = create_app()
 
 
 #khadijas chat code
-    socketio.run(app, debug=True) #starts app using socketio server
+    socketio.run(app, debug=True) #start app using socketio server

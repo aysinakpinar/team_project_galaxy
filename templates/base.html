@@ -76,7 +76,7 @@
                             >
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/chat">chat</a>
+                            <a class="nav-link" href="/chat">Chat</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/threads/posts"
@@ -96,10 +96,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/auth/signup">Sign up</a>
                         </li>
-                        {% if session["user_id"] %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/logout">Log out</a>
-                        </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -115,3 +111,5 @@
         {% block javasript %}{% endblock %}
     </body>
 </html>
+
+
