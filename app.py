@@ -70,7 +70,7 @@ def create_app(config_class=None):
     #khadijas chat code
     app.register_blueprint(chat, url_prefix='/chat')
     socketio.init_app(app) #initialise socketio w app
-    init_socketio(socketio)
+    init_socketio(socketio) #initialises socketio event handlers
 
 
     return app
