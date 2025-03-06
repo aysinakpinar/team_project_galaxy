@@ -5,7 +5,7 @@
 {% block content %}
 <div class="mt-4"></div>
     <title>Find the Best Gym for You</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCctO8HTJKGB3UB7-8IlxRRWnkIXtkq-Y &libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places"></script>
     <style>
     /* Simple styling for the map */
     body{
@@ -69,6 +69,7 @@
     let infowindow;
     google.maps.importLibrary("maps");
     google.maps.importLibrary("marker");
+    
     function initMap() {
             const cityLocation = {lat:parseFloat("{{lat}}"), lng:parseFloat("{{lng}}")}
         const map = new google.maps.Map(document.getElementById("map"), {
