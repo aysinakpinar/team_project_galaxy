@@ -318,7 +318,7 @@
                                     >{{ loop.index }}</span
                                 >
                                 <a
-                                    href="user/{{ user[0] }}"
+                                    href="users/profile?user_id={{ user[0] }}"
                                     class="mx-2 px-1 py-3 leaderboard__users-list__username"
                                 >
                                     <img src="{{ user[3] }}" class="user-img" />
@@ -362,7 +362,7 @@
                                     >{{ loop.index }}</span
                                 >
                                 <a
-                                    href="user/{{ friend[1] }}"
+                                    href="users/profile?user_id={{ friend[1] }}"
                                     class="mx-2 px-1 py-3 leaderboard__friends-list__username"
                                 >
                                     <img

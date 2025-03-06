@@ -46,7 +46,9 @@
             <div class="users-list">
                 {% if users %} {% for user in users %}
                 <div>
-                    <a href="{{ url_for('users.profile', user_id=user.id) }}"><h3>{{ user.username }}</h3></a>
+                    <a href="{{ url_for('users.profile', user_id=user.id) }}"
+                        ><h3>{{ user.username }}</h3></a
+                    >
                     <p>Location: {{ user.location }}</p>
                     <p>Age: {{ user.age }}</p>
                     <p>Fitness level: {{ user.fitness_level }}</p>
@@ -81,7 +83,7 @@
                 class="d-flex align-items-center justify-content-between w-100"
             >
                 <a
-                    href="http://127.0.0.1:5000/user/{{ friendship_sent[3] }}"
+                    href="http://127.0.0.1:5000/users/profile?user_id={{ friendship_sent[3] }}"
                     class="user-name"
                 >
                     <img src="{{ friendship_sent[2] }}" class="user-img" />
@@ -132,7 +134,7 @@
                 class="d-flex align-items-center justify-content-between w-100"
             >
                 <a
-                    href="http://127.0.0.1:5000/user/{{ friendship_received[3] }}"
+                    href="http://127.0.0.1:5000/users/profile?user_id={{ friendship_received[3] }}"
                     class="user-name"
                 >
                     <img src="{{ friendship_received[2] }}" class="user-img" />
@@ -179,7 +181,7 @@
             {% for approved_friend in approved_friends %} {% if
             approved_friend[0] != 0 %}
             <a
-                href="http://127.0.0.1:5000/user/{{ approved_friend[3] }}"
+                href="http://127.0.0.1:5000/users/profile?user_id={{ approved_friend[3] }}"
                 class="user-name m-2"
             >
                 <img src="{{ approved_friend[2] }}" class="user-img" />
