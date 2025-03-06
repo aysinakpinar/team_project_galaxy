@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from decimal import Decimal
+from sqlalchemy import Column, Float, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import backref
 from sqlalchemy.engine import TupleResult
 from datetime import datetime
@@ -12,4 +13,9 @@ class GymModel(db.Model):
     picture_path = Column(String(200), nullable=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete = "CASCADE"), nullable = False)
     location = db.Column(db.String(200), nullable=True)
+    lat = Column(Float, nullable=False)
+    lng = Column(Float, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+
+def __repr__(self):
+    return f"<Gym {self.name}>"
