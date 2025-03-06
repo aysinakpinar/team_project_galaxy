@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Basic styling for the chat interface */
+        #container {
+            display: flex;
+            height: 100vh;
+        }
+        #sidebar {
+            width: 250px;
+            height: 100%;
+            border-right: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        #chat {
+            flex-grow: 1;
+            height: 100%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        #messages {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            overflow-y: auto;
+            height: 80%;
+        }
+        #message-input {
+            padding: 10px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        #send-button {
+            padding: 10px;
+        }
+        .user-link {
+            cursor: pointer;
+            padding: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+        }
+        .user-link:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- Sidebar for users -->
+        <div id="sidebar">
+            <h3>Users</h3>
+            <ul id="user-list"></ul>
+        </div>
+
+        <!-- Chat window -->
+        <div id="chat">
+            <div id="messages"></div>
+
+            <!-- Message input and send button -->
+            <input type="text" id="message-input" placeholder="Type your message here...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // Connect to the Socket.IO server
+        var socket = io();
+        var currentRoom = null;
+
+        // Fetch and display the list of users
+        $.get('/chat/get_users', function(users) {
+            users.forEach(function(user) {
+                $('#user-list').append(
+                    '<li><a href="#" class="user-link" data-user-id="' + user.id + '">' + user.username + '</a></li>'
+                );
+            });
+        });
+
+        // Handle clicking on a user to start a private chat
+        $('body').on('click', '.user-link', function(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            var userId = $(this).data('user-id');
+            if (currentRoom) {
+                socket.emit('leave_room', {room: currentRoom});
+            }
+            currentRoom = userId; // Set the new user as the current room
+            socket.emit('join_room', {room: currentRoom});
+            $('#messages').html(''); // Clear previous messages
+            console.log('Joined room:', currentRoom); // Debugging
+        });
+
+        // Handle sending a message
+        $('#send-button').click(function() {
+            var message = $('#message-input').val();
+            if (message && currentRoom) {
+                socket.emit('send_message', {room: currentRoom, message: message});
+                $('#message-input').val('');
+            }
+        });
+
+        // Handle receiving a message
+        socket.on('receive_message', function(data) {
+            $('#messages').append(
+                '<div><strong>' + data.sender_username + ':</strong> ' + data.message + '</div>'
+            );
+            // Auto scroll to the bottom of the messages
+            $('#messages').scrollTop($('#messages')[0].scrollHeight);
+        });
+
+        // Handle updating the user list
+        socket.on('update_user_list', function(user_ids) {
+            $('#user-list').empty(); // Clear the user list first
+            $.get('/chat/get_users', function(users) {
+                users.forEach(function(user) {
+                    if (user_ids.includes(user.id)) {
+                        $('#user-list').append(
+                            '<li><a href="#" class="user-link" data-user-id="' + user.id + '">' + user.username + '</a></li>'
+                        );
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
