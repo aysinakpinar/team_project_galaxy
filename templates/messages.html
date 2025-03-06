@@ -8,12 +8,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
         integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
         crossorigin="anonymous"></script>
-    <title>Document</title>
+    <title>Private Chat</title>
 </head>
 <body>
-    <div class="messages">
-    <input placeholder="message" id= "messageInput" />
+    <div class="main container">
+        <div class="user-container">
+            <div class="search box">
+                <input type="text" id="searchInput" placeholder="Search for a friend" />
+            </div>
+            <div id="userList" class="user-list"
+        </div>
     </div>
+
 
     <style>
         body {
@@ -43,7 +49,7 @@
             margin: 10px 0;
             font-size: 1.2rem;
             line-height: 1.5;
-            background-color: linear-gradient(45deg, #0db2b8, #9e28d0);
+            background-image: linear-gradient(45deg, #0db2b8, #9e28d0);
             padding: 5px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
@@ -80,7 +86,12 @@
     <script>
         const socket = io();
 
-        let messageContainer = document.querySelector(".messages");
+        let username = "khadija";
+
+        let messageContainer = document.getElementById("messageContainer");
+        if (!messageContainer) {
+            console.error("🚨 Error: .messages container not found");
+        }
 
         socket.on("connect", () => {
             let p = document.createElement("p")
@@ -93,16 +104,20 @@
             if (e.key === "Enter") {
                 let message = messageInput.value.trim();
                 if (message) {
-                    socket.emit("message", message)
+                    socket.emit("message", {message: message})
                     messageInput.value = "";
                 }
             }
         })
 
         socket.on('message', (message) => {
+            console.log("Received message:", message);  // Debugging
             let messageElement = document.createElement("p")
             messageElement.innerText = message
             messageContainer.appendChild(messageElement)
+
+            // Auto-scroll to the bottom of the chat
+            messageContainer.scrollTop = messageContainer.scrollHeight;
         })
 
     </script>

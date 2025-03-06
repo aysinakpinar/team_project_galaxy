@@ -26,7 +26,7 @@ from blueprints.chatbot import chatbot
 
 
 #khaadijas chat cod
-from blueprints.chat import chat
+from blueprints.chat import chat, init_socketio
 from flask_socketio import SocketIO # Importing Socketio for real time communications
 
 socketio = SocketIO(cors_allowed_origins="*") #allows all domains to connect using socketio
@@ -70,6 +70,7 @@ def create_app(config_class=None):
     #khadijas chat code
     app.register_blueprint(chat, url_prefix='/chat')
     socketio.init_app(app) #connects flask app w socetio for real time chat
+    init_socketio(socketio)
 
 
     return app
@@ -85,7 +86,7 @@ if __name__ == "__main__":
     # except Exception as e:
     #     print("Failed to connect to PostgreSQL:", str(e))  # Print the error message if connection fails
 
-    app.run(debug=True)
+    # app.run(debug=True)
 
 #khadijas chat code
     socketio.run(app, debug=True) #starts app using socketio server
