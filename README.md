@@ -128,9 +128,11 @@ python seeds/5_gym_seed.py
         running Mistral 7
     - pip install -r requirements.txt
     - brew install ollama
+    - ollama start
+    in another terminal
     - ollama --version #check if it was installed
+    - ollama pull mistral:7b-instruct-q4_K_M
     - ollama serve (opens for the port for mistral) #should run during running the app.
-    - ollama pull mistral
     - ollama run mistral
     - flask run (in another terminal)
 - enum in exercise model changed to string

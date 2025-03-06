@@ -276,7 +276,7 @@ def add_suggested_exercise():
         new_entry = WorkoutExercise(workout_id=workout_id, exercise_id=selected_exercise.id)
         db.session.add(new_entry)
         db.session.commit()
-        flash(f'Added AI suggested exercise "{selected_exercise.name}" to the workout!', 'success')
+        flash(f'Added suggested exercise "{selected_exercise.name}" to the workout!', 'success')
     return redirect(url_for('workout.manage_workout', workout_id=workout_id))
 
 @workout.route('/exercise/tutorial/<int:exercise_id>', methods=['GET'])
