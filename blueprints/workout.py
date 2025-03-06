@@ -8,6 +8,8 @@ from models.workout import WorkoutModel
 from models.user import UserModel
 from models.associations import WorkoutExercise
 from models.exercise_analytics import ExerciseAnalyticsModel
+import re
+import requests
 
 workout = Blueprint("workout", __name__, url_prefix="/workout")
 
@@ -276,4 +278,46 @@ def add_suggested_exercise():
         db.session.commit()
         flash(f'Added AI suggested exercise "{selected_exercise.name}" to the workout!', 'success')
     return redirect(url_for('workout.manage_workout', workout_id=workout_id))
+
+@workout.route('/exercise/tutorial/<int:exercise_id>', methods=['GET'])
+def exercise_tutorial(exercise_id):
+    exercise = ExerciseModel.query.get_or_404(exercise_id)
+    
+    # Assuming WorkoutExercise has a foreign key to Workout
+    workout_exercise = WorkoutExercise.query.filter_by(exercise_id=exercise.id).first()
+    
+    # Get the workout related to this exercise
+    workout = workout_exercise.workout if workout_exercise else None
+
+    # Extract the video URL from the tutorial text
+    tutorial_text = exercise.tutorial
+    video_url = None
+    video_data = None
+
+    if tutorial_text:
+        # Try to find a YouTube URL using regex
+        match = re.search(r'https?://(?:www\.)?(?:youtube|vimeo)\.com/[^\s]+', tutorial_text)
+        if match:
+            url = match.group(0)
+            
+            # For YouTube URLs, convert them to embed format and fetch video metadata via oEmbed API
+            if "youtube.com" in url:
+                video_url = url.replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/").rstrip(')')
+
+                # Use YouTube oEmbed API to get video details
+                video_id = url.split('v=')[-1]
+                oembed_url = f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={video_id}&format=json"
+                try:
+                    response = requests.get(oembed_url)
+                    # Ensure the request was successful
+                    if response.status_code == 200:
+                        video_data = response.json()  # This contains video title, thumbnail, etc.
+                    else:
+                        print(f"Error fetching oEmbed data: {response.status_code}")
+                except Exception as e:
+                    print(f"Error while making request: {e}")
+
+    # Pass the exercise, workout, and video data to the template
+    return render_template('exercise_tutorial.html', exercise=exercise, workout=workout, video_url=video_url, video_data=video_data)
+
 

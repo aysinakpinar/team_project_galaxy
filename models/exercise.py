@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, CheckConstraint
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Boolean, CheckConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 from extension import db
@@ -13,13 +13,14 @@ class ExerciseModel(db.Model):
     sets = db.Column(db.Integer, nullable=True)
     reps = db.Column(db.Integer, nullable=True)
     picture_path = db.Column(db.String(200), nullable=True, default=None)
+    tutorial = db.Column(db.Text, nullable=True)  # ✅ New column for instructions & links
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Many-to-Many Relationships
     users = db.relationship(
         "UserModel", 
-        secondary="user_exercise",  # Kept this Many-to-Many
+        secondary="user_exercise",  
         lazy="subquery", 
         back_populates="exercises"
     )
@@ -29,4 +30,4 @@ class ExerciseModel(db.Model):
         "WorkoutExercise", 
         back_populates="exercise", 
         cascade="all, delete-orphan"
-        )
+    )
