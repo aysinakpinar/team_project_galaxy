@@ -9,8 +9,17 @@
         max-height: 500px;
         overflow: auto;
     }
+    .user {
+        border-bottom: 0.5px solid gray;
+        padding-bottom: 0.5rem;
+    }
     .approval-buttons__container {
         width: 250px;
+    }
+    .user-name-container {
+        color: rgb(80, 80, 80);
+        text-decoration: none;
+        padding-bottom: 0.5rem;
     }
     .user-img {
         width: 35px;
@@ -20,6 +29,19 @@
     .user-name {
         text-decoration: none;
         color: black;
+        padding: 0;
+        margin: 0;
+    }
+    .friend-requests-container {
+        border-left: 0.5px solid gray;
+    }
+    .user-spec__input {
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+    }
+    .user-spec__form {
+        border-bottom: 0.5px solid gray;
     }
 </style>
 {% endblock %} {% block content %}
@@ -29,31 +51,53 @@
             <form
                 method="get"
                 action="{{ url_for('friends.find') }}"
-                class="d-flex flex-column"
+                class="d-flex flex-column user-spec__form"
             >
                 {{ form_find_friend.hidden_tag() }}
                 <label>Location:</label>
-                {{ form_find_friend.location() }}
+                {{ form_find_friend.location(class="user-spec__input") }}
                 <label>Age:</label>
-                {{ form_find_friend.age() }}
+                {{ form_find_friend.age(class="user-spec__input") }}
                 <label>Fitness Level:</label>
-                {{ form_find_friend.fitness_level() }}
+                {{ form_find_friend.fitness_level(class="user-spec__input") }}
                 <label>Favourite Exercise:</label>
-                {{ form_find_friend.favourite_exercise()}}
+                {{
+                form_find_friend.favourite_exercise(class="user-spec__input")}}
 
-                <button type="submit">Search</button>
+                <button
+                    class="align-self-end btn btn-sm btn-secondary my-3 mb-5 px-4"
+                    type="submit"
+                >
+                    Search
+                </button>
             </form>
             <div class="users-list">
                 {% if users %} {% for user in users %}
-                <div>
-                    <a href="{{ url_for('users.profile', user_id=user.id) }}"
-                        ><h3>{{ user.username }}</h3></a
+                <div class="my-3 user">
+                    <a
+                        class="d-flex user-name-container align-items-center"
+                        href="{{ url_for('users.profile', user_id=user.id) }}"
                     >
-                    <p>Location: {{ user.location }}</p>
-                    <p>Age: {{ user.age }}</p>
-                    <p>Fitness level: {{ user.fitness_level }}</p>
-                    <p>Favourite Exercise: {{ user.favourite_exercise }}</p>
-                    <form method="post" action="{{ url_for('friends.find') }}">
+                        <img
+                            class="user-img me-2"
+                            src="{{user.profile_picture}}"
+                        />
+                        <p class="user-name">{{ user.username }}</p>
+                    </a>
+
+                    <p class="fw-light">Location: {{ user.location }}</p>
+                    <p class="fw-light">Age: {{ user.age }}</p>
+                    <p class="fw-light">
+                        Fitness level: {{ user.fitness_level }}
+                    </p>
+                    <p class="fw-light">
+                        Favourite Exercise: {{ user.favourite_exercise }}
+                    </p>
+                    <form
+                        method="post"
+                        action="{{ url_for('friends.find') }}"
+                        class="d-flex"
+                    >
                         {{ form_add_friend.hidden_tag() }}
                         <button class="btn btn-primary btn-sm">
                             Add friend
@@ -73,7 +117,7 @@
     </section>
 
     <!-- MICHAL FRIENDS REQUESTS -->
-    <section class="m-4">
+    <section class="friend-requests-container m-5 px-5">
         <!-- SENT REQUESTS SECTION -->
         <h1>Sent requests</h1>
         <div class="friendships-container overflow-auto my-4">
