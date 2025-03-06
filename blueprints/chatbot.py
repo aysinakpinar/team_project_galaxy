@@ -1,67 +1,60 @@
-import requests
-import json
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, session
+import ollama
 
 chatbot = Blueprint('chatbot', __name__)
 
-# Route to handle chatbot interactions
-@chatbot.route('/chat_with_bot', methods=['GET', 'POST'])
+model_name = "mistral:7b-instruct-q4_K_M"
+
+# Function to get response from Ollama chatbot API
+def get_response(message):
+    try:
+        # Simulate loading state (set loading to True while processing)
+        session['loading'] = True
+        
+        # Get the response from Ollama chatbot API
+        response = ollama.chat(model_name, [{"role": "user", "content": message}])
+        print("Ollama Response:", response)  # Log the full response
+        
+        content = response.get('message', {}).get('content', "Error: No valid response generated.")
+        
+        # Add to chat history
+        if 'chat_history' not in session:
+            session['chat_history'] = []
+
+        session['chat_history'].append({'user_message': message, 'bot_response': content})
+
+        # Clear loading state after processing the response
+        session['loading'] = False
+        return content
+    except Exception as e:
+        # Handle any exceptions that occur during the API call
+        session['loading'] = False
+        return f"Error: {str(e)}"
+
+@chatbot.route('/ask', methods=['GET', 'POST'])
 def chat_with_bot():
     user_message = ""
     bot_response = ""
+    error_message = None
 
     if request.method == 'POST':
-        user_message = request.form.get('message', '')
+        user_message = request.form.get('message', '').strip()
 
         if not user_message:
             flash("Please ask a workout-related question!", "chatbot")
         else:
             try:
-                # Sending request to the local Ollama server
-                response = requests.post(
-                    "http://localhost:11434/api/generate",
-                    json={"model": "mistral", "prompt": f"Answer this workout-related question: {user_message}"},
-                    stream=True  # Enable streaming
-                )
+                # Get the response from the chatbot
+                bot_response = get_response(user_message)
 
-                # Check if the response is successful
-                if response.status_code != 200:
-                    bot_response = f"Error: Received non-200 status code {response.status_code} from server."
-                    return render_template('chat_with_bot.html', user_message=user_message, bot_response=bot_response)
-
-                print(f"Raw response: {response.text}")
-
-                full_response = ""
-
-                # Process the response as a stream of JSON objects
-                for line in response.iter_lines():
-                    if line:
-                        try:
-                            # Attempt to decode and parse each line as JSON
-                            line_data = line.decode('utf-8')
-
-                            if not line_data.strip():
-                                continue
-                            
-                            # Attempt to parse the line as JSON
-                            try:
-                                json_data = json.loads(line_data)
-                                if "response" in json_data:
-                                    full_response += json_data["response"]
-                            except ValueError as e:
-                                print(f"Error parsing chunk: {line_data} | Error: {str(e)}")
-                                continue
-                            
-                        except Exception as e:
-                            print(f"Unexpected error: {str(e)}")
-
-                # Final response after processing all chunks
-                bot_response = full_response.strip()
-
+                # Handle response if it's empty
                 if not bot_response:
                     bot_response = "Error: No valid response generated."
-
             except Exception as e:
                 bot_response = f"Error: {str(e)}"
+                error_message = "Sorry, there seems to be an issue with the bot. Please try again later."
 
-    return render_template('chat_with_bot.html', user_message=user_message, bot_response=bot_response)
+    # Pass chat history, loading status, and bot response to template
+    return render_template('chatbot.html', user_message=user_message, bot_response=bot_response, 
+                        chat_history=session.get('chat_history', []), loading=session.get('loading', False), 
+                        error_message=error_message)

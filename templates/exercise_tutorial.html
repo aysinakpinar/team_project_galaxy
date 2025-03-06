@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Large Title without Container -->
+    <h1 class="text-center mb-4">{{ exercise.name }} - Tutorial</h1>
+
+    <!-- Exercise Info List -->
+    <div class="mb-4">
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Description:</strong> {{ exercise.description }}</li>
+            <li class="list-group-item"><strong>Intensity:</strong> {{ exercise.intensity }}</li>
+            <li class="list-group-item"><strong>Sets:</strong> {{ exercise.sets }}</li>
+            <li class="list-group-item"><strong>Reps:</strong> {{ exercise.reps }}</li>
+        </ul>
+    </div>
+
+    <!-- Container for Image and Video Side-by-Side -->
+    <div class="row mb-5">
+        <!-- Exercise Image (if available) -->
+        <div class="col-md-6 d-flex justify-content-center">
+            {% if exercise.picture_path %}
+                <div class="mb-3">
+                    <img src="{{ url_for('static', filename=exercise.picture_path.split('/static/')[-1]) }}" 
+                         alt="{{ exercise.name }}" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: cover;">
+                </div>
+            {% else %}
+                <p>No image available for this exercise.</p>
+            {% endif %}
+        </div>
+
+        <!-- Tutorial Video -->
+        <div class="col-md-6 d-flex justify-content-center">
+            {% if video_url %}
+                <!-- Use responsive embed class for better control over the video size -->
+                <div class="embed-responsive embed-responsive-16by9" style="max-height: 800px;">
+                    <iframe class="embed-responsive-item" src="{{ video_url }}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            {% else %}
+                <p>No tutorial video available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Back to Workout Button -->
+    <div class="text-center">
+        <a href="{{ url_for('workout.manage_workout', workout_id=workout.id) }}" class="btn btn-primary btn-lg">Back to Workout</a>
+    </div>
+{% endblock %}

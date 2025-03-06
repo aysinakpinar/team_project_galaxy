@@ -59,7 +59,7 @@ def create_app(config_class=None):
     app.register_blueprint(threads, url_prefix='/threads')
     app.register_blueprint(home)
     app.register_blueprint(workout, url_prefix='/workout')
-    app.register_blueprint(chatbot, url_prefix='/chat')
+    app.register_blueprint(chatbot, url_prefix='/chatbot')
 
     return app
 
