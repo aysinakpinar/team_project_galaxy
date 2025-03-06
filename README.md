@@ -118,6 +118,8 @@ python seeds/2_user_point_seed.py
 python seeds/3_exercise_seed.py
 python seeds/4_quote_seed.py
 python seeds/5_gym_seed.py
+python seeds/6_workout_seed.py
+python seeds/7_workout_exercise_seed.py
 '''
 ## PR26
 - Users can display the exercises in the workout page.

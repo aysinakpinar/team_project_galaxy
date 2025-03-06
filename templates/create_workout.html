@@ -100,11 +100,11 @@
                 </td>
 
                 <td>
-                    <!-- Grouping the buttons -->
+                    <!-- Grouping the buttons with a margin between them -->
                     <div class="btn-group" role="group" aria-label="Workout Actions">
-                        <!-- Remove Workout -->
+                        <!-- Remove Workout with margin-right -->
                         <form action="{{ url_for('workout.remove_workout', workout_id=workout.id) }}" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            <button type="submit" class="btn btn-danger btn-sm mr-2">Remove</button>
                         </form>
 
                         <!-- Edit Workout -->

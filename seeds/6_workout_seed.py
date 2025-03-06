@@ -167,7 +167,7 @@ def seed_workouts():
             workouts = user_data["workouts"]
             
             # Fetch the user by user_id
-            user = UserModel.query.get(user_id)
+            user = db.session.get(UserModel, user_id)
 
             if user:
                 for workout_data in workouts:
