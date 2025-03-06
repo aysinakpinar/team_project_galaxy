@@ -22,7 +22,7 @@
                         <img src="{{ url_for('static', filename=post.img) }}" class="post-image" alt="Post image">
                     {% endif %}
                     <div class="post-footer">
-                        <form action="{{ url_for('threads.like', content_type='post', content_id=post.id, highlight_reply=highlight_reply) }}" method="post" class="d-inline me-2">
+                        <form action="{{ url_for('threads.like', content_type='post', content_id=post.id, highlight_reply=highlight_reply) }}" method="post" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-primary">
                                 {% if post.likes|selectattr('user_id', 'equalto', session['user_id'])|list|length > 0 %}
                                     <i class="bi bi-heart-fill"></i>
@@ -44,34 +44,68 @@
         {% if post.replies %}
             <div class="reply-container">
                 {% for reply in post.replies %}
-                    <div class="card reply-card {% if highlight_reply == reply.id %}highlighted{% endif %}">
-                        <div class="card-body">
-                            <img src="{{ url_for('static', filename='profile_pics/' + reply.replier.profile_picture) }}" class="profile-pic" alt="{{ reply.username }}'s profile">
-                            <div class="content-wrapper">
-                                <p class="card-text"><strong class="username">{{ reply.username }}</strong>: {{ reply.text }}</p>
-                                {% if reply.img %}
-                                    <img src="{{ url_for('static', filename=reply.img) }}" class="reply-image" alt="Reply image">
-                                {% endif %}
-                                <div class="post-footer">
-                                    <form action="{{ url_for('threads.like', content_type='reply', content_id=reply.id, highlight_reply=highlight_reply) }}" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-outline-primary">
-                                            {% if reply.likes|selectattr('user_id', 'equalto', session['user_id'])|list|length > 0 %}
-                                                <i class="bi bi-heart-fill"></i>
-                                            {% else %}
-                                                <i class="bi bi-heart"></i>
-                                            {% endif %}
-                                            ({{ reply.likes|length }})
-                                        </button>
-                                    </form>
+                    {% if not reply.parent_reply_id %}  <!-- Only top-level replies -->
+                        <div class="card reply-card {% if highlight_reply == reply.id %}highlighted{% endif %}">
+                            <div class="card-body">
+                                <img src="{{ url_for('static', filename='profile_pics/' + reply.replier.profile_picture) }}" class="profile-pic" alt="{{ reply.username }}'s profile">
+                                <div class="content-wrapper">
+                                    <p class="card-text"><strong class="username">{{ reply.username }}</strong>: {{ reply.text }}</p>
+                                    {% if reply.img %}
+                                        <img src="{{ url_for('static', filename=reply.img) }}" class="reply-image" alt="Reply image">
+                                    {% endif %}
+                                    <div class="post-footer">
+                                        <form action="{{ url_for('threads.like', content_type='reply', content_id=reply.id, highlight_reply=highlight_reply) }}" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                {% if reply.likes|selectattr('user_id', 'equalto', session['user_id'])|list|length > 0 %}
+                                                    <i class="bi bi-heart-fill"></i>
+                                                {% else %}
+                                                    <i class="bi bi-heart"></i>
+                                                {% endif %}
+                                                ({{ reply.likes|length }})
+                                            </button>
+                                        </form>
+                                        <a href="{{ url_for('threads.reply', post_id=post.id) }}?parent_reply_id={{ reply.id }}" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-chat"></i> ({{ reply.replies|length }})
+                                        </a>
+                                    </div>
+                                    <!-- Nested Replies -->
+                                    {% for nested_reply in reply.replies %}
+                                        <div class="card reply-card nested-reply {% if highlight_reply == nested_reply.id %}highlighted{% endif %}">
+                                            <div class="card-body">
+                                                <img src="{{ url_for('static', filename='profile_pics/' + nested_reply.replier.profile_picture) }}" class="profile-pic" alt="{{ nested_reply.username }}'s profile">
+                                                <div class="content-wrapper">
+                                                    <p class="card-text"><strong class="username">{{ nested_reply.username }}</strong>: {{ nested_reply.text }}</p>
+                                                    {% if nested_reply.img %}
+                                                        <img src="{{ url_for('static', filename=nested_reply.img) }}" class="reply-image" alt="Nested reply image">
+                                                    {% endif %}
+                                                    <div class="post-footer">
+                                                        <form action="{{ url_for('threads.like', content_type='reply', content_id=nested_reply.id, highlight_reply=highlight_reply) }}" method="post" class="d-inline">
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                                {% if nested_reply.likes|selectattr('user_id', 'equalto', session['user_id'])|list|length > 0 %}
+                                                                    <i class="bi bi-heart-fill"></i>
+                                                                {% else %}
+                                                                    <i class="bi bi-heart"></i>
+                                                                {% endif %}
+                                                                ({{ nested_reply.likes|length }})
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% else %}
             <p>No replies yet. Be the first to reply!</p>
         {% endif %}
+        <a href="{{ url_for('threads.view_posts') }}" class="btn btn-secondary mt-3">
+            <i class="bi bi-caret-left"></i>
+        </a>
     </div>
 </div>
 

@@ -12,7 +12,7 @@ from extension import db
 
 threads = Blueprint("threads", __name__, url_prefix="/threads")
 
-# Middleware:
+# Middleware + utils
 # checkAuth
 def checkAuth():
     if "user_id" not in session:
@@ -39,7 +39,7 @@ def view_posts():
     redirect_response = checkAuth()
     if redirect_response:
         return redirect_response
-    
+
     form = PostForm()
     if form.validate_on_submit():
         user_id = get_current_user_id()
@@ -50,7 +50,7 @@ def view_posts():
             img_path = os.path.join('static/images/posts', filename)
             img.save(img_path)
             img_path = f"images/posts/{filename}"
-        
+
         new_post = PostModel(
             poster_Id=user_id,
             text=form.text.data,
@@ -60,9 +60,10 @@ def view_posts():
         db.session.commit()
         flash("Post created!", "success")
         return redirect(url_for("threads.view_posts"))
-    
-    posts = PostModel.query.all()
-    return render_template("posts.html", posts=posts, form=form)
+
+    posts = PostModel.query.order_by(PostModel.created_at.desc()).all()
+    current_user = UserModel.query.get(get_current_user_id())
+    return render_template("posts.html", posts=posts, form=form, current_user=current_user)
 
 
 # reply
@@ -72,7 +73,11 @@ def reply(post_id):
     if redirect_response:
         return redirect_response
     form = ReplyForm()
+    parent_reply = None
     post = PostModel.query.get_or_404(post_id)
+    if request.args.get("parent_reply_id"):
+        parent_reply_id = int(request.args.get("parent_reply_id"))
+        parent_reply = ReplyModel.query.get_or_404(parent_reply_id)
     
     if form.validate_on_submit():
         user_id = get_current_user_id()
@@ -91,6 +96,7 @@ def reply(post_id):
         new_reply = ReplyModel(
             post_Id=post_id,
             replier_Id=user_id,
+            parent_reply_id = parent_reply.id if parent_reply else None,
             username=username,
             text=form.text.data,
             img=img_path
@@ -99,7 +105,7 @@ def reply(post_id):
         db.session.commit()
         flash("Reply added!", "success")
         return redirect(url_for("threads.view_post", post_id=post_id))
-    return render_template("reply.html", form=form, post=post)
+    return render_template("reply.html", form=form, post=post, parent_reply=parent_reply)
 
 
 # view post
