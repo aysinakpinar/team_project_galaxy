@@ -46,7 +46,7 @@ def seed_exercises():
             "sets": 3,
             "reps": 12,
             "picture_path": "/static/images/exercises/shoulderpress.jpg",
-            "tutorial": "Hold a dumbbell in each hand at shoulder height and press them straight overhead. Lower them back with control. \n\n[Watch Tutorial](https://www.youtube.com/watch?v=Q7aSWDnMJkE)"
+            "tutorial": "Hold a dumbbell in each hand at shoulder height and press them straight overhead. Lower them back with control. \n\n[Watch Tutorial](https://www.youtube.com/watch?v=0JfYxMRsUCQ)"
         },
         {
             "name": "Lateral Raises",
@@ -133,7 +133,7 @@ def seed_exercises():
         "sets": 3,
         "reps": 12,
         "picture_path": "/static/images/exercises/stepups.jpg",
-        "tutorial": "Find a sturdy box or bench. Step up with one foot, pressing through your heel, and bring the other foot up to stand on the box. Step down carefully and repeat with the opposite leg. Maintain control and avoid pushing off too much with the trailing leg. \n\n[Watch Tutorial](https://www.youtube.com/watch?v=PhF3gR0LRwM)"
+        "tutorial": "Find a sturdy box or bench. Step up with one foot, pressing through your heel, and bring the other foot up to stand on the box. Step down carefully and repeat with the opposite leg. Maintain control and avoid pushing off too much with the trailing leg. \n\n[Watch Tutorial](https://www.youtube.com/watch?v=wfhXnLILqdk)"
     },
     {
         "name": "Romanian Deadlifts",
@@ -142,7 +142,7 @@ def seed_exercises():
         "sets": 3,
         "reps": 12,
         "picture_path": "/static/images/exercises/romaniandeadlifts.jpg",
-        "tutorial": "Hold a barbell or dumbbells in front of you with a slight bend in the knees. Hinge at the hips, lowering the weights while keeping your back straight. Lower until you feel a stretch in your hamstrings, then engage your glutes to return to standing. \n\n[Watch Tutorial](https://www.youtube.com/watch?v=RZrvjC5BeCc)"
+        "tutorial": "Hold a barbell or dumbbells in front of you with a slight bend in the knees. Hinge at the hips, lowering the weights while keeping your back straight. Lower until you feel a stretch in your hamstrings, then engage your glutes to return to standing. \n\n[Watch Tutorial](https://www.youtube.com/watch?v=5WxMW-Fu5KU)"
     },
     {
         "name": "Glute Bridges",

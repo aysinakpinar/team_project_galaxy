@@ -14,30 +14,46 @@
         </ul>
     </div>
 
-    <!-- Container for Image and Video Side-by-Side -->
-    <div class="row mb-5">
-        <!-- Exercise Image (if available) -->
-        <div class="col-md-6 d-flex justify-content-center">
-            {% if exercise.picture_path %}
-                <div class="mb-3">
-                    <img src="{{ url_for('static', filename=exercise.picture_path.split('/static/')[-1]) }}" 
-                        alt="{{ exercise.name }}" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: cover;">
+    <!-- Card containing Image and Tutorial Text -->
+    <div class="card mb-5">
+        <div class="card-body">
+            <div class="row">
+                <!-- Exercise Image (if available) -->
+                <div class="col-md-6">
+                    {% if exercise.picture_path %}
+                        <div class="mb-3">
+                            <img src="{{ url_for('static', filename=exercise.picture_path.split('/static/')[-1]) }}" 
+                                alt="{{ exercise.name }}" class="img-fluid rounded shadow-sm" style="max-height: 500px; object-fit: cover;">
+                        </div>
+                    {% else %}
+                        <p>No image available for this exercise.</p>
+                    {% endif %}
                 </div>
-            {% else %}
-                <p>No image available for this exercise.</p>
-            {% endif %}
-        </div>
 
-        <!-- Tutorial Video -->
-        <div class="col-md-6 d-flex justify-content-center">
-            {% if video_url %}
-                <!-- Use responsive embed class for better control over the video size -->
-                <div class="embed-responsive embed-responsive-16by9" style="max-height: 800px;">
-                    <iframe class="embed-responsive-item" src="{{ video_url }}" frameborder="0" allowfullscreen></iframe>
+                <!-- Tutorial Text -->
+                <div class="col-md-6">
+                    <h4>Exercise Instructions:</h4>
+                    <p>{{ exercise.tutorial | safe }}</p>
                 </div>
-            {% else %}
-                <p>No tutorial video available.</p>
-            {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Centered Video Section -->
+    <div class="row mb-5">
+        <div class="col-12 d-flex justify-content-center">
+            <!-- Tutorial Video (larger size) -->
+            <div class="video-container" style="width: 100%; max-width: 1200px; height: 750px;">
+                {% if video_url %}
+                    <iframe 
+                        src="{{ video_url }}" 
+                        frameborder="0" 
+                        allowfullscreen
+                        style="width: 100%; height: 100%;"></iframe>
+                {% else %}
+                    <p>No tutorial video available.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 
