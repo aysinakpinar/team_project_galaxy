@@ -46,7 +46,7 @@
             <div class="users-list">
                 {% if users %} {% for user in users %}
                 <div>
-                    <h3>{{ user.username }}</h3>
+                    <a href="{{ url_for('users.profile', user_id=user.id) }}"><h3>{{ user.username }}</h3></a>
                     <p>Location: {{ user.location }}</p>
                     <p>Age: {{ user.age }}</p>
                     <p>Fitness level: {{ user.fitness_level }}</p>
