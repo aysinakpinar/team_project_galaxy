@@ -14,6 +14,19 @@
                 </div>
             </div>
         </div>
+        {% if parent_reply %}
+            <div class="card reply-card mb-4">
+                <div class="card-body">
+                    <img src="{{ url_for('static', filename='profile_pics/' + parent_reply.replier.profile_picture) }}" class="profile-pic" alt="{{ parent_reply.username }}'s profile">
+                    <div class="content-wrapper">
+                        <p class="card-text"><strong class="username">{{ parent_reply.username }}</strong>: {{ parent_reply.text }}</p>
+                        {% if parent_reply.img %}
+                            <img src="{{ url_for('static', filename=parent_reply.img) }}" class="reply-image" alt="Parent reply image">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -33,13 +46,19 @@
                 {% endfor %}
             </div>
             <div class="mb-3">
-                {{ form.img(class="form-control") }}
+                <div class="input-group">
+                    <label class="input-group-text btn btn-outline-secondary" for="img">
+                        <i class="bi bi-image-fill"></i> <!-- Bootstrap Icons image icon -->
+                    </label>
+                    <span class="form-control">Add an image (optional)</span>
+                    {{ form.img(class="d-none", id="img") }} <!-- Hidden input -->
+                </div>
                 {% for error in form.img.errors %}
                     <div class="text-danger">{{ error }}</div>
                 {% endfor %}
             </div>
-            <button type="submit" class="btn btn-primary">Reply</button>
-            <a href="{{ url_for('threads.view_post', post_id=post.id) }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i></button>
+            <a href="{{ url_for('threads.view_post', post_id=post.id) }}" class="btn btn-secondary"><i class="bi bi-x-circle-fill"></i></a>
         </form>
     </div>
 </div>

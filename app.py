@@ -25,10 +25,16 @@ from blueprints.home import home
 from blueprints.chatbot import chatbot
 
 
+#khaadijas chat cod
+from blueprints.chat import chat, init_socketio
+from flask_socketio import SocketIO # Importing Socketio for real time communications
+# initialise socketio globally
+socketio = SocketIO(cors_allowed_origins="*") #allows all domains to connect using socketio
 
 def create_app(config_class=None):
     #create and configure the Flask App
     app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'secret_key'
 
     if config_class:
         app.config.from_object(config_class)
@@ -61,20 +67,17 @@ def create_app(config_class=None):
     app.register_blueprint(workout, url_prefix='/workout')
     app.register_blueprint(chatbot, url_prefix='/chatbot')
 
+    #khadijas chat code
+    app.register_blueprint(chat, url_prefix='/chat')
+    socketio.init_app(app) #initialise socketio w app
+    init_socketio(socketio) #initialises socketio event handlers
+
+
     return app
 
 if __name__ == "__main__":
     app = create_app()
 
-    # # Test database connection
-    # try:
-    #     with app.app_context():  # Ensure the code runs within the Flask application context
-    #         with db.engine.connect() as connection:  # Establish a connection to the database
-    #             print("PostgreSQL connection successful!")
-    # except Exception as e:
-    #     print("Failed to connect to PostgreSQL:", str(e))  # Print the error message if connection fails
 
-    app.run(debug=True)
-
-
-
+#khadijas chat code
+    socketio.run(app, debug=True) #start app using socketio server

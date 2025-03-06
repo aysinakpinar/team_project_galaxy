@@ -143,5 +143,28 @@ python seeds/5_gym_seed.py
 - Chatbot was implemented on the navbar.
 - refer to the PR26 to run the chatbot.
 
+## Khadija PR  REAL-Time chat feature
+
+- pip install -r requirements.txt
+
+or pip install flask-socketio  // enables websocket cocmmunication in flask
+pip install python-socketio  // provides socketio server implmentation
+pip install eventlet  // library required for socketio (all added to requirements.txt)
+
+- Users can view a list of active users in the sidebar
+(sidebar displays a list of all active users except the logged in user,
+each user is clickable, click to start orivate chat, has to be done for oth users)
+- Users can send and recieve messages in real time
+(messages are displayed in chat window with senders name)
+- Users can join and leave private chat rooms
+(clicking on a user joins their private chat room, 
+leaving a chat room is handled automatically when switching to another user)
+- Users can see when other users are online or offline
+(the list of active users updates in real-time as users connect or disconnect)
+- Users can only chat with other users who are currently online
+
+messages.html : contains chat interface, handles user interactions & websocket communication using js
+chat.py : defines flask routes & socketio event handlers for chat feature, manages user connections, room joining, messaging
+app.py : initialises flask app and integrates socketio, starts app using socketio.run(app, debug=true) (comments in app.py to explain my code)
 
 
