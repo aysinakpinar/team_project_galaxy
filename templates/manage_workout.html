@@ -1,4 +1,17 @@
 {% extends 'base.html' %} {% block content %}
+<!-- Show flash messages specific to this page -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-dismissible fade show" role="alert">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endwith %}
+
 <h2>Manage Workout: {{ workout.name }}</h2>
 <p><strong>Estimated Time:</strong> {{ workout.estimated_time }}</p>
 
