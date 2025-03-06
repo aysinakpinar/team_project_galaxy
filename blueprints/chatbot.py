@@ -8,9 +8,10 @@ model_name = "mistral:7b-instruct-q4_K_M"
 # Function to get response from Ollama chatbot API
 def get_response(message):
     try:
-        # Simulate loading state (set loading to True while processing)
+        # Set loading state before making the API request
         session['loading'] = True
-        
+        session.modified = True  # Ensure the session is updated
+
         # Get the response from Ollama chatbot API
         response = ollama.chat(model_name, [{"role": "user", "content": message}])
         print("Ollama Response:", response)  # Log the full response
@@ -25,10 +26,12 @@ def get_response(message):
 
         # Clear loading state after processing the response
         session['loading'] = False
+        session.modified = True  # Ensure session is saved
         return content
     except Exception as e:
         # Handle any exceptions that occur during the API call
         session['loading'] = False
+        session.modified = True
         return f"Error: {str(e)}"
 
 @chatbot.route('/ask', methods=['GET', 'POST'])
