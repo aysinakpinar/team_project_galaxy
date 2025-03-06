@@ -5,11 +5,11 @@ from wtforms import StringField, SubmitField, HiddenField
 
 
 class FindFriendsForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    location = StringField("Location", validators=[DataRequired()])
-    age = StringField("Age", validators=[DataRequired()])
-    fitness_level = StringField("Fitness Level", validators=[DataRequired()])
-    favourite_exercise = StringField("Favourite Exercise", validators=[DataRequired()])
+    username = StringField("Username")
+    location = StringField("Location")
+    age = StringField("Age")
+    fitness_level = StringField("Fitness Level" )
+    favourite_exercise = StringField("Favourite Exercise")
 
 class AddFriendForm(FlaskForm):
     add_friend = SubmitField("Add friend")

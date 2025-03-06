@@ -3,24 +3,39 @@
 {% block styles %}
 <style>
     /* CHART  */
-    .daschboard-container {
+    .dashboard-container {
         width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: center;
+    }
+    .outside-chart-container {
+        display: flex;
+        justify-content: center;
         align-items: center;
+        flex-direction: column;
+        background-color: #e9e9e9;
+        /* background-color: #c5c5c5; */
+        width: 70%;
+        border-radius: 25px;
+        margin-bottom: 5rem;
+        border: 2px solid rgb(125, 125, 125);
     }
     .chart-container {
-        width: 70%;
+        width: 100%;
         min-width: 350px;
-        border-radius: 25px;
         display: block;
         height: 450px;
+        border-top: 1px solid gray;
+    }
+    .chart-buttons-container {
+        width: 90%;
     }
     .dashboard-menu {
+        padding-top: 3rem;
         width: 20%;
         border-right: 0.5px solid gray;
-        height: 100vh;
+        height: 125vh;
     }
     .dashboard-content {
         width: 80%;
@@ -34,11 +49,11 @@
     .main-svg {
         border-radius: 25px;
         width: 100%;
-        border: 2px solid rgb(125, 125, 125);
     }
 
     .leaderboard-container {
         width: 100%;
+        margin-bottom: 7rem;
     }
     .leaderboard {
         width: 70%;
@@ -134,14 +149,28 @@
         text-decoration: none;
         color: black;
     }
+    .leader-board-btn {
+        text-decoration: none;
+        font-weight: 200;
+        color: rgb(65, 65, 65);
+        margin: 0.5rem 0;
+    }
     @media (max-width: 768px) {
-        .daschboard-container {
+        .dashboard-container {
             display: flex;
+            align-items: center;
             flex-direction: column;
         }
         .dashboard-menu {
             height: auto;
             border: none;
+            display: none;
+        }
+        .leaderboard {
+            width: 100%;
+        }
+        .outside-chart-container {
+            width: 100%;
         }
     }
 </style>
@@ -149,11 +178,11 @@
 {% endblock %}
 <!-- your html content in body -->
 {% block content %}
-<div class="daschboard-container">
+<div class="dashboard-container">
     <div class="dashboard-menu">
         <a
             class="user-profile-container d-flex align-items-center"
-            href="user/{{ user_data.id }}"
+            href="users/profile?user_id={{ user_data.id }}"
         >
             <img
                 class="user-img-profile"
@@ -162,10 +191,17 @@
                 >{{ user_data.username}}</span
             >
         </a>
-        <div class="my-5">
-            <p>Menu dashboard</p>
-            <p>Leaderboard</p>
-            <p>Analytics</p>
+        <div class="d-flex flex-column my-5">
+            <p class="h5 my-3">Menu dashboard</p>
+            <a class="leader-board-btn" href="#leader-board-id" class="fw-light"
+                >Leaderboard</a
+            >
+            <a
+                class="leader-board-btn"
+                href="#outside-chart-id"
+                class="fw-light"
+                >Analytics</a
+            >
         </div>
     </div>
     <div class="dashboard-content d-flex flex-column align-items-center">
@@ -173,6 +209,7 @@
 
         <!-- LEADERBOARD SECTION -------- START -->
         <div
+            id="leader-board-id"
             class="leaderboard-container d-flex flex-column align-items-center mt-5"
         >
             <section
@@ -391,12 +428,26 @@
 
         <!-- ANALYTICS SECTION ------- START -->
         {% if chart_data != "[]" %}
-        <div>
-            <button id="barchart-button">Barchart</button>
-            <button id="piechart-button">Piechart</button>
-        </div>
-        <div class="chart-container">
-            <div class="chart" style="width: 100%"></div>
+        <div id="outside-chart-id" class="outside-chart-container">
+            <div
+                class="chart-buttons-container my-4 d-flex justify-content-evenly"
+            >
+                <button
+                    class="btn btn-sm btn-outline-secondary px-5"
+                    id="barchart-button"
+                >
+                    Barchart
+                </button>
+                <button
+                    class="btn btn-sm btn-outline-secondary px-5"
+                    id="piechart-button"
+                >
+                    Piechart
+                </button>
+            </div>
+            <div class="chart-container">
+                <div class="chart" style="width: 100%"></div>
+            </div>
         </div>
         {% else %}
         <div class="no-chart-container">No chart data available.</div>
@@ -494,8 +545,8 @@
                 },
                 range: [0, 120],
             },
-            plot_bgcolor: "#e1e1e1",
-            paper_bgcolor: "#e1e1e1",
+            plot_bgcolor: "#e9e9e9",
+            paper_bgcolor: "#e9e9e9",
         };
         let config = { responsive: true };
         return {
@@ -526,8 +577,8 @@
             },
 
             font: { size: 14 },
-            plot_bgcolor: "#e1e1e1",
-            paper_bgcolor: "#e1e1e1",
+            plot_bgcolor: "#e9e9e9",
+            paper_bgcolor: "#e9e9e9",
             showlegend: true,
             legend: {
                 traceorder: "normal",
