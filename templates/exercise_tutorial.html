@@ -21,7 +21,7 @@
             {% if exercise.picture_path %}
                 <div class="mb-3">
                     <img src="{{ url_for('static', filename=exercise.picture_path.split('/static/')[-1]) }}" 
-                         alt="{{ exercise.name }}" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: cover;">
+                        alt="{{ exercise.name }}" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: cover;">
                 </div>
             {% else %}
                 <p>No image available for this exercise.</p>
