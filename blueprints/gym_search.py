@@ -2,14 +2,21 @@ from flask import Blueprint, render_template, request
 from models.gym import GymModel
 from extension import db
 from forms.gym_search_form import GymSearchForm
+from dotenv import load_dotenv
 import googlemaps
+import os
+import requests
 
-gym_search = Blueprint("gym_search", __name__, url_prefix="/gym_search")
+load_dotenv()
+# Get the Google Maps API Key from the environment variable
+api_key = os.getenv("GOOGLE_MAPS_API_KEY")
 
 GOOGLE_PLACES_URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
 
+gym_search = Blueprint("gym_search", __name__, url_prefix="/gym_search")
+
 # Initialize Google Maps client
-gmaps = googlemaps.Client(key='AIzaSyDCctO8HTJKGB3UB7-8IlxRRWnkIXtkq-Y')
+gmaps = googlemaps.Client(key=api_key)
 def get_lat_lng_from_location(location):
     geocode_result = gmaps.geocode(location)
     if geocode_result:
@@ -35,7 +42,7 @@ def search_gyms():
         # Return a result template
             lat, lng = get_lat_lng_from_location(location)
             if filtered_query.count() != 0:
-                return render_template('search.html', form=form, location=location, gyms=filtered_query, lat=lat, lng=lng, formatted_gyms=gyms)
+                return render_template('search.html', api_key=api_key, form=form, location=location, gyms=filtered_query, lat=lat, lng=lng, formatted_gyms=gyms)
             else:
-                return render_template('search.html', form=form, location=location, lat=lat, lng=lng, formatted_gyms=gyms, error="No gyms found or invalid location")
-    return render_template('search.html', form=form, lat= 51.509865, lng= -0.118092, formatted_gyms=gyms)
+                return render_template('search.html', api_key=api_key, form=form, location=location, lat=lat, lng=lng, formatted_gyms=gyms, error="No gyms found or invalid location")
+    return render_template('search.html', api_key=api_key, form=form, lat= 51.509865, lng= -0.118092, formatted_gyms=gyms)
