@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Edit Your Profile</h2>
+<h2>Your Profile</h2>
+
+<h3>Hello {{user.username}}!</h3>
 
 {% if user.profile_picture %}
     <img src="{{ url_for('static', filename='profile_pics/' + user.profile_picture) }}" alt="Profile Picture" width="150">
@@ -9,11 +11,9 @@
     <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Default Profile Picture" width="150">
 {% endif %}
 
-<h3>Hello {{user.username}}!</h3>
-
-<a href="{{ url_for('users.edit_profile') }}" class="btn btn-primary">
-    Edit Profile
-</a>
+{% if session['user_id'] == user.id %}
+<a href="{{ url_for('users.edit_profile') }}" class="btn btn-primary">Edit Profile</a>
+{% endif %}
 
 <p><strong>Username:</strong> {{ user.username }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
@@ -25,7 +25,7 @@
     <p><strong>Favourite Exercise:</strong> {{ user.favourite_exercise }}</p>
 
     
-    <h3>Your Friends</h3>
+    <h3>Friendships</h3>
     {% if friends %}
         <ul>
             {% for friend in friends %}
