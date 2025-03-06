@@ -12,40 +12,40 @@ from app import create_app  # Replace 'your_app' with your actual Flask app name
 def seed_quotes():
     quotes = [
         {
-            "body": "“Push harder than yesterday if you want a different tomorrow.” Vincent Williams Sr."
+            "body": '“Push harder than yesterday if you want a different tomorrow.” Vincent Williams Sr.'
         },
         {
-            "body": "“The secret of getting ahead is getting started.” Mark Twain"
+            "body": '“The secret of getting ahead is getting started.” Mark Twain'
         },
         {
-            "body": "“You miss one hundred percent of the shots you don’t take.” Wayne Gretzky"
+            "body": '“You miss one hundred percent of the shots you don’t take.” Wayne Gretzky'
         },
         {
-            "body": "“All progress takes place outside the comfort zone.” Michael John Bobak"
+            "body": '“All progress takes place outside the comfort zone.” Michael John Bobak'
         },
         {
-            "body": "“Think of your workouts as important meetings you schedule with yourself. Bosses don’t cancel” Unknown"
+            "body": '“Think of your workouts as important meetings you schedule with yourself. Bosses don’t cancel” Unknown'
         },
         {
-            "body": "“Never give up on a dream just because of the time it will take to accomplish it. The time will pass anyway.” Earl Nightingale"
+            "body": '“Never give up on a dream just because of the time it will take to accomplish it. The time will pass anyway.” Earl Nightingale'
         },
         {
-            "body": "“The only place where success comes before work is in the dictionary.”  Vidal Sassoon"
+            "body": '“The only place where success comes before work is in the dictionary.”  Vidal Sassoon'
         },
         {
-            "body": "“There is no magic pill.” Arnold Schwarzenegger"
+            "body": '“There is no magic pill.” Arnold Schwarzenegger'
         },
         {
-            "body": "“Success is usually a culmination of controlling failure.” Sylvester Stallone"
+            "body": '“Success is usually a culmination of controlling failure.” Sylvester Stallone'
         },
         {
-            "body": "“A year from now you may wish you had started today.” Karen Lamb"
+            "body": '“A year from now you may wish you had started today.” Karen Lamb'
         },
         {
-            "body": "“Everyone's dream can come true if you just stick to it and work hard.” Serena Williams"
+            "body": '“Everyone s dream can come true if you just stick to it and work hard.” Serena Williams'
         },
         {
-            "body": "“Acknowledge the fear and do it anyway.“ Emma Lovewell"
+            "body": '“Acknowledge the fear and do it anyway.“ Emma Lovewell'
         }
     ]
     # Create application contex
