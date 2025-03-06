@@ -24,6 +24,9 @@ def search_gyms():
     query = GymModel.query
     if request.method == 'GET':
         location = request.args.get('location') or form.location.data 
+        gyms = []
+        for gym in query:
+            gyms.append({"latitude": gym.lat, "longitude":gym.lng})
         if location:
             filtered_query = query.filter(GymModel.location.ilike(f"%{location.strip()}%"))
         # Perform the search for gyms based on the location
@@ -32,7 +35,7 @@ def search_gyms():
         # Return a result template
             lat, lng = get_lat_lng_from_location(location)
             if filtered_query.count() != 0:
-                return render_template('search.html', form=form, location=location, gyms=filtered_query, lat=lat, lng=lng)
+                return render_template('search.html', form=form, location=location, gyms=filtered_query, lat=lat, lng=lng, formatted_gyms=gyms)
             else:
-                return render_template('search.html', form=form, location=location, lat=lat, lng=lng, error="No gyms found or invalid location")
-    return render_template('search.html', form=form, lat= 51.509865, lng= -0.118092)
+                return render_template('search.html', form=form, location=location, lat=lat, lng=lng, formatted_gyms=gyms, error="No gyms found or invalid location")
+    return render_template('search.html', form=form, lat= 51.509865, lng= -0.118092, formatted_gyms=gyms)
