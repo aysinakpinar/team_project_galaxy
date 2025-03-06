@@ -131,9 +131,17 @@ python seeds/5_gym_seed.py
     - ollama start
     in another terminal
     - ollama --version #check if it was installed
-    - ollama pull mistral:7b-instruct-q4_K_M
-    - ollama serve (opens for the port for mistral) #should run during running the app.
+    - ollama pull mistral:7b-instruct-q4_K_M (may take some time to download)
+    - ollama serve (opens the port for mistral) #should run during running the app.
     - ollama run mistral
     - flask run (in another terminal)
 - enum in exercise model changed to string
+## PR32
+- users can display the exercise tutorials.
+- exercises are listed in the workouts page under each workout.
+- mistral was updated with a slower version mistral:7b-instruct-q4_K_M.
+- Chatbot was implemented on the navbar.
+- refer to the PR26 to run the chatbot.
+
+
 
