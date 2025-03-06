@@ -1,47 +1,64 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Your Profile</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-12 mb-4">
+            <div class="card shadow-lg p-4 mx-auto">
+                <h3 class="text-center text-success">Friends</h3>
+                {% if friends %}
+                    <ul class="list-group list-group-flush">
+                        {% for friend in friends %}
+                            <li class="list-group-item">
+                                <a href="{{ url_for('users.profile', user_id=friend.id) }}" class="text-decoration-none fw-bold text-primary">
+                                    {{ friend.username }}
+                                </a>
+                                <p class="mb-0 text-muted">
+                                    📍 <strong>Location:</strong> {{ friend.location or "Unknown" }}<br>
+                                    🎂 <strong>Age:</strong> {{ friend.age or "N/A" }}<br>
+                                    💪 <strong>Fitness Level:</strong> {{ friend.fitness_level or "N/A" }}<br>
+                                    🏋️‍♂️ <strong>Favorite Exercise:</strong> {{ friend.favourite_exercise or "N/A" }}
+                                </p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center text-muted mt-3">
+                        You have no friends yet. <a href="/friends/find" class="text-primary">Find a workout buddy.</a>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
 
-<h3>Hello {{user.username}}!</h3>
+        <div class="col-lg-8 col-md-12 mb-4">
+            <div class="card shadow-lg p-4 mx-auto text-center"> 
+                <h2 class="mb-3 text-primary">Your Profile</h2>
 
-{% if user.profile_picture %}
-    <img src="{{ url_for('static', filename='profile_pics/' + user.profile_picture) }}" alt="Profile Picture" width="150">
-{% else %}
-    <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Default Profile Picture" width="150">
-{% endif %}
+                <div class="mb-3">
+                    <img src="{{ url_for('static', filename='profile_pics/' + (user.profile_picture if user.profile_picture else 'default.jpg')) }}" 
+                         alt="Profile Picture" 
+                         class="rounded-circle border shadow-sm"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                </div>
 
-{% if session['user_id'] == user.id %}
-<a href="{{ url_for('users.edit_profile') }}" class="btn btn-primary">Edit Profile</a>
-{% endif %}
+                <h4 class="text-dark">Hello, <strong>{{ user.username }}</strong>!</h4>
 
-<p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Location:</strong> {{ user.location }}</p>
-    <p><strong>Age:</strong> {{ user.age }}</p>
-    <p><strong>Weight:</strong> {{ user.weight }}</p>
-    <p><strong>Height:</strong> {{ user.height }}</p>
-    <p><strong>Fitness Level:</strong> {{ user.fitness_level }}</p>
-    <p><strong>Favourite Exercise:</strong> {{ user.favourite_exercise }}</p>
+                {% if session['user_id'] == user.id %}
+                    <a href="{{ url_for('users.edit_profile') }}" class="btn btn-primary btn-lg mb-3 shadow-lg" style="padding: 12px 20px; font-size: 18px; transition: background-color 0.3s ease;">Edit Profile</a>
+                {% endif %}
 
-    
-    <h3>Friendships</h3>
-    {% if friends %}
-        <ul>
-            {% for friend in friends %}
-                <li>
-                    <a href="{{ url_for('users.profile', user_id=friend.id) }}">
-                        {{ friend.username }}
-                        {{ friend.location }}
-                        {{ friend.age }}
-                        {{ friend.fitness_level }}
-                        {{ friend.favourite_exercise }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>You have no friends yet. <a href="/friends/find">Search for a workout buddy.</a> </p>
-    {% endif %}
-
+                <div class="card text-start p-3 shadow-sm">
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Location:</strong> {{ user.location or "Not provided" }}</p>
+                    <p><strong>Age:</strong> {{ user.age or "Not provided" }}</p>
+                    <p><strong>Weight:</strong> {{ user.weight or "Not provided" }} kg</p>
+                    <p><strong>Height:</strong> {{ user.height or "Not provided" }} ft/in</p>
+                    <p><strong>Fitness Level:</strong> {{ user.fitness_level or "Not provided" }}</p>
+                    <p><strong>Favourite Exercise:</strong> {{ user.favourite_exercise or "Not provided" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
