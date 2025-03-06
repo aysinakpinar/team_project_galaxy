@@ -122,6 +122,18 @@
         height: 35px;
         border-radius: 15px;
     }
+    .user-img-profile {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+    }
+    .user-name-profile {
+        font-size: 16px;
+    }
+    .user-profile-container {
+        text-decoration: none;
+        color: black;
+    }
     @media (max-width: 768px) {
         .daschboard-container {
             display: flex;
@@ -138,9 +150,26 @@
 <!-- your html content in body -->
 {% block content %}
 <div class="daschboard-container">
-    <div class="dashboard-menu">aa</div>
+    <div class="dashboard-menu">
+        <a
+            class="user-profile-container d-flex align-items-center"
+            href="user/{{ user_data.id }}"
+        >
+            <img
+                class="user-img-profile"
+                src="{{ user_data.profile_picture}}"
+            /><span class="user-name-profile mx-2"
+                >{{ user_data.username}}</span
+            >
+        </a>
+        <div>
+            <p>Dashboard menu</p>
+            <p>Leaderboard</p>
+            <p>Analytics</p>
+        </div>
+    </div>
     <div class="dashboard-content d-flex flex-column align-items-center">
-        <h1 class="mt-2">Dashboard</h1>
+        <h1 class="mt-2 display-4">Dashboard</h1>
 
         <!-- LEADERBOARD SECTION -------- START -->
         <div
