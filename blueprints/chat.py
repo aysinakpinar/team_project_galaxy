@@ -55,18 +55,27 @@ def init_socketio(socketio):
         sender = UserModel.query.get(sender_id)
         print(f"Message received in room {room}: {message} from {sender.username}")  # Debugging
         # Emit the message to the recipient's room
-        emit('receive_message', {
+
+        if str(room) == str(sender_id): #only send once if user is in own room
+            emit('receive_message', {
             'message': message,
             'sender_id': sender_id,
             'sender_username': sender.username
         }, room=room)
-        
-        # Additionally, send the message to the sender’s room (so they can see it as well)
-        emit('receive_message', {
-            'message': message,
-            'sender_id': sender_id,
-            'sender_username': sender.username
-        }, room=sender_id)
+            
+        else:
+            emit('receive_message', {
+                'message': message,
+                'sender_id': sender_id,
+                'sender_username': sender.username
+            }, room=room)
+            
+            # send the message to the sender’s room (so they can see it as well)
+            emit('receive_message', {
+                'message': message,
+                'sender_id': sender_id,
+                'sender_username': sender.username
+            }, room=sender_id)
 
 @chat.route('/')
 def chat_home():

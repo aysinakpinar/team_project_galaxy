@@ -3,53 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
+    <title>Gym Chat</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        /* Basic styling for the chat interface */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8; 
+            color: #333333; 
+        }
+
         #container {
             display: flex;
             height: 100vh;
+            background-color: #f0f4f8;
         }
+
+        /* Sidebar Styling */
         #sidebar {
-            width: 250px;
+            width: 300px;
             height: 100%;
-            border-right: 1px solid #ccc;
-            padding: 10px;
+            background-color: #ffffff; 
+            padding: 20px;
+            border-right: 2px solid #e0e7ff; 
             overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
         }
+
+        #sidebar h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            color: #4a90e2; 
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        #user-list {
+            list-style: none;
+        }
+
+        .user-link {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f8fafc;
+            color: #333333;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-link:hover {
+            background-color: #4a90e2; 
+            color: #ffffff;
+        }
+
+        /* Highlight the selected user */
+        .user-link.active {
+            background-color: #4a90e2; 
+            color: #ffffff;
+        }
+
+        /* Style for the logged-in user */
+        .logged-in-user {
+            background-color: #e0e7ff;
+            font-weight: bold;
+        }
+
+        /* Chat Window Styling */
         #chat {
             flex-grow: 1;
-            height: 100%;
-            padding: 10px;
             display: flex;
             flex-direction: column;
+            padding: 20px;
+            background-color: #f0f4f8;
         }
+
         #messages {
             flex-grow: 1;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
+            background-color: #ffffff; 
+            padding: 20px;
+            border-radius: 10px;
             overflow-y: auto;
-            height: 80%;
+            margin-bottom: 20px;
+            border: 2px solid #e0e7ff; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
         }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8fafc; 
+            border-radius: 5px;
+            color: #333333;
+        }
+
+        .message strong {
+            color: #4a90e2; 
+        }
+
+        /* Message Input and Send Button */
+        #message-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
         #message-input {
+            flex-grow: 1;
             padding: 10px;
-            margin-bottom: 10px;
-            flex-shrink: 0;
+            border: 2px solid #e0e7ff; 
+            border-radius: 5px;
+            background-color: #ffffff; 
+            color: #333333;
+            font-size: 16px;
         }
+
+        #message-input::placeholder {
+            color: #888888; 
+        }
+
         #send-button {
-            padding: 10px;
-        }
-        .user-link {
+            padding: 10px 20px;
+            background-color: #4a90e2; 
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
-            padding: 5px;
-            border: 1px solid #ddd;
-            margin-bottom: 5px;
+            transition: background-color 0.3s ease;
         }
-        .user-link:hover {
-            background-color: #f0f0f0;
+
+        #send-button:hover {
+            background-color: #357abd; 
+        }
+
+        /* Scrollbar Styling */
+        #messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #messages::-webkit-scrollbar-track {
+            background: #f8fafc; 
+        }
+
+        #messages::-webkit-scrollbar-thumb {
+            background: #4a90e2; 
+            border-radius: 4px;
+        }
+
+        #messages::-webkit-scrollbar-thumb:hover {
+            background: #357abd; 
         }
     </style>
 </head>
@@ -57,7 +168,7 @@
     <div id="container">
         <!-- Sidebar for users -->
         <div id="sidebar">
-            <h3>Users</h3>
+            <h3>Active Gym Buddies</h3>
             <ul id="user-list"></ul>
         </div>
 
@@ -66,8 +177,10 @@
             <div id="messages"></div>
 
             <!-- Message input and send button -->
-            <input type="text" id="message-input" placeholder="Type your message here...">
-            <button id="send-button">Send</button>
+            <div id="message-input-container">
+                <input type="text" id="message-input" placeholder="Type your message here...">
+                <button id="send-button">Send</button>
+            </div>
         </div>
     </div>
 
@@ -78,16 +191,34 @@
 
         // Fetch and display the list of users
         $.get('/chat/get_users', function(users) {
+            // Fetch the logged-in user's ID from the session 
+            var loggedInUserId = "{{ session.user_id }}"; 
+
+            // Add the logged-in user to the sidebar
+            $('#user-list').append(
+                '<li><a href="#" class="user-link logged-in-user" data-user-id="' + loggedInUserId + '">You</a></li>'
+            );
+
+            // Add other users to the sidebar
             users.forEach(function(user) {
-                $('#user-list').append(
-                    '<li><a href="#" class="user-link" data-user-id="' + user.id + '">' + user.username + '</a></li>'
-                );
+                if (user.id !== loggedInUserId) { // Exclude the logged-in user
+                    $('#user-list').append(
+                        '<li><a href="#" class="user-link" data-user-id="' + user.id + '">' + user.username + '</a></li>'
+                    );
+                }
             });
         });
 
         // Handle clicking on a user to start a private chat
         $('body').on('click', '.user-link', function(event) {
-            event.preventDefault(); // Prevent the default link behavior
+            event.preventDefault(); 
+
+            // Remove the 'active'
+            $('.user-link').removeClass('active');
+
+            // Add the 'active'
+            $(this).addClass('active');
+
             var userId = $(this).data('user-id');
             if (currentRoom) {
                 socket.emit('leave_room', {room: currentRoom});
@@ -110,7 +241,7 @@
         // Handle receiving a message
         socket.on('receive_message', function(data) {
             $('#messages').append(
-                '<div><strong>' + data.sender_username + ':</strong> ' + data.message + '</div>'
+                '<div class="message"><strong>' + data.sender_username + ':</strong> ' + data.message + '</div>'
             );
             // Auto scroll to the bottom of the messages
             $('#messages').scrollTop($('#messages')[0].scrollHeight);
@@ -119,9 +250,19 @@
         // Handle updating the user list
         socket.on('update_user_list', function(user_ids) {
             $('#user-list').empty(); // Clear the user list first
+
+            // Fetch the logged-in user's ID from the session 
+            var loggedInUserId = "{{ session.user_id }}"; 
+
+            // Add the logged-in user to the sidebar
+            $('#user-list').append(
+                '<li><a href="#" class="user-link logged-in-user" data-user-id="' + loggedInUserId + '">You</a></li>'
+            );
+
+            // Add other users to the sidebar
             $.get('/chat/get_users', function(users) {
                 users.forEach(function(user) {
-                    if (user_ids.includes(user.id)) {
+                    if (user_ids.includes(user.id) && user.id !== loggedInUserId) {
                         $('#user-list').append(
                             '<li><a href="#" class="user-link" data-user-id="' + user.id + '">' + user.username + '</a></li>'
                         );
