@@ -4,20 +4,14 @@ from wtforms.validators import email
 
 from forms.login_form import LoginForm
 from forms.signup_form import SignupForm
+# from forms.register_form import RegisterForm
+
 from models.user import UserModel
 from extension import db
 from forms import signup_form, login_form
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 
-@auth.route('/shutdown', methods=['GET'])
-def shutdown():
-    """Shutdown the Flask app."""
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-    return 'Server shutting down..'
 
 # Register a new user
 # ----- signup route -- | Aysin | ------
@@ -100,7 +94,6 @@ def login():
             return render_template("login.html", form=form)
     return render_template("login.html", form=form)
 
-
 # Logout from a session
 @auth.route('/logout')
 def logout():
@@ -112,6 +105,3 @@ def logout():
     resp.set_cookie('user_id', expires=0)
     flash("Logged out successfully!", "success")
     return resp
-
-
-    

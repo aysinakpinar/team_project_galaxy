@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 post-container">
+        <h1>Reply to Post</h1>
+        <div class="card post-card mb-4">
+            <div class="card-body">
+                <img src="{{ url_for('static', filename='profile_pics/' + post.poster.profile_picture) }}" class="profile-pic" alt="{{ post.poster.username }}'s profile">
+                <div class="content-wrapper">
+                    <p class="card-text"><strong class="username">{{ post.poster.username }}</strong>: {{ post.text }}</p>
+                    {% if post.img %}
+                        <img src="{{ url_for('static', filename=post.img) }}" class="post-image" alt="Post image">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="mb-3">
+                {{ form.text(class="form-control", placeholder="Your reply...", rows="3") }}
+                {% for error in form.text.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.img(class="form-control") }}
+                {% for error in form.img.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">Reply</button>
+            <a href="{{ url_for('threads.view_post', post_id=post.id) }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

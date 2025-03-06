@@ -4,9 +4,9 @@ from extension import db
 from datetime import datetime
 import random
 
-quote = Blueprint("home", __name__, url_prefix="/home")
+home = Blueprint("home", __name__, url_prefix="/home")
 
-@quote.route('/quote', methods=['GET'])
+@home.route('', methods=['GET'])
 def quote_of_day():
     quotes = db.session.query(QuoteModel).all()
     quote = random.choice(quotes)
