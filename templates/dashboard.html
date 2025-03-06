@@ -3,19 +3,37 @@
 {% block styles %}
 <style>
     /* CHART  */
-    .barchart-container,
-    .piechart-container {
-        width: 50%;
+    .daschboard-container {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    .chart-container {
+        width: 70%;
         min-width: 350px;
         border-radius: 25px;
         display: block;
+        height: 450px;
     }
-    /* .display-none {
-        display: none;
-    } */
+    .dashboard-menu {
+        width: 20%;
+        border-right: 0.5px solid gray;
+        height: 100vh;
+    }
+    .dashboard-content {
+        width: 80%;
+    }
+    .no-chart-container {
+        height: 250px;
+        display: flex;
+        align-items: center;
+    }
 
     .main-svg {
         border-radius: 25px;
+        width: 100%;
         border: 2px solid rgb(125, 125, 125);
     }
 
@@ -23,7 +41,7 @@
         width: 100%;
     }
     .leaderboard {
-        width: 50%;
+        width: 70%;
         border-radius: 15px;
         min-width: 350px;
         height: 450px;
@@ -104,253 +122,423 @@
         height: 35px;
         border-radius: 15px;
     }
+    .user-img-profile {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+    }
+    .user-name-profile {
+        font-size: 16px;
+    }
+    .user-profile-container {
+        text-decoration: none;
+        color: black;
+    }
+    @media (max-width: 768px) {
+        .daschboard-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .dashboard-menu {
+            height: auto;
+            border: none;
+        }
+    }
 </style>
 
 {% endblock %}
 <!-- your html content in body -->
 {% block content %}
-<div class="d-flex flex-column align-items-center mt-4">
-    <h1 class="mt-2">Dashboard</h1>
-    <!-- ANALYTICS SECTION ------- START -->
-    <!-- <div>
-        <button id="piechart-button">Piechart</button>
-        <button id="barchart-button">Barchart</button>
-    </div> -->
-
-    <div class="barchart-container">{{ bar_chart|safe }}</div>
-    <!-- <div class="piechart-container display-none">{{ pie_chart|safe }}</div> -->
-
-    <!-- LEADERBOARD SECTION -------- START -->
-    <div
-        class="leaderboard-container d-flex flex-column align-items-center mt-5"
-    >
-        <section
-            class="leaderboard {% if users_with_points %}leaderboard-global{% endif %} d-flex flex-column align-items-center mt-2"
+<div class="daschboard-container">
+    <div class="dashboard-menu">
+        <a
+            class="user-profile-container d-flex align-items-center"
+            href="user/{{ user_data.id }}"
         >
-            <h3 class="my-4">Leaderboard</h3>
-            <div class="d-flex w-100">
-                <!-- Friends form -->
+            <img
+                class="user-img-profile"
+                src="{{ user_data.profile_picture}}"
+            /><span class="user-name-profile mx-2"
+                >{{ user_data.username}}</span
+            >
+        </a>
+        <div class="my-5">
+            <p>Menu dashboard</p>
+            <p>Leaderboard</p>
+            <p>Analytics</p>
+        </div>
+    </div>
+    <div class="dashboard-content d-flex flex-column align-items-center">
+        <h1 class="mt-2 display-4">Dashboard</h1>
+
+        <!-- LEADERBOARD SECTION -------- START -->
+        <div
+            class="leaderboard-container d-flex flex-column align-items-center mt-5"
+        >
+            <section
+                class="leaderboard {% if users_with_points %}leaderboard-global{% endif %} d-flex flex-column align-items-center mt-2"
+            >
+                <h3 class="my-4">Leaderboard</h3>
+                <div class="d-flex w-100">
+                    <!-- Friends form -->
+                    <form
+                        method="post"
+                        action="{{ url_for('dashboard.friends_leaderboard') }}"
+                        class="d-flex flex-column leaderboard-form"
+                    >
+                        <!-- CSRF Token  is required by the wtforms library -->
+                        {{ form.hidden_tag() }}
+                        <!-- button to friends -->
+                        <div class="d-flex justify-content-center">
+                            <input
+                                class="btn leaderboard-button {% if friends_with_points %}active{% endif %}"
+                                type="submit"
+                                name="all_friends"
+                                value="Friends"
+                            />
+                        </div>
+                    </form>
+                    <!-- Global form -->
+                    <form
+                        method="post"
+                        action="{{ url_for('dashboard.global_leaderboard') }}"
+                        class="d-flex flex-column leaderboard-form"
+                    >
+                        <!-- CSRF Token  is required by the wtforms library -->
+                        {{ form.hidden_tag() }}
+                        <!-- button to friends -->
+                        <div class="d-flex justify-content-center">
+                            <input
+                                class="btn leaderboard-button leaderboard-button-global {% if users_with_points %}active{% endif %}"
+                                type="submit"
+                                name="all_users"
+                                value="Global"
+                            />
+                        </div>
+                    </form>
+                </div>
+                <!-- FRIENDS - yearly, monthly buttons form -->
+                {% if friends_with_points|length > 0 and not users_with_points
+                %}
                 <form
                     method="post"
                     action="{{ url_for('dashboard.friends_leaderboard') }}"
-                    class="d-flex flex-column leaderboard-form"
+                    class="d-flex flex-column leaderboard-form w-100 my-3"
                 >
                     <!-- CSRF Token  is required by the wtforms library -->
                     {{ form.hidden_tag() }}
-                    <!-- button to friends -->
-                    <div class="d-flex justify-content-center">
+                    <!-- monthly, yearly buttons -->
+                    <div
+                        id="friends-buttons-container"
+                        class="d-flex justify-content-evenly py-4"
+                    >
                         <input
-                            class="btn leaderboard-button {% if friends_with_points %}active{% endif %}"
                             type="submit"
-                            name="all_friends"
-                            value="Friends"
+                            name="friends_weekly"
+                            value="Weekly"
+                            class="btn leaderboard-button btn-sm {% if points_period=='week' %}active{% endif %}"
                         />
+                        <input
+                            type="submit"
+                            name="friends_monthly"
+                            value="Monthly"
+                            class="btn leaderboard-button btn-sm {% if points_period=='month' %}active{% endif %}"
+                        />
+                        <input
+                            type="submit"
+                            name="friends_yearly"
+                            value="Yearly"
+                            class="btn leaderboard-button btn-sm {% if points_period=='year' %}active{% endif %}"
+                        />
+                        <input type="hidden" name="action" id="action" />
                     </div>
+                    {% endif %}
                 </form>
-                <!-- Global form -->
+                <!-- GLOBAL - yearly, monthly buttons form -->
+                {% if users_with_points|length > 0 and not friends_with_points
+                %}
                 <form
                     method="post"
                     action="{{ url_for('dashboard.global_leaderboard') }}"
-                    class="d-flex flex-column leaderboard-form"
+                    class="d-flex flex-column leaderboard-form w-100 my-3"
                 >
                     <!-- CSRF Token  is required by the wtforms library -->
                     {{ form.hidden_tag() }}
-                    <!-- button to friends -->
-                    <div class="d-flex justify-content-center">
+                    <!-- show only if getting users_with_points from the blueprint -->
+                    <!-- monthly, yearly buttons -->
+                    <div
+                        id="global-buttons-container"
+                        class="d-flex justify-content-evenly py-4"
+                    >
                         <input
-                            class="btn leaderboard-button leaderboard-button-global {% if users_with_points %}active{% endif %}"
                             type="submit"
-                            name="all_users"
-                            value="Global"
+                            name="all_users_weekly"
+                            value="Weekly"
+                            class="btn leaderboard-button leaderboard-button-global btn-sm {% if points_period=='week' %}active{% endif %}"
                         />
+                        <input
+                            type="submit"
+                            name="all_users_monthly"
+                            value="Monthly"
+                            class="btn leaderboard-button leaderboard-button-global btn-sm {% if points_period=='month'%}active{% endif %}"
+                        />
+                        <input
+                            type="submit"
+                            name="all_users_yearly"
+                            value="Yearly"
+                            class="btn leaderboard-button leaderboard-button-global btn-sm {% if points_period=='year' %}active{% endif %}"
+                        />
+                        <input type="hidden" name="action" id="action" />
                     </div>
                 </form>
-            </div>
-            <!-- FRIENDS - yearly, monthly buttons form -->
-            {% if friends_with_points|length > 0 and not users_with_points %}
-            <form
-                method="post"
-                action="{{ url_for('dashboard.friends_leaderboard') }}"
-                class="d-flex flex-column leaderboard-form w-100 my-3"
-            >
-                <!-- CSRF Token  is required by the wtforms library -->
-                {{ form.hidden_tag() }}
-                <!-- monthly, yearly buttons -->
-                <div
-                    id="friends-buttons-container"
-                    class="d-flex justify-content-evenly py-4"
-                >
-                    <input
-                        type="submit"
-                        name="friends_weekly"
-                        value="Weekly"
-                        class="btn leaderboard-button btn-sm {% if points_period=='week' %}active{% endif %}"
-                    />
-                    <input
-                        type="submit"
-                        name="friends_monthly"
-                        value="Monthly"
-                        class="btn leaderboard-button btn-sm {% if points_period=='month' %}active{% endif %}"
-                    />
-                    <input
-                        type="submit"
-                        name="friends_yearly"
-                        value="Yearly"
-                        class="btn leaderboard-button btn-sm {% if points_period=='year' %}active{% endif %}"
-                    />
-                    <input type="hidden" name="action" id="action" />
-                </div>
                 {% endif %}
-            </form>
-            <!-- GLOBAL - yearly, monthly buttons form -->
-            {% if users_with_points|length > 0 and not friends_with_points %}
-            <form
-                method="post"
-                action="{{ url_for('dashboard.global_leaderboard') }}"
-                class="d-flex flex-column leaderboard-form w-100 my-3"
-            >
-                <!-- CSRF Token  is required by the wtforms library -->
-                {{ form.hidden_tag() }}
-                <!-- show only if getting users_with_points from the blueprint -->
-                <!-- monthly, yearly buttons -->
+                <!-- GLOBAL table -->
+                {% if users_with_points and not friends_with_points %}
+                <h5>Global - this {{ points_period }}</h5>
+                {% endif %}
                 <div
-                    id="global-buttons-container"
-                    class="d-flex justify-content-evenly py-4"
+                    class="w-100 d-flex align-items-center flex-column leaderboard__users-list"
                 >
-                    <input
-                        type="submit"
-                        name="all_users_weekly"
-                        value="Weekly"
-                        class="btn leaderboard-button leaderboard-button-global btn-sm {% if points_period=='week' %}active{% endif %}"
-                    />
-                    <input
-                        type="submit"
-                        name="all_users_monthly"
-                        value="Monthly"
-                        class="btn leaderboard-button leaderboard-button-global btn-sm {% if points_period=='month'%}active{% endif %}"
-                    />
-                    <input
-                        type="submit"
-                        name="all_users_yearly"
-                        value="Yearly"
-                        class="btn leaderboard-button leaderboard-button-global btn-sm {% if points_period=='year' %}active{% endif %}"
-                    />
-                    <input type="hidden" name="action" id="action" />
-                </div>
-            </form>
-            {% endif %}
-            <!-- GLOBAL table -->
-            {% if users_with_points and not friends_with_points %}
-            <h5>Global - this {{ points_period }}</h5>
-            {% endif %}
-            <div
-                class="w-100 d-flex align-items-center flex-column leaderboard__users-list"
-            >
-                {% if users_with_points and not friends_with_points %} {% for
-                user in users_with_points %}
-                <!-- if user id = 0 -->
-                <!-- TODO: HERE -->
-                {% if user[0] != 0 %}
-                <div
-                    class="w-100 d-flex flex-column justify-content-space-between"
-                >
+                    {% if users_with_points and not friends_with_points %} {%
+                    for user in users_with_points %}
+                    <!-- if user id = 0 -->
+                    <!-- TODO: HERE -->
+                    {% if user[0] != 0 %}
                     <div
-                        class="d-flex justify-content-evenly align-items-center w-100"
+                        class="w-100 d-flex flex-column justify-content-space-between"
                     >
                         <div
-                            class="d-flex align-items-center leaderboard__users-list__container"
+                            class="d-flex justify-content-evenly align-items-center w-100"
                         >
-                            <span
-                                class="mx-2 px-1 py-3 leaderboard__users-list__position"
-                                >{{ loop.index }}</span
+                            <div
+                                class="d-flex align-items-center leaderboard__users-list__container"
                             >
-                            <a
-                                href="user/{{ user[0] }}"
-                                class="mx-2 px-1 py-3 leaderboard__users-list__username"
+                                <span
+                                    class="mx-2 px-1 py-3 leaderboard__users-list__position"
+                                    >{{ loop.index }}</span
+                                >
+                                <a
+                                    href="users/profile?user_id={{ user[0] }}"
+                                    class="mx-2 px-1 py-3 leaderboard__users-list__username"
+                                >
+                                    <img src="{{ user[3] }}" class="user-img" />
+                                    {{ user[1] }}
+                                </a>
+                            </div>
+                            <span class="leaderboard__users-list__points">
+                                {{ user[2] }}</span
                             >
-                                <img src="{{ user[3] }}" class="user-img" />
-                                {{ user[1] }}
-                            </a>
                         </div>
-                        <span class="leaderboard__users-list__points">
-                            {{ user[2] }}</span
-                        >
                     </div>
+                    {% else %}
+                    <!-- else display no data -->
+                    <div class="d-flex p-2">
+                        <p>No data</p>
+                    </div>
+                    {% endif %} {% endfor %} {% endif %}
                 </div>
-                {% else %}
-                <!-- else display no data -->
-                <div class="d-flex p-2">
-                    <p>No data</p>
-                </div>
-                {% endif %} {% endfor %} {% endif %}
-            </div>
-            <!-- FRIENDS table -->
-            {% if friends_with_points and not users_with_points %}
-            <h5>Friends - this {{ points_period }}</h5>
-            {% endif %}
-            <div
-                class="w-100 d-flex align-items-center flex-column leaderboard__friends-list"
-            >
-                {% if friends_with_points and not users_with_points %} {% for
-                friend in friends_with_points %}
-                <!-- if friend id = 0 -->
-                {% if friend[0] != 0 %}
+                <!-- FRIENDS table -->
+                {% if friends_with_points and not users_with_points %}
+                <h5>Friends - this {{ points_period }}</h5>
+                {% endif %}
                 <div
-                    class="w-100 d-flex flex-column justify-content-space-between"
+                    class="w-100 d-flex align-items-center flex-column leaderboard__friends-list"
                 >
+                    {% if friends_with_points and not users_with_points %} {%
+                    for friend in friends_with_points %}
+                    <!-- if friend id = 0 -->
+                    {% if friend[0] != 0 %}
                     <div
-                        class="d-flex justify-content-evenly align-items-center w-100"
+                        class="w-100 d-flex flex-column justify-content-space-between"
                     >
                         <div
-                            class="d-flex align-items-center leaderboard__friends-list__container"
+                            class="d-flex justify-content-evenly align-items-center w-100"
                         >
-                            <span
-                                class="mx-2 px-1 py-3 leaderboard__friends-list__position"
-                                >{{ loop.index }}</span
+                            <div
+                                class="d-flex align-items-center leaderboard__friends-list__container"
                             >
-                            <a
-                                href="user/{{ friend[1] }}"
-                                class="mx-2 px-1 py-3 leaderboard__friends-list__username"
+                                <span
+                                    class="mx-2 px-1 py-3 leaderboard__friends-list__position"
+                                    >{{ loop.index }}</span
+                                >
+                                <a
+                                    href="users/profile?user_id={{ friend[1] }}"
+                                    class="mx-2 px-1 py-3 leaderboard__friends-list__username"
+                                >
+                                    <img
+                                        src="{{ friend[3] }}"
+                                        class="user-img"
+                                    />
+                                    {{ friend[2] }}
+                                </a>
+                            </div>
+                            <span class="leaderboard__friends-list__points"
+                                >{{ friend[4] }}</span
                             >
-                                <img src="{{ friend[3] }}" class="user-img" />
-                                {{ friend[2] }}
-                            </a>
                         </div>
-                        <span class="leaderboard__friends-list__points"
-                            >{{ friend[4] }}</span
-                        >
                     </div>
+                    {% else %}
+                    <!-- else display no data -->
+                    <div class="d-flex p-2">
+                        <p>No data</p>
+                    </div>
+                    {% endif %} {% endfor %} {% endif %}
                 </div>
-                {% else %}
-                <!-- else display no data -->
-                <div class="d-flex p-2">
-                    <p>No data</p>
-                </div>
-                {% endif %} {% endfor %} {% endif %}
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
 
-    <!-- LEADERBOARD SECTION ---- END -->
+        <!-- LEADERBOARD SECTION ---- END -->
+
+        <!-- ANALYTICS SECTION ------- START -->
+        {% if chart_data != "[]" %}
+        <div>
+            <button id="barchart-button">Barchart</button>
+            <button id="piechart-button">Piechart</button>
+        </div>
+        <div class="chart-container">
+            <div class="chart" style="width: 100%"></div>
+        </div>
+        {% else %}
+        <div class="no-chart-container">No chart data available.</div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %} {% block javasript %}
 <script>
     const piechartButton = document.getElementById("piechart-button");
     const barchartButton = document.getElementById("barchart-button");
-    const piechartContainer = document.querySelector(".piechart-container");
-    const barchartContainer = document.querySelector(".barchart-container");
+    const chart = document.querySelector(".chart");
 
-    piechartButton.addEventListener("click", function () {
-        barChartContainer.style.display = "none";
-        pieChartContainer.style.display = "block";
+    week_days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "ne", "ne"];
+    let chartData = "{{ chart_data|safe }}";
+    let chart_data_arr = [];
+    // json
+    chart_data_arr = JSON.parse(chartData) || [];
+    const intensityColours = [];
+    // for charts - different colours for different intensity
+    if (chart_data_arr && chart_data_arr.length > 0) {
+        // set colour intensity
+        for (let intensity of chart_data_arr[1]) {
+            if (intensity === 3) {
+                intensityColours.push("#6a0bff");
+            } else if (intensity === 2) {
+                intensityColours.push("#a871ff");
+            } else if (intensity === 1) {
+                intensityColours.push("#d1b3ff");
+            } else {
+                intensityColours.push("gray");
+            }
+        }
 
-        // Plotly.relayout(pieChartContainer, { autosize: true });
-    });
-    barchartButton.addEventListener("click", function () {
-        pieChartContainer.style.display = "none";
-        barChartContainer.style.display = "block";
+        // default
+        let chartTypeLocalStorage = localStorage.getItem("chartType");
+        let chartConfig = null;
+        if (chartTypeLocalStorage === "pie") {
+            chartConfig = displayPiechart();
+        } else {
+            chartConfig = displayBarchart();
+        }
+        Plotly.newPlot(
+            chart,
+            chartConfig.data,
+            chartConfig.layout,
+            chartConfig.config
+        );
 
-        // Plotly.relayout(barChartContainer, { autosize: true });
-    });
+        piechartButton.addEventListener("click", function () {
+            const chartConfig = displayPiechart();
+            localStorage.setItem("chartType", "pie");
+            Plotly.newPlot(
+                chart,
+                chartConfig.data,
+                chartConfig.layout,
+                chartConfig.config
+            );
+            Plotly.relayout(chart, { autosize: true });
+        });
+        barchartButton.addEventListener("click", function () {
+            const chartConfig = displayBarchart();
+            localStorage.setItem("chartType", "bar");
+            Plotly.newPlot(
+                chart,
+                chartConfig.data,
+                chartConfig.layout,
+                chartConfig.config
+            );
+            Plotly.relayout(chart, { autosize: true });
+        });
+    }
+    function displayBarchart() {
+        let chartTrace = {
+            type: "bar",
+            x: week_days,
+            y: chart_data_arr[0],
+            marker: {
+                color: intensityColours,
+            },
+            hoverinfo: "y",
+        };
+        let layout = {
+            title: {
+                text: "Workout Insights",
+            },
+            font: { size: 14 },
+            xaxis: {
+                title: {
+                    text: "Activity Days",
+                },
+            },
+            yaxis: {
+                title: {
+                    text: "Training Minutes",
+                },
+                range: [0, 120],
+            },
+            plot_bgcolor: "#e1e1e1",
+            paper_bgcolor: "#e1e1e1",
+        };
+        let config = { responsive: true };
+        return {
+            data: [chartTrace],
+            layout: layout,
+            config: config,
+        };
+    }
+    function displayPiechart() {
+        let filteredData = chart_data_arr[0].filter((value) => value > 0);
+        let filteredIntensity = intensityColours.filter(
+            (colour) => colour !== "gray"
+        );
+
+        let chartTrace = {
+            type: "pie",
+            labels: week_days,
+            values: filteredData,
+            marker: {
+                colors: filteredIntensity,
+            },
+            hoverinfo: "label+percent",
+            hole: 0.4,
+        };
+        let layout = {
+            title: {
+                text: "Workout Insights",
+            },
+
+            font: { size: 14 },
+            plot_bgcolor: "#e1e1e1",
+            paper_bgcolor: "#e1e1e1",
+            showlegend: true,
+            legend: {
+                traceorder: "normal",
+            },
+        };
+        let config = { responsive: true };
+        return {
+            data: [chartTrace],
+            layout: layout,
+            config: config,
+        };
+    }
 </script>
 {% endblock %}

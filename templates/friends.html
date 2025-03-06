@@ -31,26 +31,39 @@
                 action="{{ url_for('friends.find') }}"
                 class="d-flex flex-column"
             >
-                {{ form.hidden_tag() }}
+                {{ form_find_friend.hidden_tag() }}
                 <label>Location:</label>
-                {{ form.location() }}
+                {{ form_find_friend.location() }}
                 <label>Age:</label>
-                {{ form.age() }}
+                {{ form_find_friend.age() }}
                 <label>Fitness Level:</label>
-                {{ form.fitness_level() }}
+                {{ form_find_friend.fitness_level() }}
                 <label>Favourite Exercise:</label>
-                {{ form.favourite_exercise()}}
+                {{ form_find_friend.favourite_exercise()}}
 
                 <button type="submit">Search</button>
             </form>
             <div class="users-list">
                 {% if users %} {% for user in users %}
                 <div>
-                    <a href="{{ url_for('users.profile', user_id=user.id) }}"><h3>{{ user.username }}</h3></a>
+                    <a href="{{ url_for('users.profile', user_id=user.id) }}"
+                        ><h3>{{ user.username }}</h3></a
+                    >
                     <p>Location: {{ user.location }}</p>
                     <p>Age: {{ user.age }}</p>
                     <p>Fitness level: {{ user.fitness_level }}</p>
                     <p>Favourite Exercise: {{ user.favourite_exercise }}</p>
+                    <form method="post" action="{{ url_for('friends.find') }}">
+                        {{ form_add_friend.hidden_tag() }}
+                        <button class="btn btn-primary btn-sm">
+                            Add friend
+                        </button>
+                        <input
+                            type="hidden"
+                            name="send_reqest_to_id"
+                            value="{{ user.id }}"
+                        />
+                    </form>
                 </div>
                 {% endfor %} {% else %}
                 <p>No users found, try searching again.</p>
@@ -70,7 +83,7 @@
                 class="d-flex align-items-center justify-content-between w-100"
             >
                 <a
-                    href="http://127.0.0.1:5000/user/{{ friendship_sent[3] }}"
+                    href="http://127.0.0.1:5000/users/profile?user_id={{ friendship_sent[3] }}"
                     class="user-name"
                 >
                     <img src="{{ friendship_sent[2] }}" class="user-img" />
@@ -84,7 +97,7 @@
                     class="d-flex justify-content-center approval-buttons__container"
                 >
                     <!-- CSRF Token  is required by the wtforms library -->
-                    {{ form.hidden_tag() }}
+                    {{ form_friendship.hidden_tag() }}
                     <!-- <input
                         type="submit"
                         name="accept_sent_friendship"
@@ -98,10 +111,11 @@
                         class="btn btn-sm btn-outline-danger px-3 mx-3 my-3"
                     />
                     <!-- pending_friend[0] is the friendship id -->
+
                     <input
                         type="hidden"
                         name="friendship_sent_id"
-                        value="{{ friendship_sent[0] }}"
+                        value="{{friendship_sent[0]}}"
                     />
                 </form>
             </div>
@@ -120,7 +134,7 @@
                 class="d-flex align-items-center justify-content-between w-100"
             >
                 <a
-                    href="http://127.0.0.1:5000/user/{{ friendship_received[3] }}"
+                    href="http://127.0.0.1:5000/users/profile?user_id={{ friendship_received[3] }}"
                     class="user-name"
                 >
                     <img src="{{ friendship_received[2] }}" class="user-img" />
@@ -134,7 +148,7 @@
                     class="d-flex justify-content-center approval-buttons__container"
                 >
                     <!-- CSRF Token  is required by the wtforms library -->
-                    {{ form.hidden_tag() }}
+                    {{ form_friendship.hidden_tag() }}
                     <input
                         type="submit"
                         name="accept_received_friendship"
@@ -167,7 +181,7 @@
             {% for approved_friend in approved_friends %} {% if
             approved_friend[0] != 0 %}
             <a
-                href="http://127.0.0.1:5000/user/{{ approved_friend[3] }}"
+                href="http://127.0.0.1:5000/users/profile?user_id={{ approved_friend[3] }}"
                 class="user-name m-2"
             >
                 <img src="{{ approved_friend[2] }}" class="user-img" />
@@ -181,4 +195,6 @@
         </div>
     </section>
 </div>
+{% endblock %} {% block javasript %}
+<script></script>
 {% endblock %}

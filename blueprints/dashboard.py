@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, json
 from sqlalchemy import or_
 import plotly.graph_objects as go
+
 from datetime import datetime, timezone, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import Counter
@@ -16,15 +17,17 @@ from extension import db
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
 @dashboard.route("", methods=['GET', 'POST'])
+# default, when the page is open
 def dashboard_home():
     form = DashboardForm()
     points_period = "week"
 
-    # default, when the page is open
     friends_with_points = get_friends_points("weekly")
-    bar_chart = create_bar_chart()
-    pie_chart = create_pie_chart()
-    return render_template("dashboard.html", form=form, friends_with_points=friends_with_points, points_period=points_period, bar_chart=bar_chart, pie_chart=pie_chart)
+    chart_data = get_chart_data()
+    current_user_id = session.get('user_id')
+    user_data = UserModel.query.filter_by(id=current_user_id).first()
+
+    return render_template("dashboard.html", user_data=user_data, chart_data=json.dumps(chart_data or []), form=form, friends_with_points=friends_with_points, points_period=points_period)
 
 @dashboard.route("/friends-leaderboard", methods=['GET', 'POST'])
 def friends_leaderboard():
@@ -32,6 +35,10 @@ def friends_leaderboard():
     # default, when the page is open
     points_period = "week"
     friends_with_points = get_friends_points("weekly")
+    chart_data = get_chart_data()
+    current_user_id = session.get('user_id')
+    user_data = UserModel.query.filter_by(id=current_user_id).first()
+
     if form.validate_on_submit():
         if form.friends.data:
             points_period = "week"
@@ -45,14 +52,17 @@ def friends_leaderboard():
         elif form.friends_yearly.data:
             points_period = "year"
             friends_with_points = get_friends_points("yearly")
-        return render_template("dashboard.html", form=form, friends_with_points=friends_with_points, points_period=points_period)
-    return render_template("dashboard.html", form=form, friends_with_points=friends_with_points, points_period=points_period)
+        return render_template("dashboard.html", user_data=user_data, form=form,chart_data=json.dumps(chart_data or []), friends_with_points=friends_with_points, points_period=points_period)
+    return render_template("dashboard.html", user_data=user_data, chart_data=json.dumps(chart_data or []), form=form, friends_with_points=friends_with_points, points_period=points_period)
 
 @dashboard.route('/global-leaderboard', methods=['GET', 'POST'])
 def global_leaderboard():
     form = DashboardForm()
     points_period = "week"
     users_with_points = get_users_points("weekly")
+    chart_data = get_chart_data()
+    current_user_id = session.get('user_id')
+    user_data = UserModel.query.filter_by(id=current_user_id).first()
 
     if form.validate_on_submit():
         # if clicked on global
@@ -71,65 +81,8 @@ def global_leaderboard():
         elif form.all_users_yearly.data:
             points_period = "year"
             users_with_points = get_users_points("yearly")
-        return render_template("dashboard.html", form=form, users_with_points=users_with_points, points_period=points_period)
-    return render_template("dashboard.html", form=form, users_with_points=users_with_points, points_period=points_period)
-
-def create_pie_chart():
-    labels = ['Oxygen','Hydrogen','Carbon_Dioxide','Nitrogen']
-    values = [4500, 2500, 1053, 500]
-
-    # Use `hole` to create a donut-like pie chart
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.3)])
-    # Get the HTML representation of the figure for embedding in the template
-    graph_html = fig.to_html(full_html=False)
-
-    return graph_html
-
-def create_bar_chart():
-    data = get_chart_data()
-    # Data for the bar chart
-    week_days = []
-    workout_times = []
-    intensity_colours = []
-    if data:
-        week_days = data["week_days"]
-        workout_times = data["estimated_times"]
-        intensities = data["intensities"]
-        for intensity in intensities:
-            if intensity == "High":
-                intensity_colours.append("#6a0bff")
-            elif intensity == "Medium":
-                intensity_colours.append("#a871ff")
-            elif intensity == "Low":
-                intensity_colours.append("#d1b3ff")
-            else:
-                intensity_colours.append("gray")
-
-    # Create a Plotly figure
-    fig = go.Figure(data=[go.Bar(
-        x=week_days,
-        y=workout_times,
-        marker=dict(color=intensity_colours),
-        hoverinfo='x+y'  # Show hover information on bars
-    )])
-
-    fig.update_yaxes(range=[0, 120])
-
-    # Customize the layout
-    fig.update_layout(
-        title="This week workouts",
-        xaxis_title="Week days",
-        yaxis_title="Time(minutes)",
-        template="plotly",
-        plot_bgcolor="#e1e1e1",
-        paper_bgcolor="#e1e1e1",
-        font=dict(color="black"),
-    )
-
-    # Get the HTML representation of the figure for embedding in the template
-    graph_html = fig.to_html(full_html=False)
-
-    return graph_html
+        return render_template("dashboard.html", user_data=user_data, chart_data=json.dumps(chart_data or []), form=form, users_with_points=users_with_points, points_period=points_period)
+    return render_template("dashboard.html", user_data=user_data, chart_data=json.dumps(chart_data or []), form=form, users_with_points=users_with_points, points_period=points_period)
 
 def get_chart_data():
     current_date = datetime.now()
@@ -175,17 +128,23 @@ def get_chart_data():
                 # count number of intesities
                 intensity_counts = Counter(details['intensity'])
                 most_common_intensity = intensity_counts.most_common(1)[0][0]
-                most_frequent_intensity[day] = most_common_intensity
+                if most_common_intensity == "High":
+                    intensity = 3
+                elif most_common_intensity == "Medium":
+                    intensity = 2
+                elif most_common_intensity == "Low":
+                    intensity = 1
+                most_frequent_intensity[day] = intensity
             else:
-                most_frequent_intensity[day] = None  
+                most_frequent_intensity[day] = 0 
             # get most frequent intensity
             workout_weekly_data[day]["intensity"] = most_frequent_intensity[day]
 
         # create arrays out of dictionaries
         estimated_times = [data['estimated_time'] for data in workout_weekly_data.values()]
         intensities = [data['intensity'] for data in workout_weekly_data.values()]
-        week_days = [data for data in workout_weekly_data.keys()]
-        return {"estimated_times":estimated_times, "intensities":intensities, "week_days":week_days}
+        # week_days = [data for data in workout_weekly_data.keys()]
+        return [estimated_times, intensities]
 
 
 # get points sql function
