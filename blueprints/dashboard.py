@@ -150,7 +150,7 @@ def get_chart_data():
             "Mon":{"estimated_time":0, "intensity":[]}, 
             "Tue":{"estimated_time":0, "intensity":[]}, 
             "Wed":{"estimated_time":0, "intensity":[]}, 
-            "Thur":{"estimated_time":0, "intensity":[]}, 
+            "Thu":{"estimated_time":0, "intensity":[]}, 
             "Fri":{"estimated_time":0, "intensity":[]}, 
             "Sat":{"estimated_time":0, "intensity":[]}, 
             "Sun":{"estimated_time":0, "intensity":[]}
