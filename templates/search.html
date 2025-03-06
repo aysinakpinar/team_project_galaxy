@@ -1,0 +1,138 @@
+{% extends 'base.html' %} 
+{% block styles %}
+<style></style>
+{% endblock %} 
+{% block content %}
+<div class="mt-4"></div>
+    <title>Find the Best Gym for You</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCctO8HTJKGB3UB7-8IlxRRWnkIXtkq-Y &libraries=places"></script>
+    <style>
+    /* Simple styling for the map */
+    body{
+        display: flex;
+        justify-content: space-between;
+        padding: 20;
+    }
+    .split-left,
+    .split-right {
+        flex: 1;
+        flex-direction: column;
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        align-items: flex-start;
+    }
+    .split-left {
+        margin-right: 20px;
+    }
+    .error {
+        padding-top: 20px;
+    }
+    #map {
+        height: 440px;
+        width: 70%;
+    }
+    </style>
+</div>
+<body>
+    <h1>Find the Best Gym for You</h1>
+        <div class="split-left">
+            <div class="search-container">
+            <form method="get" action="{{ url_for('gym_search.search_gyms') }}">
+            {{ form.hidden_tag() }}
+                <input id="location"  name="location" type="text" placeholder="Enter a location" />
+                <button onclick="findGyms()">Search for Gyms</button>
+            </form>
+            {% if gyms or error %}
+            <div class="error">
+                <h7>{{error}}</h7>
+            </div>
+                    {% if gyms is not none %} 
+                    <ul>
+                        {% for gym in gyms %}
+                            <li>{{ gym.name }} - {{ gym.location }}</li>
+                            <img src="{{gym.picture_path}}" alt="picture of a gym"
+                                width="200"
+                                height="170"></img>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="split-right"></div>
+            <div id="map"></div>
+    </div>
+    <script>
+    let map;
+    let service;
+    let infowindow;
+    google.maps.importLibrary("maps");
+    google.maps.importLibrary("marker");
+    function initMap() {
+            const cityLocation = {lat:parseFloat("{{lat}}"), lng:parseFloat("{{lng}}")}
+        const map = new google.maps.Map(document.getElementById("map"), {
+        center: cityLocation,
+        zoom: 12,
+        mapId:'GALAXY_GYM'
+        });
+        const formatted_gyms = JSON.parse(`{{ formatted_gyms|tojson|safe }}`);
+        formatted_gyms.forEach(element => {
+            const marker = new google.maps.marker.AdvancedMarkerElement({
+                map,
+                position: {lat: element.latitude, lng: element.longitude},
+        });
+        });
+        infowindow = new google.maps.InfoWindow();
+        
+    }
+
+    function findGyms() {
+        const searchLocation = document.getElementById("location").value;
+        const geocoder = new google.maps.Geocoder();
+
+      // Geocode the location to get latitude and longitude
+        geocoder.geocode({ address: searchLocation }, function (results, status) {
+        if (status === "OK") {
+            const location = results[0].geometry.location;
+            map.setCenter(location);
+            map.setZoom(14);  // Zoom in to a more focused area
+
+          // Search for gyms around the geocoded location
+            const request = {
+            location: location,
+            radius: 5000, // Search within 5 km radius
+            type: ["gym"], // Type of place we're searching for (gym in this case)
+            };
+
+            const service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, function (results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                for (let i = 0; i < results.length; i++) {
+                    const place = results[i];
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: place.geometry.location,
+                    });
+
+                google.maps.event.addListener(marker, "click", function () {
+                    infowindow.setContent(place.name);
+                    infowindow.open(map, this);
+                });
+                }
+            } else {
+                alert("No gyms found in this area.");
+            }
+            });
+        // } else {
+        //     alert("Geocode was not successful for the following reason: " + status);
+        }
+        });
+    }
+
+    // Initialize the map when the page loads
+    google.maps.event.addDomListener(window, "load", initMap);
+    </script>
+    </form>
+</body>
+{% endblock %}
