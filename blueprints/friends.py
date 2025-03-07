@@ -82,6 +82,7 @@ def find():
     # sent from user
     friendships_sent= []
     friendships_received=[]
+    users = []
     friendships_sent = get_pending_friendships_user_is_sender()
     friendships_received = get_pending_friendships_user_is_receiver()
     if len(approved_friends) == 0:
@@ -91,42 +92,32 @@ def find():
     if len(friendships_sent) == 0:
         friendships_sent = [(0, 'no data', 0, 0)]
     form_find_friend = FindFriendsForm()
-    if form_find_friend.validate_on_submit(): 
-        #shows all users if no search criteria is provided
-        query = UserModel.query
+ 
+    #shows all users if no search criteria is provided
+    query = UserModel.query
 
-        #removed, this option is to show no users as default instead.
-        #users = None
+    #removed, this option is to show no users as default instead.
+    #users = None
 
-        location = request.args.get('location') or form_find_friend.location.data
-        age = request.args.get('age') or form_find_friend.age.data
-        fitness_level = request.args.get('fitness_level') or form_find_friend.fitness_level.data
-        favourite_exercise = request.args.get('favourite_exercise') or form_find_friend.favourite_exercise.data
+    location = request.args.get('location') or form_find_friend.location.data
+    age = request.args.get('age') or form_find_friend.age.data
+    fitness_level = request.args.get('fitness_level') or form_find_friend.fitness_level.data
+    favourite_exercise = request.args.get('favourite_exercise') or form_find_friend.favourite_exercise.data
 
-        #applies filters only if the values are provided, so can have empty fields.
-        if location:
-            query = query.filter(UserModel.location.ilike(f"%{location.strip()}%"))
-        if age:
-            query = query.filter(UserModel.age == age)  # Assuming age is an exact match
-        if fitness_level:
-            query = query.filter(UserModel.fitness_level.ilike(f"%{fitness_level.strip()}%"))
-        if favourite_exercise:
-            query = query.filter(UserModel.favourite_exercise.ilike(f"%{favourite_exercise.strip()}%"))
+    #applies filters only if the values are provided, so can have empty fields.
+    if location:
+        query = query.filter(UserModel.location.ilike(f"%{location.strip()}%"))
+    if age:
+        query = query.filter(UserModel.age == age)  # Assuming age is an exact match
+    if fitness_level:
+        query = query.filter(UserModel.fitness_level.ilike(f"%{fitness_level.strip()}%"))
+    if favourite_exercise:
+        query = query.filter(UserModel.favourite_exercise.ilike(f"%{favourite_exercise.strip()}%"))
 
     # ----------- MICHAL - CHANGES --------
     #if no filter applied, show all user which have no frienship connection
-    users = db.session.query(
-        UserModel.id,
-        UserModel.username,
-        UserModel.description,
-        UserModel.profile_picture,
-        UserModel.location, 
-        UserModel.age, 
-        UserModel.weight,
-        UserModel.height, 
-        UserModel.fitness_level,
-        UserModel.favourite_exercise
-    ).outerjoin(
+    # Ensure users without friendship connection are shown if no filters are applied
+    query = query.outerjoin(
         FriendshipModel, or_(
             and_(UserModel.id == FriendshipModel.friend_id, FriendshipModel.user_id == session["user_id"]),
             and_(UserModel.id == FriendshipModel.user_id, FriendshipModel.friend_id == session["user_id"])
@@ -136,10 +127,15 @@ def find():
             UserModel.id != session["user_id"],
             or_(
                 FriendshipModel.id.is_(None),
-                not_(FriendshipModel.status.in_(["approved", "pending"])) 
+                not_(FriendshipModel.status.in_(["approved", "pending"]))
             )
         )
-    ).all()
+    )
+
+    # Fetch the final user list
+    users = query.all()
+    print("useeeers=----======",users)
+
 
     return render_template("friends.html",form_add_friend=form_add_friend,form_find_friend=form_find_friend, users=users, form_friendship=form_friendship, approved_friends=approved_friends, friendships_sent=friendships_sent, friendships_received=friendships_received)
 
