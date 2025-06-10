@@ -9,7 +9,7 @@ This repository contains the seed codebase for the **Galaxy** project built with
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/aysinakpinar/Galaxy_gym_python_flask.git
+git clone https://github.com/aysinakpinar/team_project_galaxy.git
 ```
 
 ### 2. Set Up Virtual Environment
