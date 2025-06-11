@@ -233,7 +233,7 @@ Then open: [http://127.0.0.1:5000/home](http://127.0.0.1:5000/home)
 
 
 
-### PR4-Aysin
+### PR4
 signup method was implemented in blueprints/auth
 forms/signup_form was created to use in templates/signup.html template
 templates/signup.html was created to render the signup form.
@@ -243,7 +243,7 @@ To do:
 Test the rendering of the signup form and page, ensuring error and success messages display correctly.
 Password hash with bcrypt
 
-## PR6
+### PR6
 - Users table was updated for the relationships:
     - one to many for workouts and gyms
     - many to many for friendships and exercises
