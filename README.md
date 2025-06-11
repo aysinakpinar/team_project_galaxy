@@ -34,13 +34,33 @@ pip install playwright
 
 This project uses a `.env` file to store sensitive environment variables like the **Google Maps API key**.
 
-### 1. Create a `.env` File in the Project Root
+### 1. Create a config.py File in the Project Root
+
+```
+class Config(object):
+    TESTING = False
+
+class DevelopmentConfig(Config):
+    DEV_DATABASE_NAME = "galaxy_db"
+    SQLALCHEMY_DATABASE_URI = f"postgresql://localhost/{DEV_DATABASE_NAME}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = "default_key"
+
+class TestingConfig(Config):
+    TEST_DATABASE_NAME = "galaxy_db_test"
+    SQLALCHEMY_DATABASE_URI = f"postgresql://localhost/{TEST_DATABASE_NAME}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = "default_key"
+
+```
+
+### 2. Create a `.env` File in the Project Root
 
 ```bash
 touch .env
 ```
 
-### 2. Add Your Google Maps API Key
+### 3. Add Your Google Maps API Key
 
 Inside the `.env` file, add:
 
@@ -48,7 +68,7 @@ Inside the `.env` file, add:
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 ```
 
-### 3. Load Environment Variables
+### 4. Load Environment Variables
 
 Ensure you’re using a library like `python-dotenv` (included in `requirements.txt`) and have this in your config or app setup:
 
