@@ -220,8 +220,20 @@ Then open: [http://127.0.0.1:5000/home](http://127.0.0.1:5000/home)
 
 ---
 
+## 👥 Contributors
 
-## PR4-Aysin
+- [@apterry1](https://github.com/apterry1)
+- [@aysinakpinar](https://github.com/aysinakpinar)
+- [@Khadija1481](https://github.com/Khadija1481)
+- [@Louistwt](https://github.com/Louistwt)
+- [@jLubica739](https://github.com/Lubica739)
+- [@Michal-P-1](https://github.com/Michal-P-1)
+
+
+
+
+
+### PR4-Aysin
 signup method was implemented in blueprints/auth
 forms/signup_form was created to use in templates/signup.html template
 templates/signup.html was created to render the signup form.
@@ -231,7 +243,7 @@ To do:
 Test the rendering of the signup form and page, ensuring error and success messages display correctly.
 Password hash with bcrypt
 
-## PR6-Aysin
+## PR6
 - Users table was updated for the relationships:
     - one to many for workouts and gyms
     - many to many for friendships and exercises
@@ -243,7 +255,7 @@ Password hash with bcrypt
     - intensity, 3 options, easy, meduium, hard
 - assosciations model was created for many to many relationships
 
-## PR17-Aysin
+### PR17
 - Users can create a new workout plan.
 - Users can add new exercises to the workout plan.
 - Users can remove the exercises from the workout plan.
@@ -262,7 +274,7 @@ python seeds/5_gym_seed.py
 python seeds/6_workout_seed.py
 python seeds/7_workout_exercise_seed.py
 '''
-## PR26
+### PR26
 - Users can display the exercises in the workout page.
 - Users can also add user specific suggested exercises to the workouts.
 - Bugs were fixed for displaying, removing and marking the exercises done for each workouts.
@@ -279,14 +291,14 @@ python seeds/7_workout_exercise_seed.py
     - ollama run mistral
     - flask run (in another terminal)
 - enum in exercise model changed to string
-## PR32
+### PR32
 - users can display the exercise tutorials.
 - exercises are listed in the workouts page under each workout.
 - mistral was updated with a slower version mistral:7b-instruct-q4_K_M.
 - Chatbot was implemented on the navbar.
 - refer to the PR26 to run the chatbot.
 
-## Khadija PR  REAL-Time chat feature
+### Khadija PR  REAL-Time chat feature
 
 - pip install -r requirements.txt
 
