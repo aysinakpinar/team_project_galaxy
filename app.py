@@ -14,19 +14,6 @@ from models.gym import GymModel
 from models.associations import *
 
 from flask_sqlalchemy import SQLAlchemy
-from blueprints.auth import auth
-from blueprints.dashboard import dashboard
-from blueprints.friends import friends
-from blueprints.gym_search import gym_search
-from blueprints.users import users
-from blueprints.threads import threads
-from blueprints.workout import workout
-from blueprints.home import home
-from blueprints.chatbot import chatbot
-
-
-#khaadijas chat cod
-from blueprints.chat import chat, init_socketio
 from flask_socketio import SocketIO # Importing Socketio for real time communications
 # initialise socketio globally
 socketio = SocketIO(cors_allowed_origins="*") #allows all domains to connect using socketio
@@ -55,6 +42,17 @@ def create_app(config_class=None):
                 print("PostgreSQL connection successful!")
     except Exception as e:
         print("Failed to connect to PostgreSQL:", str(e))  # Print the error message if connection fails
+    
+    from blueprints.auth import auth
+    from blueprints.dashboard import dashboard
+    from blueprints.friends import friends
+    from blueprints.gym_search import gym_search
+    from blueprints.users import users
+    from blueprints.threads import threads
+    from blueprints.workout import workout
+    from blueprints.home import home
+    from blueprints.chatbot import chatbot
+    from blueprints.chat import chat, init_socketio
 
     # Registering blueprints
     app.register_blueprint(auth, url_prefix='/auth')
